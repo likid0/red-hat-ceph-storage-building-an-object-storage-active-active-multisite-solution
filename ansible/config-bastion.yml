@@ -1,0 +1,130 @@
+- hosts: bastion
+  any_errors_fatal: true
+  become: true
+  tasks:
+
+#  - name: Install pkgs
+#    yum:
+#      name: "{{ item }}"
+#      state: latest
+#    with_items:
+#      - git
+#      - ansible
+#      - docker
+#      - lvm2
+#      - httpd
+#      - yum-utils
+#      - createrepo
+
+  - name: partition disks
+    parted:
+      device: "{{ item }}"
+      number: 1
+      state: present
+      align: optimal
+    with_items:
+      -  "/dev/vdb"
+  
+  - name: create vgs
+    lvg:
+      force: yes
+      pvs: "{{ item.disk }}"
+      pesize: 4
+      state: present
+      vg: "{{ item.name }}"
+    with_items:
+      -  { disk: "/dev/vdb1", name: "{{ lv_values.vg_data }}" }
+  
+  - name: Create logical volumes
+    lvol:
+      vg: "{{ item.vg }}"
+      lv: "{{ item.name }}"
+      size: "{{ item.size }}"
+      state: present
+    with_items:
+      - { vg: "{{ lv_values.vg_data }}", name: "{{ lv_values.lv_name }}" , size: "{{ lv_values.data_size }}" }
+  
+  
+  # Format devices to the correct fs format
+  - name: Format devices
+    filesystem:
+      fstype: "{{ lv_values.filesystem }}"
+      dev: /dev/{{ item.vg }}/{{ item.name }}
+    with_items:
+      - { vg: "{{ lv_values.vg_data }}", name: "{{ lv_values.lv_name }}"}
+  
+  
+  # Create the directories for mongodb filesystems
+  - name: Create mount folders
+    file:
+      path: "{{ item }}"
+      state: directory
+    with_items:
+      - /var/www/repos
+  
+  
+  # Mount logicals volumes
+  - name: Mount logical volumes
+    mount:
+      name: "{{ item.dest }}"
+      src: /dev/mapper/{{ item.vg }}-{{ item.name }}
+      fstype: "{{ lv_values.filesystem }}"
+      opts: "{{ item.opts }}"
+      state: mounted
+    with_items:
+      - { vg: "{{ lv_values.vg_data }}", dest: "/var/www/repos" , name: "{{ lv_values.lv_name }}" , opts: "defaults" }
+   
+  
+  - name: Ensure devices are mounted
+    args:
+     warn: no
+    command: mount -a
+    register: check_mounts
+    changed_when: check_mounts.rc != 0
+   
+  - name: Restore label
+    command: restorecon -Rv "{{ item }}"
+    with_items:
+      - /var/www/repos
+
+  - name: Install ceph-ansible and ansible on bastion
+    yum:
+      name: ceph-ansible
+      state: latest
+
+  - name: Create install dirs
+    file:
+      path: "{{ item }}"
+      state: directory
+    with_items:
+      - /root/dc1
+      - /root/dc2
+
+  - name: Copy ansible.cfg
+    copy:
+      src: "../ansible.cfg"
+      dest: "{{ item }}"
+      owner: root
+      group: root
+    with_items:
+     - "/etc/ansible/ansible.cfg"
+     - "/root/dc1/ansible.cfg"
+     - "/root/dc2/ansible.cfg"
+
+#  - name: Copy inventory
+#    copy:
+#      src: "../inventory"
+#      dest: "{{ item }}"
+#      owner: root
+#      group: root
+#    with_items:
+#     - "/root/inventory"
+
+#  - name: Copy /etc/hosts
+#    copy:
+#      src: "../hosts"
+#      dest: "{{ item }}"
+#      owner: root
+#      group: root
+#    with_items:
+#     - "/etc/hosts"

@@ -1,0 +1,6 @@
+---
+lv_values:
+  filesystem: xfs
+  vg_data: repovg
+  lv_name: repolv
+  data_size: 200G
