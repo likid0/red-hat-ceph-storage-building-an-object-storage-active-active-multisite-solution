@@ -1,0 +1,13 @@
+#/etc/systemd/system/var-lib-docker.mount
+[Unit]
+Description=dockerlv
+
+[Mount]
+What=/dev/mapper/dockervg-dockerlv
+Where=/var/lib/docker
+Type=xfs
+Options=defaults
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=docker.service

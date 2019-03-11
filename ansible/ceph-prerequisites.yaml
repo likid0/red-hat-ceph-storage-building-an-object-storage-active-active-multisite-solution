@@ -1,0 +1,96 @@
+- hosts: ceph
+  any_errors_fatal: true
+  become: true
+  tasks:
+
+    - name: Copy private repo file
+      copy:
+        src: files/ceph3.repo
+        dest: /etc/yum.repos.d/ceph3.repo
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Run yum repolist
+      command: yum repolist
+    
+    - name: Install docker
+      yum:
+        name: docker
+        state: latest
+
+    - name: Make sure docker is stopped
+      systemd:
+        name: docker
+        state: stopped
+
+    - name: Copy docker-storage-setup file
+      copy:
+        src: files/docker-storage-setup
+        dest: /etc/sysconfig/docker-storage-setup
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Configure Docker storage setup
+      command: /usr/bin/docker-storage-setup
+
+    - name: Copy mount systemd unit for docker lv
+      copy:
+        src: files/var-lib-docker.mount
+        dest: /etc/systemd/system/var-lib-docker.mount
+        owner: root
+        group: root 
+        mode: 0644
+   
+    - name: Mount docker lv
+      systemd:
+        name: var-lib-docker.mount
+        enabled: yes
+        state: started
+        masked: no
+
+    - name: Copy registries.conf
+      copy:
+        src: files/registries.conf
+        dest: /etc/containers/registries.conf
+        owner: root
+        group: root 
+
+    - name: Start docker
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+        masked: no
+
+    - name: Copy s3cmd rpm
+      copy:
+        src: "files/{{ s3cmd_rpm }}"
+        dest: "/root/{{ s3cmd_rpm }}"
+        owner: root
+        group: root 
+
+    - name: Install s3cmd
+      yum:
+        name: "/root/{{ s3cmd_rpm }}"
+        state: present
+
+- hosts: mons[0]
+  any_errors_fatal: true
+  become: true
+  tasks:
+    - name: Install ceph-ansible and ansible on mon1
+      yum:
+        name: ceph-ansible
+        state: latest
+
+    - name: Copy ansible.cfg
+      copy:
+        src: "../ansible.cfg"
+        dest: "{{ item }}"
+        owner: root
+        group: root 
+      with_items:
+       - "/etc/ansible/ansible.cfg"
+       - "/root/ansible.cfg" 

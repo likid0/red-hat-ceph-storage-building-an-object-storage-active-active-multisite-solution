@@ -1,0 +1,18 @@
+# Systemd unit to start a local private registry
+[Unit]
+Description=docker private registry service
+After=docker.service
+
+[Service]
+ExecStartPre=-/usr/bin/docker kill registry
+ExecStartPre=-/usr/bin/docker rm registry
+ExecStart=/usr/bin/docker run -p 5000:5000 \
+                          -v /var/lib/local-registry:/var/lib/registry:Z \
+                          --name registry \
+                          registry:latest
+ExecStop=-/usr/bin/docker stop registry
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
