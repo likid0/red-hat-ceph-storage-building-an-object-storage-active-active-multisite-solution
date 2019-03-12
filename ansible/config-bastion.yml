@@ -16,6 +16,9 @@
 #      - yum-utils
 #      - createrepo
 
+#
+#Create fs for repos
+#
   - name: partition disks
     parted:
       device: "{{ item }}"
@@ -23,7 +26,7 @@
       state: present
       align: optimal
     with_items:
-      -  "/dev/vdb"
+      -  "{{ lv_values.disk }}"
   
   - name: create vgs
     lvg:
@@ -33,7 +36,7 @@
       state: present
       vg: "{{ item.name }}"
     with_items:
-      -  { disk: "/dev/vdb1", name: "{{ lv_values.vg_data }}" }
+      -  { disk: "{{ lv_values.disk }}1", name: "{{ lv_values.vg_data }}" }
   
   - name: Create logical volumes
     lvol:
@@ -56,7 +59,7 @@
       path: "{{ item }}"
       state: directory
     with_items:
-      - /var/www/repos
+      - "{{ lv_values.repo_path }}"
 
   - name: Mount logical volumes
     mount:
@@ -66,7 +69,7 @@
       opts: "{{ item.opts }}"
       state: mounted
     with_items:
-      - { vg: "{{ lv_values.vg_data }}", dest: "/var/www/repos" , name: "{{ lv_values.lv_name }}" , opts: "defaults" }
+      - { vg: "{{ lv_values.vg_data }}", dest: "{{ lv_values.repo_path }}" , name: "{{ lv_values.lv_name }}" , opts: "defaults" }
    
   - name: Ensure devices are mounted
     args:
@@ -78,7 +81,23 @@
   - name: Restore label
     command: restorecon -Rv "{{ item }}"
     with_items:
-      - /var/www/repos
+      - "{{ lv_values.repo_path }}"
+
+#
+# start and configure httpd to enable repo
+#
+
+  - name: Start httpd
+    systemd:
+      name: httpd
+      enabled: yes
+      state: started
+      masked: no
+
+
+#
+#Install and configure ceph-ansible for each DC
+#
 
   - name: Install ceph-ansible and ansible on bastion
     yum:
@@ -133,6 +152,11 @@
     with_items:
       - { src: '../inventory_dc1', dest: '/root/dc1/ceph-ansible/inventory' }
       - { src: '../inventory_dc2', dest: '/root/dc2/ceph-ansible/inventory' }
+
+
+#
+# Dowload/sync repos on bastion host
+#
 
   - name: Copy create_repos script
     copy:

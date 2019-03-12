@@ -4,3 +4,5 @@ lv_values:
   vg_data: repovg
   lv_name: repolv
   data_size: 200G
+  repo_path: "/var/www/html/repo"
+  disk: "/dev/vdb"
