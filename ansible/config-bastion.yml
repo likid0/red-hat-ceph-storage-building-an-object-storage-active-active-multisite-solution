@@ -44,8 +44,6 @@
     with_items:
       - { vg: "{{ lv_values.vg_data }}", name: "{{ lv_values.lv_name }}" , size: "{{ lv_values.data_size }}" }
   
-  
-  # Format devices to the correct fs format
   - name: Format devices
     filesystem:
       fstype: "{{ lv_values.filesystem }}"
@@ -53,17 +51,13 @@
     with_items:
       - { vg: "{{ lv_values.vg_data }}", name: "{{ lv_values.lv_name }}"}
   
-  
-  # Create the directories for mongodb filesystems
   - name: Create mount folders
     file:
       path: "{{ item }}"
       state: directory
     with_items:
       - /var/www/repos
-  
-  
-  # Mount logicals volumes
+
   - name: Mount logical volumes
     mount:
       name: "{{ item.dest }}"
@@ -74,7 +68,6 @@
     with_items:
       - { vg: "{{ lv_values.vg_data }}", dest: "/var/www/repos" , name: "{{ lv_values.lv_name }}" , opts: "defaults" }
    
-  
   - name: Ensure devices are mounted
     args:
      warn: no
@@ -100,6 +93,15 @@
       - /root/dc1
       - /root/dc2
 
+  - name: synchronize ceph-ansible dirs for each dc
+    synchronize:
+      src: /usr/share/ceph-ansible
+      dest: "{{ item }}"
+    with_items:
+      - /root/dc1/
+      - /root/dc2/
+    delegate_to: "{{ inventory_hostname }}"
+
   - name: Copy ansible.cfg
     copy:
       src: "../ansible.cfg"
@@ -108,23 +110,36 @@
       group: root
     with_items:
      - "/etc/ansible/ansible.cfg"
-     - "/root/dc1/ansible.cfg"
-     - "/root/dc2/ansible.cfg"
+     - "/root/dc1/ceph-ansible/ansible.cfg"
+     - "/root/dc2/ceph-ansible/ansible.cfg"
 
-#  - name: Copy inventory
-#    copy:
-#      src: "../inventory"
-#      dest: "{{ item }}"
-#      owner: root
-#      group: root
-#    with_items:
-#     - "/root/inventory"
+  - name: Copy ansible.cfg
+    copy:
+      src: "../ansible.cfg"
+      dest: "{{ item }}"
+      owner: root
+      group: root
+    with_items:
+     - "/etc/ansible/ansible.cfg"
+     - "/root/dc1/ceph-ansible/ansible.cfg"
+     - "/root/dc2/ceph-ansible/ansible.cfg"
 
-#  - name: Copy /etc/hosts
-#    copy:
-#      src: "../hosts"
-#      dest: "{{ item }}"
-#      owner: root
-#      group: root
-#    with_items:
-#     - "/etc/hosts"
+  - name: Copy inventory
+    copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+    with_items:
+      - { src: '../inventory_dc1', dest: '/root/dc1/ceph-ansible/inventory' }
+      - { src: '../inventory_dc2', dest: '/root/dc2/ceph-ansible/inventory' }
+
+  - name: Copy create_repos script
+    copy:
+      src: "../hacks/sync-repos.sh"
+      dest: "{{ item }}"
+      owner: root
+      group: root
+    with_items:
+      - /root/
+

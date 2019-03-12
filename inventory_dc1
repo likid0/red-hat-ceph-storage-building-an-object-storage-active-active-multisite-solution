@@ -16,3 +16,15 @@ ceph2
 ceph3
 0bastion
 metrics4
+[metrics]
+metrics4
+[dc1]
+ceph1
+ceph2
+ceph3
+metrics4
+[dc2]
+cepha
+cephb
+cephc
+metricsd
