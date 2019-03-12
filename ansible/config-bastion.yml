@@ -15,6 +15,8 @@
 #      - httpd
 #      - yum-utils
 #      - createrepo
+#      - docker-python
+#      - python-docker
 
 #
 #Create fs for repos
@@ -167,3 +169,51 @@
     with_items:
       - /root/
 
+#
+# Configure docker and start registry on bastion
+#
+
+  - name: Copy registries.conf
+    copy:
+      src: files/registries.conf
+      dest: /etc/containers/registries.conf
+      owner: root
+      group: root 
+
+  - name: Start docker
+    systemd:
+      name: docker
+      enabled: yes
+      state: started
+      masked: no
+
+  - name: Copy systemd to start local docker registry
+    copy:
+      src: "../hacks/local-registry.service"
+      dest: /etc/systemd/system/local-registry.service
+      owner: root
+      group: root 
+      mode: 0644
+
+  - name: Start registry
+    systemd:
+      name: local-registry
+      enabled: yes
+      state: started
+      masked: no
+
+  - name: Wait for port 5000 from registry
+    wait_for:
+      port: 5000
+      delay: 10
+
+  - name: pull an image
+    docker_image:
+      name: registry.access.redhat.com/rhceph/rhceph-3-rhel7
+
+  - name: Tag and push to local registry
+    docker_image:
+       name: rhceph/rhceph-3-rhel7
+       repository: 10.0.0.10:5000/rhceph/rhceph-3-rhel7
+       tag: latest
+       push: yes
