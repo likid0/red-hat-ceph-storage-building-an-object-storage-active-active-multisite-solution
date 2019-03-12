@@ -1,0 +1,68 @@
+--- 
+#
+#Create fs for repos
+#
+  - name: partition disks
+    parted:
+      device: "{{ item }}"
+      number: 1
+      state: present
+      align: optimal
+    with_items:
+      -  "{{ lv_values.disk }}"
+  
+  - name: create vgs
+    lvg:
+      force: yes
+      pvs: "{{ item.disk }}"
+      pesize: 4
+      state: present
+      vg: "{{ item.name }}"
+    with_items:
+      -  { disk: "{{ lv_values.disk }}1", name: "{{ lv_values.vg_data }}" }
+  
+  - name: Create logical volumes
+    lvol:
+      vg: "{{ item.vg }}"
+      lv: "{{ item.name }}"
+      size: "{{ item.size }}"
+      state: present
+    with_items:
+      - { vg: "{{ lv_values.vg_data }}", name: "{{ lv_values.lv_name }}" , size: "{{ lv_values.data_size }}" }
+  
+  - name: Format devices
+    filesystem:
+      fstype: "{{ lv_values.filesystem }}"
+      dev: /dev/{{ item.vg }}/{{ item.name }}
+    with_items:
+      - { vg: "{{ lv_values.vg_data }}", name: "{{ lv_values.lv_name }}"}
+  
+  - name: Create mount folders
+    file:
+      path: "{{ item }}"
+      state: directory
+    with_items:
+      - "{{ lv_values.path }}"
+
+  - name: Mount logical volumes
+    mount:
+      name: "{{ item.dest }}"
+      src: /dev/mapper/{{ item.vg }}-{{ item.name }}
+      fstype: "{{ lv_values.filesystem }}"
+      opts: "{{ item.opts }}"
+      state: mounted
+    with_items:
+      - { vg: "{{ lv_values.vg_data }}", dest: "{{ lv_values.path }}" , name: "{{ lv_values.lv_name }}" , opts: "defaults" }
+   
+  - name: Ensure devices are mounted
+    args:
+     warn: no
+    command: mount -a
+    register: check_mounts
+    changed_when: check_mounts.rc != 0
+   
+  - name: Restore label
+    command: restorecon -Rv "{{ item }}"
+    with_items:
+      - "{{ lv_values.path }}"
+

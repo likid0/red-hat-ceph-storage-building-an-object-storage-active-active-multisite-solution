@@ -17,7 +17,6 @@
         dest: "/etc/yum.repos.d/ceph3.repo"
         backup: yes
 
-
     - name: Run yum repolist
       command: yum repolist
     
@@ -30,6 +29,8 @@
       systemd:
         name: docker
         state: stopped
+
+    - import_tasks: create_lvol_fs.yml
 
     - name: Copy docker-storage-setup file
       copy:
@@ -82,22 +83,3 @@
       yum:
         name: "/root/{{ s3cmd_rpm }}"
         state: present
-
-- hosts: mons[0]
-  any_errors_fatal: true
-  become: true
-  tasks:
-    - name: Install ceph-ansible and ansible on mon1
-      yum:
-        name: ceph-ansible
-        state: latest
-
-    - name: Copy ansible.cfg
-      copy:
-        src: "../ansible.cfg"
-        dest: "{{ item }}"
-        owner: root
-        group: root 
-      with_items:
-       - "/etc/ansible/ansible.cfg"
-       - "/root/ansible.cfg" 

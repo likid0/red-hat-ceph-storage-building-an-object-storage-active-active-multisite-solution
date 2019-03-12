@@ -28,5 +28,8 @@ ceph1
 ceph2
 ceph3
 metrics4
+[ceph:children]
+dc1
+dc2
 [all:vars]
 ansible_user=cloud-user
