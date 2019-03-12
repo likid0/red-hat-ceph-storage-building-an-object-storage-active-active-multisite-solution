@@ -1,0 +1,8 @@
+DEVICE={{dc2pub_interface}}
+ONBOOT=yes
+MTU=1500
+DEFROUTE=no
+NM_CONTROLLED=no
+IPV6INIT=no
+IPADDR={{ lookup('dig', '{{ inventory_hostname_short }}.dc2.summit.lab') }}
+NETMASK=255.255.255.0

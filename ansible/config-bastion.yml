@@ -18,6 +18,15 @@
 #      - docker-python
 #      - python-docker
 
+  - name: Configure DC2 publoc interface.
+    template:
+      src: "templates/ifcfg_dc2_public_template.j2"
+      dest: "/etc/sysconfig/network-scripts/ifcfg-{{dc2pub_interface}}"
+      backup: yes
+#   notify:
+#     -  Restart Network
+
+
 #
 #Create fs for repos
 #
