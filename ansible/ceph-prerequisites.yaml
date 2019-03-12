@@ -1,4 +1,4 @@
-- hosts: ceph1
+- hosts: ceph
   any_errors_fatal: true
   become: true
   tasks:
