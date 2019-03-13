@@ -2,6 +2,14 @@
 #
 #Create fs for repos
 #
+
+  - name: Install pkgs
+    yum:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+      - lvm2
+
   - name: partition disks
     parted:
       device: "{{ item }}"

@@ -37,5 +37,6 @@
         state: present
 
   handlers:
-  - include_tasks: handlers_common.yaml
+    - import_tasks: handlers_common.yaml
+  
 

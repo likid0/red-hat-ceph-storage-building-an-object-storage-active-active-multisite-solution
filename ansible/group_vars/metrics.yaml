@@ -1,0 +1,7 @@
+lv_values:
+  filesystem: xfs
+  vg_data: dockervg
+  lv_name: dockerlv
+  data_size: 40G
+  disk: "/dev/vdb"
+  path: /var/lib/docker
