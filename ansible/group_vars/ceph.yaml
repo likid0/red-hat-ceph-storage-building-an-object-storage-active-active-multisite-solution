@@ -6,3 +6,5 @@ lv_values:
   data_size: 40G
   disk: "/dev/vdb"
   path: /var/lib/docker
+networknic: cephprivate
+conf_interface: eth1

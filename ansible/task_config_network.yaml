@@ -1,0 +1,9 @@
+---
+  - name: Configure network.
+    template:
+      src: "templates/ifcfg_{{networknic}}_template.j2"
+      dest: "/etc/sysconfig/network-scripts/ifcfg-{{conf_interface}}"
+      backup: yes
+    notify:
+      -  Restart Network
+

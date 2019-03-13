@@ -6,4 +6,5 @@ lv_values:
   data_size: 200G
   path: "/var/www/html/repo"
   disk: "/dev/vdb"
-dc2pub_interface: eth1
+conf_interface: eth1
+networknic: dc2_public

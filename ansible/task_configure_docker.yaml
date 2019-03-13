@@ -1,25 +1,7 @@
-- hosts: ceph
-  any_errors_fatal: true
-  become: true
-  tasks:
-
-#    - name: Copy private repo file
-#      copy:
-#        src: files/ceph3.repo
-#        dest: /etc/yum.repos.d/ceph3.repo
-#        owner: root
-#        group: root
-#        mode: 0644
-
-    - name: Copy private repo file
-      template:
-        src: "templates/ceph3.repo.j2"
-        dest: "/etc/yum.repos.d/ceph3.repo"
-        backup: yes
-
+---
     - name: Run yum repolist
       command: yum repolist
-    
+
     - name: Install docker
       yum:
         name: docker
@@ -29,8 +11,6 @@
       systemd:
         name: docker
         state: stopped
-
-    - import_tasks: create_lvol_fs.yml
 
     - name: Copy docker-storage-setup file
       copy:
@@ -48,9 +28,9 @@
         src: files/var-lib-docker.mount
         dest: /etc/systemd/system/var-lib-docker.mount
         owner: root
-        group: root 
+        group: root
         mode: 0644
-   
+  
     - name: Mount docker lv
       systemd:
         name: var-lib-docker.mount
@@ -63,7 +43,7 @@
         src: files/registries.conf
         dest: /etc/containers/registries.conf
         owner: root
-        group: root 
+        group: root
 
     - name: Start docker
       systemd:
@@ -71,15 +51,3 @@
         enabled: yes
         state: started
         masked: no
-
-    - name: Copy s3cmd rpm
-      copy:
-        src: "files/{{ s3cmd_rpm }}"
-        dest: "/root/{{ s3cmd_rpm }}"
-        owner: root
-        group: root 
-
-    - name: Install s3cmd
-      yum:
-        name: "/root/{{ s3cmd_rpm }}"
-        state: present

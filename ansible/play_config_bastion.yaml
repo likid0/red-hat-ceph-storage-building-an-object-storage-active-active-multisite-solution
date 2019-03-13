@@ -18,15 +18,9 @@
 #      - docker-python
 #      - python-docker
 
-  - name: Configure DC2 public interface on bastion.
-    template:
-      src: "templates/ifcfg_dc2_public_template.j2"
-      dest: "/etc/sysconfig/network-scripts/ifcfg-{{dc2pub_interface}}"
-      backup: yes
-    notify:
-     -  Restart Network
 
-  - import_tasks: create_lvol_fs.yml
+  - import_tasks: task_config_network.yaml
+  - import_tasks: task_create_lvol_fs.yaml
 
 
 #
@@ -150,3 +144,8 @@
        repository: 10.0.0.10:5000/rhceph/rhceph-3-rhel7
        tag: latest
        push: yes
+
+  handlers:
+  - name: Restart Network
+    service: name=network state=restarted
+
