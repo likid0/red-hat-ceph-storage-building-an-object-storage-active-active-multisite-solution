@@ -17,6 +17,7 @@
 #      - createrepo
 #      - docker-python
 #      - python-docker
+#      - ceph-common
 
 
   - import_tasks: task_config_network.yaml
@@ -63,12 +64,11 @@
 
   - name: Copy ansible.cfg
     copy:
-      src: "../ansible.cfg"
+      src: "files/ansible.cfg"
       dest: "{{ item }}"
       owner: root
       group: root
     with_items:
-     - "/etc/ansible/ansible.cfg"
      - "/root/dc1/ceph-ansible/ansible.cfg"
      - "/root/dc2/ceph-ansible/ansible.cfg"
 

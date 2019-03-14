@@ -6,6 +6,7 @@ After=docker.service
 [Service]
 ExecStartPre=-/usr/bin/docker kill registry
 ExecStartPre=-/usr/bin/docker rm registry
+ExecStartPre=-/usr/sbin/sysctl net.ipv4.ip_forward=1
 ExecStart=/usr/bin/docker run -p 5000:5000 \
                           -v /var/lib/local-registry:/var/lib/registry:Z \
                           --name registry \

@@ -1,24 +1,16 @@
 [mons]
-cepha
-cephb
-cephc
+ceph[a:c]
 [mgrs]
-cepha
-cephb
-cephc
+ceph[a:c]
 [osds]
-cepha
-cephb
-cephc
+ceph[a:c]
 [clients]
-cepha
-cephb
-cephc
+ceph[a:c]
 0bastion
 metricsd
 [metrics]
 metricsd
-[rgw]
+[rgws]
 cepha
 
 
@@ -26,9 +18,7 @@ cepha
 
 ###Global groups
 [cephdc1]
-cepha
-cephb
-cephc
+ceph[a:c]
 [cephdc2]
 ceph1
 ceph2
@@ -44,9 +34,7 @@ metricsdc2
 cephdc1
 cephdc2
 [dc1]
-cepha
-cephb
-cephc
+ceph[a:c]
 metricsd
 [dc2]
 ceph1

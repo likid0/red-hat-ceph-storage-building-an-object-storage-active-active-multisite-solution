@@ -4,8 +4,11 @@
 
     - name: Install docker
       yum:
-        name: docker
+        name: "{{ item }}"
         state: latest
+      with_items: 
+        - docker
+        - ceph-common
 
     - name: Make sure docker is stopped
       systemd:
