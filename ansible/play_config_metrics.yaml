@@ -6,6 +6,7 @@
     - import_tasks: task_config_repos.yaml
     - import_tasks: task_create_lvol_fs.yaml
     - import_tasks: task_configure_docker.yaml
+    - import_tasks: task_config_ntp.yaml
 
 
     - name: "Install cephmetrics"
@@ -25,7 +26,7 @@
     - name: "Add templates for ceph metrics"
       template:
         src: "templates/{{ item }}.j2"
-        dest: "/usr/share/cephmetrics-ansible/group_vars/{{ item }}"
+        dest: "/usr/share/cephmetrics-ansible/group_vars/all.yml"
       with_items:
         - all_metrics.yaml
     

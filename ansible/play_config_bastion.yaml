@@ -23,6 +23,7 @@
   - import_tasks: task_config_network.yaml
   - import_tasks: task_create_lvol_fs.yaml
   - import_tasks: task_config_ntp.yaml
+  - import_tasks: task_install_s3cmd.yaml
 
 
 #
@@ -158,7 +159,11 @@
 
   - name: pull an image
     docker_image:
-      name: registry.access.redhat.com/rhceph/rhceph-3-rhel7
+      name: "{{ item }}"
+    with_items:
+      - registry.access.redhat.com/rhceph/rhceph-3-dashboard-rhel7
+      - registry.access.redhat.com/rhceph/rhceph-3-rhel7
+      - registry.access.redhat.com/openshift3/prometheus
 
   - name: Tag and push to local registry
     docker_image:

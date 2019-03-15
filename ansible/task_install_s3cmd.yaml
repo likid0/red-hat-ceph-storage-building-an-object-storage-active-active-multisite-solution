@@ -1,0 +1,12 @@
+---
+    - name: Copy s3cmd rpm
+      copy:
+        src: "files/{{ s3cmd_rpm }}"
+        dest: "/root/{{ s3cmd_rpm }}"
+        owner: root
+        group: root 
+
+    - name: Install s3cmd
+      yum:
+        name: "/root/{{ s3cmd_rpm }}"
+        state: present

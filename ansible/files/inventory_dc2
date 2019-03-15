@@ -47,5 +47,7 @@ ceph1
 ceph2
 ceph3
 metrics4
+[bastion]
+0bastion  ansible_connection=local
 [all:vars]
 ansible_user=cloud-user

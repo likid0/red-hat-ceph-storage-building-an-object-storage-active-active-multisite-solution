@@ -18,3 +18,6 @@ containerized: true
 grafana:
   admin_user: admin
   admin_password: redhat01
+  container_name: {{ repo_node }}:5000/rhceph/rhceph-3-dashboard-rhel7
+prometheus:
+  container_name: {{ repo_node }}:5000/openshift3/prometheus
