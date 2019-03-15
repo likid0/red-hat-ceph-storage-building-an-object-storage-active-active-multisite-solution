@@ -1,0 +1,57 @@
+---
+dummy:
+
+fetch_directory: ~/ceph-ansible-keys
+ntp_service_enabled: true
+ceph_origin: repository
+ceph_repository: rhcs
+generate_fsid: true
+ceph_conf_key_directory: /etc/ceph
+cephx: true
+monitor_interface: eth0
+public_network:  {{ public_net }}
+cluster_network: 192.168.0.0/24
+containerized_deployment: true
+osd_objectstore: bluestore
+ceph_docker_image: "rhceph/rhceph-3-rhel7"
+ceph_docker_image_tag: "latest"
+ceph_docker_registry: "{{ repo_node }}:5000"
+docker_pull_retry: 6
+docker_pull_timeout: "600s"
+upgrade_ceph_packages: False
+radosgw_civetweb_port: 8080
+radosgw_interface: eth0
+rgw_multisite: true
+rgw_zone: {{ dc_domain }}
+rgw_zonemaster: true
+rgw_zonesecondary: false
+{% raw %}
+rgw_multisite_endpoint_addr: "{{ ansible_fqdn }}"
+{% endraw %}
+rgw_zonegroup: summit
+rgw_zone_user: zone.user
+rgw_realm: realm_summit
+system_access_key: 20304050
+system_secret_key: 20304050
+
+
+ceph_conf_overrides:
+  global:
+    max open files: 131072
+  mon:
+    mon health preluminous compat: true
+    mon osd down out interval: 6000
+  {% for item in groups[ 'rgws' ] %}
+client.rgw.{{ item }}:
+    host: {{ item }}
+    keyring: /var/lib/ceph/radosgw/ceph-rgw.{{ item }}/keyring
+    log file: /var/log/ceph/ceph-rgw-{{ item }}.log
+    rgw frontends: civetweb port={{ lookup('dig', '{{ item }}.summit.lab') }}:8080 num_threads=1024
+    rgw_dynamic_resharding: false
+    debug_civetweb: "0/1"
+    rgw_enable_apis: s3,admin
+    #rgw_dns_name: {{ item }}.summit.lab
+    #rgw_run_sync_thread: false
+    rgw_zone: {{ dc_domain }}
+    rgw_thread_pool_size: 1024
+  {% endfor %}

@@ -1,0 +1,20 @@
+---
+    - name: Install ntp
+      yum:
+        name: "{{ item }}"
+        state: latest
+      with_items: 
+        - ntp
+        - ntpdate
+    
+    - name: config ntpd
+      lineinfile:
+        path: /etc/ntp.conf
+        state: present
+        line: 'server 0.rhel.pool.ntp.org iburst'
+
+    - name: start ntp
+      service:
+        name: ntpd
+        enabled: true
+        state: started

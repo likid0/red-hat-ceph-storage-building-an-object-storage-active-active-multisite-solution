@@ -1,2 +1,6 @@
 repo_node: 10.0.0.10
 dc_domain: dc1
+public_net: '10.0.0.0/12'
+private_net: '192.168.0.0/24'
+rgw_access_key: '20304050'
+rgw_secret_key: '20304050'

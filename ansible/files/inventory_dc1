@@ -36,10 +36,13 @@ cephdc2
 [dc1]
 ceph[a:c]
 metricsd
+0bastion
 [dc2]
 ceph1
 ceph2
 ceph3
 metrics4
+[bastion]
+0bastion  ansible_connection=local
 [all:vars]
 ansible_user=cloud-user
