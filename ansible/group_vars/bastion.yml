@@ -8,3 +8,4 @@ lv_values:
   disk: "/dev/vdb"
 conf_interface: eth1
 networknic: dc2_public
+s3cmd_rpm: s3cmd-2.0.2-1.el7.noarch.rpm

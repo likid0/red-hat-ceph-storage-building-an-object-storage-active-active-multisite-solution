@@ -161,16 +161,20 @@
     docker_image:
       name: "{{ item }}"
     with_items:
-      - registry.access.redhat.com/rhceph/rhceph-3-dashboard-rhel7
-      - registry.access.redhat.com/rhceph/rhceph-3-rhel7
-      - registry.access.redhat.com/openshift3/prometheus
+      - registry.access.redhat.com/rhceph/rhceph-3-dashboard-rhel7:3-12
+      - registry.access.redhat.com/rhceph/rhceph-3-rhel7:3-20
+      - registry.access.redhat.com/openshift3/prometheus:v3.9
 
   - name: Tag and push to local registry
     docker_image:
-       name: rhceph/rhceph-3-rhel7
-       repository: 10.0.0.10:5000/rhceph/rhceph-3-rhel7
-       tag: latest
+       name: "{{ item.image_name }}"
+       repository: "{{ item.image }}"
+       tag: "{{ item.tag }}"
        push: yes
+    with_items:
+       - { image_name: "rhceph/rhceph-3-rhel7" , image: "10.0.0.10:5000/rhceph/rhceph-3-rhel7" , tag: '3-20' }
+       - { image_name: "rhceph/rhceph-3-dashboard-rhel7" , image: "10.0.0.10:5000/rhceph/rhceph-3-dashboard-rhel7" , tag: '3' }
+       - { image_name: "openshift3/prometheus" , image: "10.0.0.10:5000/openshift3/prometheus" , tag: 'v3.9' }
 
   handlers:
   - name: Restart Network

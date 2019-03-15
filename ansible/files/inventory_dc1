@@ -8,7 +8,7 @@ ceph[a:c]
 ceph[a:c]
 0bastion
 metricsd
-[metrics]
+[ceph-grafana]
 metricsd
 [rgws]
 cepha

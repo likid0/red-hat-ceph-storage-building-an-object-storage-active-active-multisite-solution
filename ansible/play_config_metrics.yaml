@@ -34,3 +34,23 @@
       copy:
         src: "../ansible.cfg"
         dest: "/usr/share/cephmetrics-ansible/"
+
+    - name: Copy inventory
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+      with_items:
+        - { src: "{{ inventory_file }}" , dest: '/usr/share/cephmetrics-ansible/inventory' }
+
+    - name: Copy keys for ansible
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0400
+      with_items:
+        - { src: "files/key"  , dest: '/root/.ssh/id_rsa' }
+        - { src: "files/key.pub" , dest: '/root/.ssh/id_rsa.pub' }

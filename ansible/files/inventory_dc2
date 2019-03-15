@@ -16,7 +16,7 @@ ceph2
 ceph3
 0bastion
 metrics4
-[metrics]
+[ceph-grafana]
 metrics4
 [rgw]
 ceph1
