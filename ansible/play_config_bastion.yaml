@@ -21,6 +21,7 @@
 
 
   - import_tasks: task_config_network.yaml
+  - import_tasks: task_config_hosts.yaml
   - import_tasks: task_create_lvol_fs.yaml
   - import_tasks: task_config_ntp.yaml
   - import_tasks: task_install_s3cmd.yaml

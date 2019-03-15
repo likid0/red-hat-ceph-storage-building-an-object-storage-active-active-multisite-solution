@@ -4,6 +4,7 @@
   tasks:
 
     - import_tasks: task_config_repos.yaml
+    - import_tasks: task_config_hosts.yaml
     - import_tasks: task_create_lvol_fs.yaml
     - import_tasks: task_configure_docker.yaml
     - import_tasks: task_config_ntp.yaml

@@ -1,0 +1,8 @@
+---
+  - name: Copy systemd to start local docker registry
+    copy:
+      src: "../files/hosts"
+      dest: /etc/hosts
+      owner: root
+      group: root 
+      mode: 0644

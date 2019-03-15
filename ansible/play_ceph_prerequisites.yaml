@@ -3,14 +3,6 @@
   become: true
   tasks:
 
-#    - name: Copy private repo file
-#      copy:
-#        src: files/ceph3.repo
-#        dest: /etc/yum.repos.d/ceph3.repo
-#        owner: root
-#        group: root
-#        mode: 0644
-
     - name: Copy private repo file
       template:
         src: "templates/ceph3.repo.j2"
@@ -22,6 +14,7 @@
 
     - import_tasks: task_create_lvol_fs.yaml
     - import_tasks: task_config_network.yaml
+    - import_tasks: task_config_hosts.yaml
     - import_tasks: task_configure_docker.yaml
     - import_tasks: task_install_s3cmd.yaml
 
