@@ -1,0 +1,45 @@
+---
+- name: Update the /etc/ssh/sshd_config file no DNS
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^UseDNS"
+    line: "UseDNS no"
+    insertafter: EOF
+    state: present
+  notify:
+    -  Restart Sshd
+
+
+- name: Update the /etc/ssh/sshd_config Allow root
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#PermitRootLogin"
+    line: "PermitRootLogin yes"
+    insertafter: EOF
+    state: present
+  notify:
+    -  Restart Sshd
+
+- name: remove from authorized host to allow root access
+  replace:
+    path: /root/.ssh/authorized_keys
+    regexp: '^.*\(ssh-rsa.*com\).*$'
+    replace: '\1'
+    owner: root
+    group: root
+    mode: 0644
+
+
+- name: Configure SSH client
+  copy:
+    dest: /root/.ssh/config
+    mode: 0644
+    content: |
+      Host * 
+       ServerAliveCountMax 4 
+       ServerAliveInterval 15
+       ForwardAgent yes 
+       GSSAPIAuthentication no
+       StrictHostKeyChecking no
+       User root
+       UserKnownHostsFile=/dev/null

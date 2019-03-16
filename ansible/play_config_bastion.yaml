@@ -18,6 +18,7 @@
 #      - docker-python
 #      - python-docker
 #      - ceph-common
+#      - ipa-client
 
 
   - import_tasks: task_config_network.yaml
@@ -25,6 +26,7 @@
   - import_tasks: task_create_lvol_fs.yaml
   - import_tasks: task_config_ntp.yaml
   - import_tasks: task_install_s3cmd.yaml
+  - import_tasks: task_config_ssh.yaml
 
 
 #
@@ -84,6 +86,7 @@
     with_items:
       - { src: 'files/inventory_dc1', dest: '/root/dc1/ceph-ansible/inventory' }
       - { src: 'files/inventory_dc2', dest: '/root/dc2/ceph-ansible/inventory' }
+      - { src: 'files/inventory_global', dest: '/etc/ansible/hosts' }
 
   - name: Copy ceph-ansible files and workarounds
     copy:
@@ -177,7 +180,7 @@
        - { image_name: "rhceph/rhceph-3-dashboard-rhel7" , image: "10.0.0.10:5000/rhceph/rhceph-3-dashboard-rhel7" , tag: '3' }
        - { image_name: "openshift3/prometheus" , image: "10.0.0.10:5000/openshift3/prometheus" , tag: 'v3.9' }
 
+
   handlers:
-  - name: Restart Network
-    service: name=network state=restarted
+    - import_tasks: handlers_common.yaml
 

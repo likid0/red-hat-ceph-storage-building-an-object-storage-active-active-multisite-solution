@@ -46,7 +46,7 @@ client.rgw.{{ item }}:
     host: {{ item }}
     keyring: /var/lib/ceph/radosgw/ceph-rgw.{{ item }}/keyring
     log file: /var/log/ceph/ceph-rgw-{{ item }}.log
-    rgw frontends: civetweb port={{ lookup('dig', '{{ item }}.summit.lab') }}:8080 num_threads=1024
+    rgw frontends: civetweb port={{ lookup('dig', 'cepha.summit.lab') }}:8080 num_threads=1024
     rgw_dynamic_resharding: false
     debug_civetweb: "0/1"
     rgw_enable_apis: s3,admin

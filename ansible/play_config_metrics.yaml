@@ -55,3 +55,7 @@
       with_items:
         - { src: "files/key"  , dest: '/root/.ssh/id_rsa' }
         - { src: "files/key.pub" , dest: '/root/.ssh/id_rsa.pub' }
+
+  handlers:
+    - import_tasks: handlers_common.yaml
+

@@ -1,28 +1,3 @@
-####Ceph ansible
-[mons]
-ceph[a:c]
-
-[mgrs]
-ceph[a:c]
-
-[osds]
-ceph[a:c]
-
-[clients]
-ceph[a:c]
-bastion
-metricsd
-
-[ceph-grafana]
-metricsd
-
-[rgws]
-cepha
-
-
-
-
-###Global groups
 [cephdc1]
 ceph[a:c]
 
