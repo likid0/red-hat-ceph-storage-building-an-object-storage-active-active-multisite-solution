@@ -20,15 +20,15 @@
   notify:
     -  Restart Sshd
 
-- name: remove from authorized host to allow root access
-  replace:
-    path: /root/.ssh/authorized_keys
-    regexp: '^.*\(ssh-rsa.*com\).*$'
-    replace: '\1'
-    owner: root
-    group: root
-    mode: 0644
+- name: check if root is allowed in authorized_keys
+  command: 'grep no-port-forwarding /root/.ssh/authorized_keys'
+  ignore_errors: True
+  register: root_allowed
 
+
+- name: remove from authorized host to allow root access
+  shell: sed -ibck 's/^.*\(ssh-rsa.*com\).*$/\1/' /root/.ssh/authorized_keys
+  when: root_allowed is succeeded
 
 - name: Configure SSH client
   copy:
