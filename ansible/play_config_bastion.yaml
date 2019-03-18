@@ -91,13 +91,16 @@
 
   - name: Copy ceph-ansible files and workarounds
     copy:
-      src: "{{ item.src }}"
+      src: "files/{{ item.src }}"
       dest: "{{ item.dest }}"
       owner: root
       group: root
     with_items:
-      - { src: 'files/site-docker.yml', dest: '/root/dc1/ceph-ansible/site-docker.yml' }
-      - { src: 'files/purge-docker-cluster.yml', dest: '/root/dc1/ceph-ansible/purge-docker-cluster.yml' }
+      - { src: 'site-docker.yml', dest: '/root/dc1/ceph-ansible/site-docker.yml' }
+      - { src: 'purge-docker-cluster.yml', dest: '/root/dc1/ceph-ansible/purge-docker-cluster.yml' }
+      - { src: 'purge-docker-cluster.yml', dest: '/root/dc2/ceph-ansible/purge-docker-cluster.yml' }
+      - { src: 'clients_ceph.yml', dest: '/root/dc1/ceph-ansible/group_vars/clients.yml' }
+      - { src: 'clients_ceph.yml', dest: '/root/dc2/ceph-ansible/group_vars/clients.yml' }
 
 
   - name: add ceph-ansible group_vars templates
@@ -107,11 +110,15 @@
       owner: root
       group: root
     with_items:
-     - { src: 'all_ceph.yml.j2', dest: '/root/dc1/ceph-ansible/group_vars/all.yml' }
-     - { src: 'osds_ceph.yml.j2', dest: '/root/dc1/ceph-ansible/group_vars/osds.yml' }
+     - { src: 'all_ceph_dc1.yml.j2', dest: '/root/dc1/ceph-ansible/group_vars/all.yml' }
+     - { src: 'osds_ceph_dc1.yml.j2', dest: '/root/dc1/ceph-ansible/group_vars/osds.yml' }
      - { src: 'rgws_ceph.yml.j2', dest: '/root/dc1/ceph-ansible/group_vars/rgws.yml' }
      - { src: 'mgrs_ceph.yml.j2', dest: '/root/dc1/ceph-ansible/group_vars/mgrs.yml' }
-     - { src: 'clients_ceph.yml.j2', dest: '/root/dc1/ceph-ansible/group_vars/clients.yml' }
+     - { src: 'all_ceph_dc2.yml.j2', dest: '/root/dc2/ceph-ansible/group_vars/all.yml' }
+     - { src: 'osds_ceph_dc2.yml.j2', dest: '/root/dc2/ceph-ansible/group_vars/osds.yml' }
+     - { src: 'rgws_ceph.yml.j2', dest: '/root/dc2/ceph-ansible/group_vars/rgws.yml' }
+     - { src: 'mgrs_ceph.yml.j2', dest: '/root/dc2/ceph-ansible/group_vars/mgrs.yml' }
+
 #
 # Dowload/sync repos on bastion host
 #

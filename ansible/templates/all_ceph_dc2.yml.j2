@@ -1,0 +1,58 @@
+---
+dummy:
+
+###Time sync config###
+ntp_service_enabled: true
+
+###Ceph Installation orgin and type###
+ceph_origin: repository
+ceph_repository: rhcs
+ceph_rhcs_version: 3
+
+###Ceph Auth Configuration###
+#The 'cluster' variable determines the name of the cluster. 
+#cluster: ceph
+# Directory to fetch cluster fsid, keys etc...
+fetch_directory: ~/ceph-ansible-keys
+generate_fsid: true
+ceph_conf_key_directory: /etc/ceph
+cephx: true
+
+
+###Ceph objecstore type config###
+# We can configure filestore or bluestore as our objecstore
+#osd_objectstore: bluestore
+
+#Ceph Cluster network config###
+# You must define either monitor_interface, monitor_address or monitor_address_block.
+# These variables must be defined at least in all.yml and overrided if needed (inventory host file or group_vars/*.yml).
+# Eg. If you want to specify for each monitor which address the monitor will bind to you can set it in your **inventory host file** by using 'monitor_address' variable.
+# Preference will go to monitor_address if both monitor_address and monitor_interface are defined.
+#monitor_interface: ethX
+#public_network:  X.X.X.X/24
+#cluster_network: X.X.X.X/24
+
+###Containerized Configuration###
+containerized_deployment: true
+ceph_docker_image: "rhceph/rhceph-3-rhel7"
+ceph_docker_image_tag: "latest"
+ceph_docker_registry: "{{ repo_node }}:5000"
+docker_pull_retry: 6
+docker_pull_timeout: "600s"
+upgrade_ceph_packages: False
+
+###Rados Gateway configuration####
+#radosgw_frontend_type: civetweb
+#radosgw_civetweb_port: 8080
+#radosgw_civetweb_num_threads: 100
+#radosgw_interface: ethX
+
+
+
+#Ceph conf overrides 
+ceph_conf_overrides:
+  global:
+    max open files: 131072
+  mon:
+    mon health preluminous compat: true
+    mon osd down out interval: 6000
