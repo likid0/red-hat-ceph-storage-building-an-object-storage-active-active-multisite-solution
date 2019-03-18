@@ -41,5 +41,5 @@
        ForwardAgent yes 
        GSSAPIAuthentication no
        StrictHostKeyChecking no
-       User root
+       User cloud-user
        UserKnownHostsFile=/dev/null
