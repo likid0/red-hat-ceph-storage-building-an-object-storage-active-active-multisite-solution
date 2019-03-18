@@ -4,7 +4,7 @@
 **Title**: Red Hat Ceph Storage: Building an Object Storage Active/Active Multi-site Solution (**T168C8**)<br>
 **Date**: 8th May 2019<br>
 
-**Authors/Lab Owners**:
+#**Authors/Lab Owners**#
 <ul class="tab">
 <li>Daniel Dominguez <<ddomingu@redhat.com>></li>
 <li>Jorge Luis Tudela Gonzalez <<jtudelag@redhat.com>></li>
