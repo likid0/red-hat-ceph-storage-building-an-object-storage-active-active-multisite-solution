@@ -1,6 +1,7 @@
 ---
 dummy:
 
+cluster: dc1
 fetch_directory: ~/ceph-ansible-keys
 ntp_service_enabled: true
 ceph_origin: repository
@@ -39,7 +40,6 @@ ceph_conf_overrides:
   global:
     max open files: 131072
   mon:
-    mon health preluminous compat: true
     mon osd down out interval: 6000
   {% for item in groups[ 'rgws' ] %}
 client.rgw.{{ item }}:
