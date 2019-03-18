@@ -27,6 +27,7 @@
   - import_tasks: task_config_ntp.yaml
   - import_tasks: task_install_s3cmd.yaml
   - import_tasks: task_config_ssh.yaml
+ 
 
 
 #
@@ -110,6 +111,7 @@
      - { src: 'osds_ceph.yml.j2', dest: '/root/dc1/ceph-ansible/group_vars/osds.yml' }
      - { src: 'rgws_ceph.yml.j2', dest: '/root/dc1/ceph-ansible/group_vars/rgws.yml' }
      - { src: 'mgrs_ceph.yml.j2', dest: '/root/dc1/ceph-ansible/group_vars/mgrs.yml' }
+     - { src: 'clients_ceph.yml.j2', dest: '/root/dc1/ceph-ansible/group_vars/clients.yml' }
 #
 # Dowload/sync repos on bastion host
 #
