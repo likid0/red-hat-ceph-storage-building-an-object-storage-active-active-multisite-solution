@@ -2,7 +2,7 @@
 
 <h2>Red Hat Summit, Boston 2019</h2>
 **Title**: Red Hat Ceph Storage: Building an Object Storage Active/Active Multi-site Solution (**T168C8**)<br>
-**Date**: 8th May 2019<br>
+**Date**: 8th May 2019<br><br>
 
 #**Authors/Lab Owners**#
 <ul class="tab">
@@ -21,7 +21,7 @@
 
 <!--BREAK-->
 
-#**Lab Overview**
+#**Lab Overview**#
 
 First of all, it's my pleasure to welcome you to the Red Hat Summit 2019, here at the ... 
 

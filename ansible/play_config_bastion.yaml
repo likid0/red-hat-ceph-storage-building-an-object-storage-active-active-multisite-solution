@@ -101,6 +101,7 @@
       - { src: 'purge-docker-cluster.yml', dest: '/root/dc2/ceph-ansible/purge-docker-cluster.yml' }
       - { src: 'clients_ceph.yml', dest: '/root/dc1/ceph-ansible/group_vars/clients.yml' }
       - { src: 'clients_ceph.yml', dest: '/root/dc2/ceph-ansible/group_vars/clients.yml' }
+      - { src: 'multisite_master.yml', dest: '/root/dc1/ceph-ansible/roles/ceph-rgw/tasks/multisite/master.yml'}
 
 
   - name: add ceph-ansible group_vars templates
