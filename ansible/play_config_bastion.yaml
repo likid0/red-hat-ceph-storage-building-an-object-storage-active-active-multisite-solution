@@ -3,22 +3,22 @@
   become: true
   tasks:
 
-#  - name: Install pkgs
-#    yum:
-#      name: "{{ item }}"
-#      state: latest
-#    with_items:
-#      - git
-#      - ansible
-#      - docker
-#      - lvm2
-#      - httpd
-#      - yum-utils
-#      - createrepo
-#      - docker-python
-#      - python-docker
-#      - ceph-common
-#      - ipa-client
+  - name: Install pkgs
+    yum:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+      - git
+      - ansible
+      - docker
+      - lvm2
+      - httpd
+      - yum-utils
+      - createrepo
+      - docker-python
+      - python-docker
+      - ceph-common
+      - ipa-client
 
 
   - import_tasks: task_config_network.yaml

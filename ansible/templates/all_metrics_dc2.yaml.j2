@@ -1,6 +1,6 @@
 dummy:
 
-cluster_name: dc1
+cluster_name: dc2
 
 containerized: true
 
@@ -17,10 +17,10 @@ containerized: true
 # New deployments work fine
 grafana:
   admin_user: admin
-  admin_password: redhat01
-  container_name: {{ repo_node }}:5000/rhceph/rhceph-3-dashboard-rhel7
+  admin_password: XXXXX
+  container_name: 172.16.0.10:5000/rhceph/rhceph-3-dashboard-rhel7
 prometheus:
-  container_name: {{ repo_node }}:5000/openshift3/prometheus
+  container_name: 172.16.0.10:5000/openshift3/prometheus
   etc_hosts:
     10.0.0.11: cepha.summit.lab
     10.0.0.12: cephb.summit.lab

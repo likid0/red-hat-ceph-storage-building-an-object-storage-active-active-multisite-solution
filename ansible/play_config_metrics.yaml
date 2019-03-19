@@ -30,7 +30,16 @@
         src: "templates/{{ item }}.j2"
         dest: "/usr/share/cephmetrics-ansible/group_vars/all.yml"
       with_items:
-        - all_metrics.yaml
+        - all_metrics_dc1.yaml
+      when: inventory_hostname == "metricsd"
+
+    - name: "Add templates for ceph metrics"
+      template:
+        src: "templates/{{ item }}.j2"
+        dest: "/usr/share/cephmetrics-ansible/group_vars/all.yml"
+      with_items:
+        - all_metrics_dc2.yaml
+      when: inventory_hostname == "metrics1"
     
     - name: "Add templates for ceph metrics"
       copy:
