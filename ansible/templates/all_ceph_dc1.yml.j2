@@ -22,18 +22,18 @@ docker_pull_timeout: "600s"
 upgrade_ceph_packages: False
 radosgw_civetweb_port: 8080
 radosgw_interface: eth0
-rgw_multisite: true
-rgw_zone: {{ dc_domain }}
-rgw_zonemaster: true
-rgw_zonesecondary: false
-{% raw %}
+#rgw_multisite: true
+#rgw_zone: {{ dc_domain }}
+#rgw_zonemaster: true
+#rgw_zonesecondary: false
+#{% raw %}
 rgw_multisite_endpoint_addr: "{{ ansible_fqdn }}"
-{% endraw %}
-rgw_zonegroup: summit
-rgw_zone_user: zone.user
-rgw_realm: realm_summit
-system_access_key: 20304050
-system_secret_key: 20304050
+#{% endraw %}
+#rgw_zonegroup: summit
+#rgw_zone_user: zone.user
+#rgw_realm: realm_summit
+#system_access_key: 20304050
+#system_secret_key: 20304050
 
 
 ceph_conf_overrides:
