@@ -42,16 +42,14 @@ ceph_conf_overrides:
   mon:
     mon osd down out interval: 6000
   {% for item in groups[ 'rgws' ] %}
-client.rgw.{{ item }}:
-    host: {{ item }}
-    keyring: /var/lib/ceph/radosgw/ceph-rgw.{{ item }}/keyring
-    log file: /var/log/ceph/ceph-rgw-{{ item }}.log
-    rgw frontends: civetweb port={{ lookup('dig', 'cepha.summit.lab') }}:8080 num_threads=1024
-    rgw_dynamic_resharding: false
-    debug_civetweb: "0/1"
-    rgw_enable_apis: s3,admin
-    #rgw_dns_name: {{ item }}.summit.lab
-    #rgw_run_sync_thread: false
-    rgw_zone: {{ dc_domain }}
-    rgw_thread_pool_size: 1024
+#client.rgw.{{ item }}:
+#    host: {{ item }}
+#    keyring: /var/lib/ceph/radosgw/ceph-rgw.{{ item }}/keyring
+#    log file: /var/log/ceph/ceph-rgw-{{ item }}.log
+#    rgw frontends: civetweb port={{ lookup('dig', 'cepha.summit.lab') }}:8080 num_threads=1024
+#    rgw_dynamic_resharding: false
+#    debug_civetweb: "0/1"
+#    rgw_enable_apis: s3,admin
+#    rgw_zone: {{ dc_domain }}
+#    rgw_thread_pool_size: 1024
   {% endfor %}

@@ -15,7 +15,7 @@ metrics4
 [ceph-grafana]
 metrics4
 
-[rgw]
+[rgws]
 ceph1
 
 ###Global groups

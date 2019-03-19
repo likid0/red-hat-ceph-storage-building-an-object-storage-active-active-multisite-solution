@@ -9,36 +9,36 @@ dummy:
 
 copy_admin_key: true
 
-rgw_create_pools:
-  .rgw.root:
-    pg_num: 16
-  {{ dc_domain }}.rgw.intent-log:
-    pg_num: 16
-  {{ dc_domain }}.rgw.log:
-    pg_num: 16
-  {{ dc_domain }}.rgw.buckets.data:
-    pg_num: 256
-  {{ dc_domain }}.rgw.buckets.extra:
-    pg_num: 16
-  {{ dc_domain }}.rgw.buckets.index:
-    pg_num: 32
-  {{ dc_domain }}.rgw.control:
-    pg_num: 16
-  {{ dc_domain }}.rgw.gc:
-    pg_num: 16
-  {{ dc_domain }}.rgw.data.root:
-    pg_num: 16 
-  {{ dc_domain }}.rgw.usage:
-    pg_num: 16
-  {{ dc_domain }}.rgw.users:
-    pg_num: 16
-  {{ dc_domain }}.rgw.users.email:
-    pg_num: 16
-  {{ dc_domain }}.rgw.users.uid:
-    pg_num: 16
-  {{ dc_domain }}.rgw.meta:
-    pg_num: 16
-
-#ceph_rgw_docker_memory_limit: 2g
-#ceph_rgw_docker_cpu_limit: 2
-ceph_rgw_docker_extra_env: "-e RGW_ZONE={{ dc_domain }} -e RGW_ZONEGROUP=summitlab"
+#rgw_create_pools:
+#  .rgw.root:
+#    pg_num: 16
+#  {{ dc_domain }}.rgw.intent-log:
+#    pg_num: 16
+#  {{ dc_domain }}.rgw.log:
+#    pg_num: 16
+#  {{ dc_domain }}.rgw.buckets.data:
+#    pg_num: 256
+#  {{ dc_domain }}.rgw.buckets.extra:
+#    pg_num: 16
+#  {{ dc_domain }}.rgw.buckets.index:
+#    pg_num: 32
+#  {{ dc_domain }}.rgw.control:
+#    pg_num: 16
+#  {{ dc_domain }}.rgw.gc:
+#    pg_num: 16
+#  {{ dc_domain }}.rgw.data.root:
+#    pg_num: 16 
+#  {{ dc_domain }}.rgw.usage:
+#    pg_num: 16
+#  {{ dc_domain }}.rgw.users:
+#    pg_num: 16
+#  {{ dc_domain }}.rgw.users.email:
+#    pg_num: 16
+#  {{ dc_domain }}.rgw.users.uid:
+#    pg_num: 16
+#  {{ dc_domain }}.rgw.meta:
+#    pg_num: 16
+#
+##ceph_rgw_docker_memory_limit: 2g
+##ceph_rgw_docker_cpu_limit: 2
+#ceph_rgw_docker_extra_env: "-e RGW_ZONE=ZONENAME -e RGW_ZONEGROUP=ZONEGROUP"

@@ -1,10 +1,11 @@
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
-10.0.0.10 bastion 0bastion bastion.summit.lab 0bastion.summit.lab
+10.0.0.10 bastion 0bastion bastion.summit.lab 0bastion.summit.lab bastion.dc1.summit.lab
 10.0.0.11 cepha cepha.summit.lab cepha.dc1.summit.lab
 10.0.0.12 cephb cephb.summit.lab cephb.dc1.summit.lab
 10.0.0.13 cephc cephc.summit.lab cephc.dc1.summit.lab
 10.0.0.14 metricsd 1metricsd metricsd.summit.lab
+172.16.0.10 bastion.dc2.summit.lab
 172.16.0.11 ceph1 ceph1.summit.lab ceph1.dc2.summit.lab
 172.16.0.12 ceph2 ceph2.summit.lab ceph2.dc2.summit.lab
 172.16.0.13 ceph3 ceph3.summit.lab ceph3.dc2.summit.lab
