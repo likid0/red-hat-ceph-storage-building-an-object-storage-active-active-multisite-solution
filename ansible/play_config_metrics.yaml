@@ -39,7 +39,7 @@
         dest: "/usr/share/cephmetrics-ansible/group_vars/all.yml"
       with_items:
         - all_metrics_dc2.yaml
-      when: inventory_hostname == "metrics1"
+      when: inventory_hostname == "metrics4"
     
     - name: "Add templates for ceph metrics"
       copy:
@@ -48,12 +48,23 @@
 
     - name: Copy inventory
       copy:
-        src: "{{ item.src }}"
+        src: "files/{{ item.src }}"
         dest: "{{ item.dest }}"
         owner: root
         group: root
       with_items:
-        - { src: "{{ inventory_file }}" , dest: '/usr/share/cephmetrics-ansible/inventory' }
+        - { src: "inventory_dc1" , dest: '/usr/share/cephmetrics-ansible/inventory' }
+      when: inventory_hostname == "metricsd"
+
+    - name: Copy inventory
+      copy:
+        src: "files/{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+      with_items:
+        - { src: "inventory_dc2" , dest: '/usr/share/cephmetrics-ansible/inventory' }
+      when: inventory_hostname == "metrics4"
 
     - name: Copy keys for ansible
       copy:
