@@ -1,0 +1,311 @@
+########### INTRO TO LAB, CONFIGURATION OF DC1 AND CEPH-METRICS
+
+
+
+
+
+
+
+
+
+
+
+
+################ CONFIGURE DC2 CEPH CLUSTER
+
+On our bastion host we have ceph-ansible installed for us, because we are managing both of our ceph clusters from one bastion host, we have one ceph-ansible dir per ceph cluster:
+
+[root@bastion ~]# ls -l /root/dc*
+/root/dc1:
+total 4
+drwxr-xr-x. 7 root root 4096 Mar 19 11:35 ceph-ansible
+
+/root/dc2:
+total 0
+drwxr-xr-x. 7 root root 272 Mar 19 11:35 ceph-ansible
+
+
+We have our dc1 ceph cluster running now we are going to deploy our second cluster, to acoomplish this we have to follow the following steps:
+
+Go into our ceph-ansible configuration dir:
+[root@bastion ceph-ansible]# pwd
+/root/dc2/ceph-ansible
+
+We have a pre-defined inventory, with our ceph nodes for our cluster in dc2.
+
+Like we have metioned before we are going to run the mons,mgrs,osds on the 3 ceph nodes ceph1,2,3.
+We are also adding our ceph nodes and the bastion host as clients so the ceph-keys get copied to the nodes and we can run ceph commands from the bastion. 
+Finally we will configure our rados gateway to run on ceph1
+
+
+[root@bastion ~]# cat /root/dc2/ceph-ansible/inventory 
+[mons]
+ceph[1:3]
+
+[mgrs]
+ceph[1:3]
+
+[osds]
+ceph[1:3]
+
+[clients]
+ceph[1:3]
+0bastion
+metrics4
+
+[ceph-grafana]
+metrics4
+
+[rgws]
+ceph1
+.....
+
+
+Run the following command to test the inventory and that ansible connects ok to all nodes. All nodes in the inventory should respond to the ansible ping module and there should be no errors.
+
+[root@bastion ceph-ansible]# ansible -i inventory -m ping all
+ [WARNING]: Found both group and host with same name: 0bastion
+
+bastion | SUCCESS => {
+    "changed": false, 
+    "ping": "pong"
+}
+ceph1 | SUCCESS => {
+    "changed": false, 
+    "ping": "pong"
+}
+.....
+ceph3 | SUCCESS => {
+    "changed": false, 
+    "ping": "pong"
+}
+
+
+
+
+To configure our cluster using ceph-ansible we work with the variable files in group_vars, These are the files that we have to take in account to configure our dc2 ceph cluster for this lab:
+
+[root@bastion ceph-ansible]# ls -l group_vars/ | grep -v sample
+total 136
+-rw-r--r--. 1 root root  1724 Mar 18 07:19 all.yml
+-rw-r--r--. 1 root root  1927 Mar 18 06:38 clients.yml
+-rw-r--r--. 1 root root  1558 Mar 18 06:30 mgrs.yml
+-rw-r--r--. 1 root root   257 Mar 18 07:19 osds.yml
+-rw-r--r--. 1 root root   929 Mar 18 06:55 rgws.yml
+
+
+There are 2 yml files that we have to modify, so we can configure our dc2 cluster as needed:
+
+- osds.yml
+- all.yml
+
+WARN # Be careful with indentation and only modify the parameters mentioned.  Syntax errors may lead to cluster misconfiguration which could damage the cluster.
+
+First we are going to configure the OSDs. we need to edit the file and do the following modifications, specify lvm as the osd_scenario, there are several scenarios available non-colocated,colocated and lvm, in our case we are going to use lvm:
+
+[root@bastion ceph-ansible]# cat group_vars/osds.yml | grep osd_scenario
+#valid_osd_scenarios:
+osd_scenario: lvm
+
+
+We have the option to create several osds per disk, we are going to configure 1 osd per disk:
+
+[root@bastion ceph-ansible]# cat group_vars/osds.yml  | grep osds
+osds_per_device: 1
+
+Finally we have to specify the devices on out ceph nodes that we want to configure as osds.
+
+We are going to connect to one of our ceph nodes, and check the disks we have available, we should have 2 10GB disks to configure for our OSDS:
+
+[root@bastion group_vars]# ssh  cloud-user@ceph1 "lsblk | grep 10G"
+vdc                   253:32   0   10G  0 disk 
+vdd                   253:48   0   10G  0 disk 
+
+One we now that we have vdc and vdd , we add them your our osds.yml file:
+
+[root@bastion group_vars]# cat osds.yml | tail -3
+devices:
+  - /dev/vdc
+  - /dev/vdd
+
+Now we can move on to the next vars file that is all.yml, this is the main config file for the cluster, we need to edit the file and make the following modifications.
+
+
+Change the cluster name, we are going to name are second cluster dc2:
+
+[root@bastion group_vars]# cat /root/dc2/ceph-ansible/group_vars/all.yml | grep "cluster:"
+cluster: dc2
+
+We are going to configure bluestore as our objecstore:
+
+[root@bastion group_vars]# cat all.yml | grep -i osd_objectstore
+osd_objectstore: bluestore
+
+We are going to define the monitor_interface variable to our publick network eth0:
+
+[root@bastion group_vars]# cat all.yml | grep  monitor_interface
+monitor_interface: eth0
+
+Add the public and cluster networks for dc2, if you check in the network schema for our lab we can see that the public network is 172.16.0.0/24 and the private network where ceph replication will happen is 192.168.1.0/24
+
+[root@bastion ~]# cat /root/dc2/ceph-ansible/group_vars/all.yml | grep network
+#Ceph Cluster network config###
+public_network:  172.16.0.0/24
+cluster_network: 192.168.1.0/24
+
+For the containerized configuration we will use cephs 3 image rhceph-3-rhel7, and we have to configure the registre from where we wan't to download the container image, the registry for dc2 has the IP 172.16.0.10:
+###Containerized Configuration###
+containerized_deployment: true
+ceph_docker_image: "rhceph/rhceph-3-rhel7"
+ceph_docker_image_tag: "latest"
+ceph_docker_registry: "172.16.0.10:5000"
+docker_pull_retry: 6
+docker_pull_timeout: "600s"
+
+
+Finally, we have to configure on what interface we want to have the rados gateway listening, we configure our public network interface.
+
+[root@bastion ~]# cat /root/dc2/ceph-ansible/group_vars/all.yml | grep radosgw_interface
+radosgw_interface: eth0
+
+
+With the rest of the files, just to point out some config options
+
+For the ceph mgr daemon, we add the prometheus manager plugin, this is needed to get ceph-metrics working:
+
+root@bastion group_vars]# cat mgrs.yml | grep -i ceph_mgr_modules
+ceph_mgr_modules: [status,dashboard,prometheus]
+
+For the client with copy_admin_key we copy the admin key to the nodes that are included in the clients group of our inventory
+
+[root@bastion group_vars]# cat clients.yml | grep admin_key
+copy_admin_key: true
+
+
+With all the variables ready we can start the deployment of the ceph cluster, on the root of the ceph-ansible dir /root/dc2/ceph-ansible we need to run the site-docker.yml playbook
+
+[root@bastion ceph-ansible]# cd /root/dc2/ceph-ansible
+[root@bastion ceph-ansible]# cp site-docker.yml.sample site-docker.yml
+[root@bastion ceph-ansible]# ansible-playbook -i inventory site-docker.yml
+
+The installation will take aproximatly 10 minutes, if the installation has finished successfully you will see the ansible summary with 0 errors:
+
+PLAY RECAP ************************************************************************************************************************************************************************************************************************************
+0bastion                   : ok=67   changed=5    unreachable=0    failed=0   
+ceph1                      : ok=508  changed=47   unreachable=0    failed=0   
+ceph2                      : ok=319  changed=34   unreachable=0    failed=0   
+ceph3                      : ok=321  changed=35   unreachable=0    failed=0   
+metrics4                   : ok=67   changed=6    unreachable=0    failed=0   
+
+
+With our DC2 cluster installed lets check the status of both of our clusters and briefly overview there configuration.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################CONFIGURE RGW MULTISITE REPLICATION
+
+
+All RadosGW services SHOULD BE STOPPED before following this procedure to create realms, zonegroups and zones:
+	-More info can be found here: https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html/object_gateway_guide_for_red_hat_enterprise_linux/multi_site
+
+Prepare ceph.conf of all RGW nodes before starting the radosgw service.
+
+	-Ceph-ansible node for DC1:
+		# vim /root/dc1/ceph-ansible/group_vars/all.yml
+  client.rgw.cepha:
+    host: cepha
+    keyring: /var/lib/ceph/radosgw/ceph-rgw.cepha/keyring
+    log file: /var/log/ceph/ceph-rgw-cepha.log
+    rgw frontends: civetweb port=10.0.0.11:8080 num_threads=1024
+    rgw_dynamic_resharding: false
+    debug_civetweb: "0/1"
+    rgw_enable_apis: s3,admin
+    rgw_zone: dc1
+    rgw_thread_pool_size: 1024
+
+		$ cd /root/dc1/ceph-ansible/
+	-Containerized deployment:
+			$ ansible-playbook site-docker.yml
+	-Ceph-ansible for DC2:
+		# vim /root/dc2/ceph-ansible/group_vars/all.yml
+  client.rgw.ceph1:
+    host: ceph1
+    keyring: /var/lib/ceph/radosgw/ceph-rgw.ceph1/keyring
+    log file: /var/log/ceph/ceph-rgw-ceph1.log
+    rgw frontends: civetweb port=172.16.0.10:8080 num_threads=1024
+    rgw_dynamic_resharding: false
+    debug_civetweb: "0/1"
+    rgw_enable_apis: s3,admin
+    rgw_zone: dc2
+    rgw_thread_pool_size: 1024
+		$ cd /root/dc2/ceph-ansible/
+		-Containerized deployment:
+			$ ansible-playbook site-docker.yml
+
+Prepare multi-site environment:
+
+REALM="summitlab"
+ZONEGROUP="production"
+MASTER_ZONE="dc1"
+SECONDARY_ZONE="dc2"
+ENDPOINTS_MASTER_ZONE="http://cepha:8080"
+URL_MASTER_ZONE="http://cepha:8080"
+ENDPOINTS_SECONDARY_ZONE="http://ceph1:8080
+URL_SECONDARY_ZONE="http://ceph1:8080"
+SYNC_USER="sync-user"
+ACCESS_KEY="redhat"
+SECRET_KEY="redhat"
+
+Master zone: Execute the following commands in the RGW node of DC1 (ceph1)
+
+	-Create the realm:
+		# radosgw-admin realm create --rgw-realm=${REALM} --default
+	-Create the zonegroup with the RGW replication endpoints of the master zone:
+		# radosgw-admin zonegroup create --rgw-zonegroup=${ZONEGROUP} --endpoints=${ENDPOINTS_MASTER_ZONE} --rgw-realm=${REALM} --master --default
+	-Create the zonegroup with the RGW replication endpoints of the master zone(ieec1cs1o03 and ieec1cs1o04):
+		# radosgw-admin zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${MASTER_ZONE} --endpoints=${ENDPOINTS_MASTER_ZONE} --master --default
+	-Create the sync user. Save the ACCESS_KEY and SECRET_KEY values from this command:
+		# radosgw-admin user create --uid=${SYNC_USER} --display-name="Synchronization User" --system
+	-Asign the user to the master zone:
+		# radosgw-admin zone modify --rgw-zone=${MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
+	-Update the period:
+		# radosgw-admin period update --commit
+	-Start radosgw service in the master zone nodes:
+		cepha # systemctl enable ceph-radosgw@rgw.$(hostname -s) --now
+
+Seconday zone: Execute the following commands in the RGW node of DC2 (cepha)
+
+	-Pull the realm information:
+		# radosgw-admin realm pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --rgw-realm=${REALM}
+	-Set the realm as the default one:
+		# radosgw-admin realm default --rgw-realm=${REALM}
+	-Pull the period information:
+		# radosgw-admin period pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
+	-Create the secondary zone:
+		# radosgw-admin zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${SECONDARY_ZONE} --endpoints=${ENDPOINTS_SECONDARY_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
+	-Update the period:
+		# radosgw-admin period update --commit
+	-Start radosgw service in the secondary zone nodes:
+		ceph1 # systemctl enable ceph-radosgw@rgw.$(hostname -s) --now
+
+Cleanup the default installation:
+	-Once RadosGW services are working with the new values, delete default values for zonegroup and zone in the master zone:
+		# radosgw-admin zonegroup remove --rgw-zonegroup=default --rgw-zone=default
+		# radosgw-admin period update --commit
+		# radosgw-admin zone delete --rgw-zone=default
+		# radosgw-admin period update --commit
+		# radosgw-admin zonegroup delete --rgw-zonegroup=default
+		# radosgw-admin period update --commit
+	-In both cluster, delete default pools. DISCLAIMER: Data will be unaccessible after performing this operation:
+		# for pool in $(rados lspools | grep ^default);do ceph osd pool delete ${pool} ${pool} --yes-i-really-really-mean-it;done
