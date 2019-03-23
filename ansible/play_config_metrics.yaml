@@ -53,7 +53,7 @@
         owner: root
         group: root
       with_items:
-        - { src: "inventory_dc1" , dest: '/usr/share/cephmetrics-ansible/inventory' }
+        - { src: "inventory_metrics_dc1" , dest: '/usr/share/cephmetrics-ansible/inventory' }
       when: inventory_hostname == "metricsd"
 
     - name: Copy inventory
@@ -63,7 +63,7 @@
         owner: root
         group: root
       with_items:
-        - { src: "inventory_dc2" , dest: '/usr/share/cephmetrics-ansible/inventory' }
+        - { src: "inventory_metrics_dc2" , dest: '/usr/share/cephmetrics-ansible/inventory' }
       when: inventory_hostname == "metrics4"
 
     - name: Copy keys for ansible

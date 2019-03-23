@@ -19,6 +19,35 @@ metricsd
 [rgws]
 cepha
 
+[cephdc1]
+ceph[a:c]
+
+[cephdc2]
+ceph[1:3]
+
+[metricsdc1]
+metricsd
+
+[metricsdc2]
+metrics4
+
+[metricsall:children]
+metricsdc1
+metricsdc2
+
+[ceph:children]
+cephdc1
+cephdc2
+
+[dc1]
+ceph[a:c]
+metricsd
+bastion
+
+[dc2]
+ceph[1:3]
+metrics4
+
 [0bastion]
 bastion  ansible_connection=local
 
