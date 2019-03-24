@@ -29,6 +29,7 @@ ceph_conf_overrides:
     max open files: 131072
     mon_pg_warn_max_per_osd: 0
     mon_pg_warn_min_per_osd: 0
+    mon allow pool delete = true
   mon:
     mon osd down out interval: 6000
   {% for item in groups[ 'rgws' ] %}
