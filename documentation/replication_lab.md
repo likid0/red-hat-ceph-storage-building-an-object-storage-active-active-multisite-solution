@@ -1,4 +1,5 @@
-########### INTRO TO LAB, CONFIGURATION OF DC1 AND CEPH-METRICS
+## INTRO TO LAB, CONFIGURATION OF DC1 AND CEPH-METRICS #
+***
 
 
 
@@ -10,9 +11,8 @@
 
 
 
-
-################ CONFIGURE DC2 CEPH CLUSTER
-
+## CONFIGURE DC2 CEPH CLUSTER #
+***
 On our bastion host we have ceph-ansible installed for us, because we are managing both of our ceph clusters from one bastion host, we have one ceph-ansible dir per ceph cluster:
 
 ```
@@ -29,7 +29,7 @@ drwxr-xr-x. 7 root root 272 Mar 19 11:35 ceph-ansible
 
 
 
-We have our dc1 ceph cluster running now we are going to deploy our second cluster, to acoomplish this we have to follow the following steps:
+We have our dc1 ceph cluster running now we are going to deploy our second cluster, to accomplish this we have to follow the following steps:
 
 Go into our ceph-ansible configuration dir:
 ```
@@ -40,7 +40,7 @@ Go into our ceph-ansible configuration dir:
 
 We have a pre-defined inventory, with our ceph nodes for our cluster in dc2.
 
-Like we have metioned before we are going to run the mons,mgrs,osds on the 3 ceph nodes ceph1,2,3.
+Like we have mentioned before we are going to run the mons, mgrs, osds on the 3 ceph nodes ceph1,2,3.
 We are also adding our ceph nodes and the bastion host as clients so the ceph-keys get copied to the nodes and we can run ceph commands from the bastion.
 Finally we will configure our rados gateway to run on ceph1
 
@@ -112,9 +112,9 @@ There are 2 yml files that we have to modify, so we can configure our dc2 cluste
 - osds.yml
 - all.yml
 
-WARN # Be careful with indentation and only modify the parameters mentioned.  Syntax errors may lead to cluster misconfiguration which could damage the cluster.
+>**NOTE**:   Be careful with indentation and only modify the parameters mentioned.  Syntax errors may lead to cluster misconfiguration which could damage the cluster.
 
-First we are going to configure the OSDs. we need to edit the file and do the following modifications, specify lvm as the osd_scenario, there are several scenarios available non-colocated,colocated and lvm, in our case we are going to use lvm:
+First we are going to configure the OSDs. we need to edit the file and do the following modifications, specify lvm as the osd_scenario, there are several scenarios available non-colocated, colocated and lvm, in our case we are going to use lvm:
 
 ```
 
@@ -171,7 +171,7 @@ Add the public and cluster networks for dc2, if you check in the network schema 
 public_network:  172.16.0.0/24
 cluster_network: 192.168.1.0/24
 ```
-For the containerized configuration we will use cephs 3 image rhceph-3-rhel7, and we have to configure the registre from where we wan't to download the container image, the registry for dc2 has the IP 172.16.0.10:
+For the containerized configuration we will use cephs 3 image rhceph-3-rhel7, and we have to configure the register from where we want to download the container image, the registry for dc2 has the IP 172.16.0.10:
 ```
 ###Containerized Configuration###
 containerized_deployment: true
@@ -230,7 +230,7 @@ total 20
 -rw-r--r--. 1 root root 632 Mar 21 11:52 dc2.conf
 ```
 
-There are 2 ceph .conf files one for each cluster, and also two keyrings one for each cluster, to be able to run ceph commands on each of the clusters we have to use the --cluster option available on ceph cli commands, for example:
+There are 2 ceph .conf files one for each cluster, and also two key-rings one for each cluster, to be able to run ceph commands on each of the clusters we have to use the --cluster option available on ceph cli commands, for example:
 
 
 For our DC1 cluster:
@@ -274,7 +274,7 @@ And for DC2 cluster:
     pgs:     32 active+clean
 ```
 
-Information that we get from the status , command we can see thhat the cluster global heath is ok, in the services section we can see that we have 3 mons running on ceph1,ceph2,ceph3, and active manager currently running on ceph2 with 2 stanby nodes ceph1,ceph2 in case ceph2 fails. we have 6 osds, 2 osds per node(disks vdc,vdd), all the the 6 osds are up and in, we also have 1 rados gateway daemon running, finally on the data section we can see that 3 have 3 pools created, these 3 pools have a total 32 pgs used, we can see the current cluster usage at the moment 6GB out the 60gb we have avaialble(each osd has 10gb, 2 osds per 3 nodes gives us our 60gb), and the 32 pgs are in active-clean state.
+Information that we get from the status , command we can see that the cluster global heath is ok, in the services section we can see that we have 3 mons running on ceph1,ceph2,ceph3, and active manager currently running on ceph2 with 2 stanby nodes ceph1,ceph2 in case ceph2 fails. we have 6 osds, 2 osds per node(disks vdc,vdd), all the the 6 osds are up and in, we also have 1 rados gateway daemon running, finally on the data section we can see that 3 have 3 pools created, these 3 pools have a total 32 pgs used, we can see the current cluster usage at the moment 6GB out the 60gb we have available(each osd has 10gb, 2 osds per 3 nodes gives us our 60gb), and the 32 pgs are in active-clean state.
 
 
 So with just one command we have a summary of our cluster state, we can dig a little bit deeper, for examle lets check what pools we have in the cluster and how much space they are using
@@ -301,7 +301,7 @@ POOLS:
     default.rgw.meta        3           0B         0       17.0GiB           0
     default.rgw.log         4           0B         0       17.0GiB         207
 ```
-We can check our osd cluster tree, were we can seeh that we have 2 osds under each host, with the default configuration each host is our failure domain, so ceph when doing the replication of the objects after a write will take care of replicating one copy of the object to and osd under each node.
+We can check our osd cluster tree, were we can see that we have 2 osds under each host, with the default configuration each host is our failure domain, so ceph when doing the replication of the objects after a write will take care of replicating one copy of the object to and osd under each node.
 ```
 [root@bastion ~]# ceph --cluster dc2 osd tree
 ID CLASS WEIGHT  TYPE NAME      STATUS REWEIGHT PRI-AFF
@@ -333,7 +333,8 @@ There is also the osd status command where we can see the status of the osds, di
 So once we have checked that both clusters are healthy and ready to be used, let's start with the configuration of our rgw multisite .
 
 
-################## RADOS GATEWAY  #########
+## RADOS GATEWAY configuration
+***
 
 All RadosGW services SHOULD BE STOPPED before following this procedure to create realms, zonegroups and zones:
 	-More info can be found here: https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html/object_gateway_guide_for_red_hat_enterprise_linux/multi_site
@@ -425,6 +426,11 @@ ceph_rgw_docker_extra_env: "-e RGW_ZONE=dc2 -e RGW_ZONEGROUP=production"
 #cd /root/dc2/ceph-ansible/
 #ansible-playbook site-docker.yml
 ```
+
+
+## Rados Gateway Multisite Configuration
+***
+
 A single zone configuration typically consists of one zone group containing one zone and one or more ceph-radosgw instances where you may load-balance gateway client requests between the instances. In a single zone configuration, typically multiple gateway instances point to a single Ceph storage cluster.
 
 In this lab we are going to deploy an advanced configuration that consists of one zone group and two zones, each zone with one(could be more) ceph-radosgw instances. Each zone is backed by its own Ceph Storage Cluster. Multiple zones in a zone group provides disaster recovery for the zone group should one of the zones experience a significant failure, Each zone is active and may receive write operations.
@@ -733,7 +739,7 @@ And also a quick check with curl so we can verify we can access port 8080 provid
 With these basic checks we can move forward and configure our DC2 ceph cluster as the slave zone in our zone-group
 
 
-Seconday zone: Execute the following commands in the RGW node of DC2 (ceph1)
+Secondary zone: Execute the following commands in the RGW node of DC2 (ceph1)
 
 
 Pull the realm information:
@@ -789,7 +795,7 @@ Once we have finished the configuration of our second zone, we can check the syn
                         data is caught up with source
 ```
 
-Lets cleanup the default rados gateway installation, by default when ever a rados gateway daemon starts it will configure and use a default zone and zonegroup, to avoid confusions it's allways better to delete our default zone and zonegroups in both clusters.
+Lets clean-up the default rados gateway installation, by default when ever a rados gateway daemon starts it will configure and use a default zone and zonegroup, to avoid confusions it's always better to delete our default zone and zonegroups in both clusters.
 
 Once RadosGW services are working with the new values, delete default values for zonegroup and zone in the master zone:
 ```
@@ -865,7 +871,7 @@ First we need to create a rgw user, we have to save the access and secret key fr
 }
 ```
 
-Lets check that our summit19 is present in oue master zone dc1:
+Lets check that our summit19 is present in our master zone dc1:
 
 ```
 [root@bastion red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution]# radosgw-admin --cluster dc1 user list
@@ -955,8 +961,11 @@ Configuration saved to '/root/.s3cfg'
 
 As you can see the configuration for the client has been saved to the following path /root/.s3cfg , lets change the name of the config file to /root/s3-dc1.cfg
 
+```
+[root@bastion ~]#mv /root/.s3cfg /root/s3-dc1.cfg   
+```  
 
-let's create a first bucket using the s3cmd mb comand, because are not using the default location for the config file of /root/.s3cfg. we need to specify with -c ~/s3-dc1.cfg the location of our s3cmd config:
+let's create a first bucket using the s3cmd mb command, because are not using the default location for the config file of /root/.s3cfg. we need to specify with -c ~/s3-dc1.cfg the location of our s3cmd config:
 
 ```
 [root@bastion ~]# s3cmd -c ~/s3-dc1.cfg mb s3://my-first-bucket
@@ -966,7 +975,7 @@ Bucket 's3://my-first-bucket/' created
 2019-03-24 17:49  s3://my-first-bucket
 ```
 
-Let's upload a file, we are going to use the s3cmd rpm as an example:
+Let's upload a file, we are going to use the s3cmd RPM as an example:
 
 ```
 [root@bastion ~]# ls
@@ -991,6 +1000,27 @@ And with the du option we can see the disk used by each object:
 194693   Total
 ```
 
+If we run the sync status command after running a put of a large object we would be able to see the secondary cluster doing a sync to keep up with the master
+
+```
+[root@bastion ~]# radosgw-admin  --cluster dc2 sync status
+          realm 80827d79-3fce-4b55-9e73-8c67ceab4f73 (summitlab)
+      zonegroup 88222e12-006a-4cac-a5ab-03925365d817 (production)
+           zone ed9f1807-7bc8-48c0-b82f-0fa1511ba47b (dc2)
+  metadata sync syncing
+                full sync: 0/64 shards
+                incremental sync: 64/64 shards
+                metadata is caught up with master
+      data sync source: 602f21ea-7664-4662-bad8-0c3840bb1d7a (dc1)
+                        syncing
+                        full sync: 0/128 shards
+                        incremental sync: 128/128 shards
+                        1 shards are recovering
+                        recovering shards: [22]
+
+```
+
+We can also check that the replication is working by connecting to the second zone dc2 and checking that the bucket and the file we uploaded are present on DC2
 
 ```
 [root@bastion ~]# radosgw-admin --cluster dc2 bucket list
@@ -998,7 +1028,123 @@ And with the du option we can see the disk used by each object:
     "my-first-bucket"
 ]
 ```
+
+Our bucket has been created lets take a look at the objects inside the DC data pool
+
+
 ```
 [root@bastion ~]#  rados --cluster dc2  -p dc2.rgw.buckets.data ls
 602f21ea-7664-4662-bad8-0c3840bb1d7a.314154.1_s3cmd-2.0.2-1.el7.noarch.rpm
 ```
+
+As we explained in the introduction RGW can be use as an active/active object storage Multisite solution, lets double check we can also put objects into our second zone DC2.
+
+First we need to create a config file that is pointing to the endpoints of DC(ceph1:8080), we are going to use sed to create a new file from our current DC1 s3cmd configuration file, we only need to replace the endpoint from cepha to ceph1, there is no need to use a different user, all the metadata, including users is replicated between both sites.
+```
+[root@bastion ~]# sed 's/cepha/ceph1/g' /root/s3-dc1.cfg > /root/s3-dc2.cfg
+[root@bastion ~]# s3cmd -c ~/s3-dc2.cfg  ls
+2019-03-24 17:49  s3://my-first-bucket
+```
+We can create a bucket in dc2 and store a file
+
+```
+[root@bastion ~]# s3cmd -c ~/s3-dc2.cfg  mb  s3://my-second-bucket
+Bucket 's3://my-second-bucket/' created
+[root@bastion ~]# s3cmd -c ~/s3-dc2.cfg  put /var/log/messages  s3://my-second-bucket
+upload: '/var/log/messages' -> 's3://my-second-bucket/messages'  [1 of 1]
+ 181085 of 181085   100% in    0s    10.22 MB/s  done
+ ```
+
+ The file is also accessible from zone DC1, our active/active multisite cluster is working without issues.
+
+ ```
+[root@bastion ~]# s3cmd -c ~/s3-dc1.cfg  ls  s3://my-second-bucket
+2019-03-25 08:20    181085   s3://my-second-bucket/messages
+```
+
+## Installing Ceph-metrics in DC2 ceph cluster.
+
+
+We need to connect to our metrics virtual machine it's hostname is metrics4
+
+```
+[root@bastion ~]# ssh cloud-user@metrics4
+Warning: Permanently added 'metrics4,172.16.0.14' (ECDSA) to the list of known hosts.
+Last login: Fri Mar 22 18:49:10 2019 from 172.16.0.10
+[cloud-user@metrics4 ~]$ sudo -i
+```
+
+We have cephmetrics-ansible already pre-installed on the system, lets check
+
+```
+[root@metrics4 ~]# yum list installed | grep -i cephmetrics
+cephmetrics-ansible.x86_64       2.0.2-1.el7cp               @rhel-7-server-rhceph-3-tools-rpms
+
+```
+
+The ansible playbooks are stored in /usr/share/cephmetrics-ansible/
+
+```
+[root@metrics4 ~]# cd /usr/share/cephmetrics-ansible/
+[root@metrics4 cephmetrics-ansible]# ls
+ansible.cfg  group_vars  inventory  inventory.sample  playbook.yml  purge.yml  README.md  roles
+```
+
+Lets check the all.yml group_vars variable file, here we can specify the name of the cluster, if we want to do a containerized deployment, were is our registry and also specify the grafana users to access the metrics dashboard.
+
+To try and save some time, the inventory and the variables have already been pre-configured for you.
+
+```
+[root@metrics4 cephmetrics-ansible]# cat group_vars/all.yml
+dummy:
+
+cluster_name: dc2
+
+containerized: true
+
+# Set the backend options, mgr+prometheus or cephmetrics+graphite
+#backend:
+#  metrics: mgr  # mgr, cephmetrics
+#  storage: prometheus  # prometheus, graphite
+
+# Turn on/off devel_mode
+#devel_mode: true
+
+# Set grafana admin user and password
+# You need to change these in the web UI on an already deployed machine, first
+# New deployments work fine
+grafana:
+  admin_user: admin
+  admin_password: redhat01
+  container_name: 172.16.0.10:5000/rhceph/rhceph-3-dashboard-rhel7
+prometheus:
+  container_name: 172.16.0.10:5000/openshift3/prometheus
+  etc_hosts:
+    172.16.0.11: ceph1.summit.lab
+    172.16.0.12: ceph2.summit.lab
+    172.16.0.13: ceph3.summit.lab
+    172.16.0.14: metrics4.summit.lab
+```
+
+We can now run the installation playbook.
+
+```
+[root@metrics4 cephmetrics-ansible]# ansible-playbook -i inventory playbook.yml
+```
+
+If everything has gone fine during the installation you should see a recap similar to this one
+
+```
+PLAY RECAP ************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+ceph1                      : ok=22   changed=4    unreachable=0    failed=0   
+ceph2                      : ok=13   changed=2    unreachable=0    failed=0   
+ceph3                      : ok=13   changed=2    unreachable=0    failed=0   
+localhost                  : ok=1    changed=0    unreachable=0    failed=0   
+metrics4                   : ok=76   changed=19   unreachable=0    failed=0   
+```
+
+We can now go to a browser on your lab laptop and connect to the grapaha dashboard, on the provided URL you have to replace GUID with the GUID assigned to your lab:
+
+url: https://metricsd-GUID.rhpds.opentlc.com:3000
+user: admin
+pass: redhat01
