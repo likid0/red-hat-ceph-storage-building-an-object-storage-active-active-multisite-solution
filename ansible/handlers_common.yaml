@@ -3,3 +3,5 @@
   service: name=network state=restarted
 - name: Restart Sshd
   service: name=sshd state=restarted
+- name: Restart Haproxy
+  service: name=haproxy state=restarted

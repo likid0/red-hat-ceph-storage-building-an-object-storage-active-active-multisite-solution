@@ -22,10 +22,16 @@ cephdc2
 ceph[a:c]
 metricsd
 bastion
+lbdc1
 
 [dc2]
 ceph[1:3]
 metrics4
+lbdc2
+
+[loadbalancer]
+lbdc1
+lbdc2
 
 [0bastion]
 bastion  ansible_connection=local

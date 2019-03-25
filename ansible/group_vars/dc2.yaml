@@ -1,2 +1,7 @@
 repo_node: 172.16.0.10
 dc_domain: dc2
+lb_node: 172.16.0.100
+rgw_node: 
+      - {hostname: "ceph1", ip: "172.16.0.11"}
+      - {hostname: "ceph2", ip: "172.16.0.12"}
+inventory_file: 'files/inventory_dc2'

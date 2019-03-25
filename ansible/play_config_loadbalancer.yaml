@@ -1,0 +1,38 @@
+- hosts: loadbalancer
+  any_errors_fatal: true
+  become: true
+  tasks:
+
+    - name: Copy private repo file
+      template:
+        src: "templates/ceph3.repo.j2"
+        dest: "/etc/yum.repos.d/ceph3.repo"
+        backup: yes
+
+    - name: Run yum repolist
+      command: yum repolist
+
+    - import_tasks: task_config_hosts.yaml
+    - import_tasks: task_config_ssh.yaml
+
+    - name: Install haproxy
+      yum:
+       name: haproxy
+       state: latest
+
+    - name: Configure haproxy
+      template:
+        src: "templates/haproxy.cfg.j2"
+        dest: "/etc/haproxy/haproxy.cfg"
+        backup: yes
+      notify: Restart Haproxy
+
+    - name: Start/enable haproxy
+      service:
+        name: haproxy
+        state: started
+        enabled: true
+      
+
+  handlers:
+    - import_tasks: handlers_common.yaml
