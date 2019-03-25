@@ -1143,8 +1143,65 @@ localhost                  : ok=1    changed=0    unreachable=0    failed=0
 metrics4                   : ok=76   changed=19   unreachable=0    failed=0   
 ```
 
-We can now go to a browser on your lab laptop and connect to the grapaha dashboard, on the provided URL you have to replace GUID with the GUID assigned to your lab:
+We can now go to a browser on your lab laptop and connect to the grapaha dashboard.
 
-url: https://metricsd-GUID.rhpds.opentlc.com:3000
-user: admin
-pass: redhat01
+> NOTE: On the provided URL you have to replace GUID with the GUID assigned to your lab.
+
+> NOTE: You will have to use http, to keep it simple we are not using ssl.
+
+|    Param  | Configuration    |
+| :------------- | :------------- |
+| URL       | http://metricsd-GUID.rhpds.opentlc.com:3000   |
+| User | admin |
+|Password | redhat01 |
+
+
+Once you have entered the grafana credentials you will be presented with the ceph-metrics landing page.
+
+###<img src="images/##01cephmetrics-ataglance.png" style="width:1200px;" border=0/>
+
+On the upper left of the page where it says Ceph At A Glance, you can access all the different ceph-metrics dashboards available, please take some time to explore.
+
+###<img src="images/##02cephmetrics-dashboards.png" style="width:1200px;" border=0/>
+
+Now that you are familiar with some of the ceph-metrics dashboard lets put some objects into the cluster and see how it's represented in grafana.
+
+First lets open the the "ceph storage backend" dashboard, and expand the "Disk/OSD Load" Summary and the "OSD Host CPU and Network Load" bullets
+
+###<img src="images/##03cephmetrics-backends.png" style="width:1200px;" border=0/>
+
+From the bastion host we are going to create a 2GB file and upload it to our DC2 cluster, once the file starts uploading we can switch to grafana and see how the metrics vary, we should see the total throughput and IOPs increase.
+
+```
+[root@bastion ~]# fallocate -l 2G testfile
+[root@bastion ~]# s3cmd -c ~/s3-dc2.cfg  put testfile  s3://my-second-bucket
+```
+
+Also check via the ceph cli that the DC1 zone is doing a sync to keep up with changes in dc2
+
+```
+[root@bastion ~]# radosgw-admin  --cluster dc1 sync status
+          realm 80827d79-3fce-4b55-9e73-8c67ceab4f73 (summitlab)
+      zonegroup 88222e12-006a-4cac-a5ab-03925365d817 (production)
+           zone 602f21ea-7664-4662-bad8-0c3840bb1d7a (dc1)
+  metadata sync no sync (zone is master)
+      data sync source: ed9f1807-7bc8-48c0-b82f-0fa1511ba47b (dc2)
+                        syncing
+                        full sync: 0/128 shards
+                        incremental sync: 128/128 shards
+                        1 shards are recovering
+                        recovering shards: [52]
+```
+
+We can also see, how our total storage available for both clusters has decreased
+
+```
+[root@bastion ~]# ceph --cluster dc2  df | head -3
+GLOBAL:
+    SIZE        AVAIL       RAW USED     %RAW USED
+    60.0GiB     43.6GiB      16.4GiB         27.30
+[root@bastion ~]# ceph --cluster dc1  df | head -3
+GLOBAL:
+    SIZE        AVAIL       RAW USED     %RAW USED
+    60.0GiB     43.6GiB      16.4GiB         27.30
+```
