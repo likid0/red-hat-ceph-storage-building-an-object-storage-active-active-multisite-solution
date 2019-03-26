@@ -27,7 +27,7 @@
 **Title** : Red Hat Ceph Storage: Building an Object Storage Active/Active Multi-site Solution (**T168C8**)<br>
 **Date**  : 8th May 2019<br><br>
 
-<p>#<strong>Authors/Lab Owners</strong>#</p>
+<p><strong>Authors/Lab Owners</strong></p>
 <ul class="tab">
 <li>Daniel Dominguez &lt;<ddomingu@redhat.com>&gt;</ddomingu@redhat.com></li>
 <li>Jorge Luis Tudela Gonzalez &lt;<jtudelag@redhat.com>&gt;</jtudelag@redhat.com></li>
@@ -35,8 +35,9 @@
 <li>Daniel Parkes &lt;<dparkes@redhat.com>&gt;</dparkes@redhat.com></li>
 </ul>
 
+<!--BREAK-->
 
-<p>#<strong>Lab Contents</strong>#</p>
+<p><strong>Lab Contents</strong></p>
 <ol>
 <li><strong>What is Ceph and what can it do?</strong></li>
 <li><strong>Ceph Rados Gateway Introduction</strong></li>
@@ -48,16 +49,43 @@
 <li><a href="05-Configure_S3_client.md"><strong>Configure a S3 client and check the Multisite Deployment</strong></a></li>
 <li><a href="06-DC2_cephmetrics_configuration.md"><strong>Configure ceph-metrics on cluster DC2</strong></a></li>
 </ol>
-<!--BREAK-->
-
-<p>#<strong>Lab Overview</strong>#</p>
+<p><strong>Welcome</strong></p>
 <p>First of all, it&apos;s my pleasure to welcome you to the Red Hat Summit 2019, here at the ...</p>
-<p>This hands-on lab aims to get you, the attendees, a bit closer to a Storage software defined solution like Ceph, with a special focus on Object Storage, Rados Gateway ...</p>
+<p>This hands-on lab aims to get you, the attendees, a bit closer to an open Software Defined Storage solution like Ceph, in this lab we are going to  focus on Object Storage, Rados Gateway ...</p>
 <p>Whilst you&apos;ll be asked to use and explore some fundamental components within ceph, you won&apos;t need to install .....</p>
-<blockquote>
-<p><strong>NOTE</strong>: If you&apos;ve <strong>not</strong> been provided with connection details or you do not see your unique session information on-screen, please ask and we&apos;ll ensure that access is provided.</p>
-</blockquote>
-<p>If you have any problems at all or have any questions about Red Hat, our RHCS ceph distribution, or Rados Gateway, please put your hand-up and a lab moderator will be with you shortly to assist - .....</p>
+<p><strong>Access your Lab Environment</strong></p>
+<p>Every attendee gets her/his own lab environment. The labs have already been deployed, to access your lab you need a unique <em>Identifier (GUID)</em> that will be part of the hostnames and URL&apos;s you need to access.</p>
+<p><strong>Get <em>GUID</em> and Access Information</strong></p>
+<p>The web browser of your laptop should default to ADD LINK TO GRABBER URL. On this web page <em>select the lab</em> your attending and enter the <em>Activation Key</em> that will be given by the lab instructor.</p>
+<p>After submitting your input by clicking <em>Next</em> you will see the attendee welcome screen with all the information you need:</p>
+<ul>
+<li>The most important part: Your unique lab <em>GUID</em></li>
+<li>A <em>link</em> to the <em>lab guide</em></li>
+<li>The <em>hostnames / URLs</em> with your <em>GUID</em> for <em>accessing</em> your lab</li>
+<li>A <em>link</em> to a <em>status page</em></li>
+</ul>
+<p><strong>Access a host via SSH or Browser</strong></p>
+<p>In most cases the lab instructions will use a string as a placeholder for your <em>GUID</em> like <em><guid></guid></em>.</p>
+<ul>
+<li>Make sure you know your <em>GUID</em></li>
+<li>Open a terminal session to log in to your host:</li>
+</ul>
+<hr>
+<h2 id="ssh-hostname-guid-rhpds-opentlc-com">ssh hostname-<guid>.rhpds.opentlc.com</guid></h2>
+<ul>
+<li>Or open a browser to access a web UI:</li>
+</ul>
+<hr>
+<h2 id="https-hostname-guid-rhods-opentlc-com"><a href="https://hostname-">https://hostname-</a><guid>.rhods.opentlc.com</guid></h2>
+<p>WARNING: <em>Replace <guid> with the GUID assigned to your seat!</guid></em></p>
+<p><strong>Example</strong></p>
+<h2 id="if-your-guid-is-83d4-do-this-">If your GUID is <em>83d4</em>, do this:</h2>
+<h2 id="ssh-hostname-83d4-rhpds-opentlc-com">ssh hostname-83d4.rhpds.opentlc.com</h2>
+<p>TIP: The user will default to <code>lab-user</code> and SSH key authentication will be used automatically. If for any reason key authentication is not working and the SSH client is asking for a password, use <em>r3dh4t1!</em></p>
+<h2 id="then-become-root-">Then become root:</h2>
+<h2 id="-lab-user-hostname-83d4-sudo-i">[lab-user@hostname-83d4 ~]$ sudo -i</h2>
+<p>Once you have been able to connect to the bastion host via SSH, you can start the lab you will need to follow the Lab content index that will take you to a step by step guide of each exercise.</p>
+<p>If you have any problems at all during the Lab or have any questions about Red Hat, our RHCS ceph distribution, Rados Gateway, etc, please put your hand-up and a lab moderator will be with you shortly to assist - .....</p>
 </article></div><div style="background-color: #b4b2b2;width: 50px;height:50px;line-height: 50px;text-align: center;position: fixed;bottom: 10px;right: 10px;padding-top:5px;" onclick="document.documentElement.scrollTop = document.body.scrollTop =0;">
   <svg t="1533629773982" class="icon" style="" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1035" xlink="http://www.w3.org/1999/xlink" width="40" height="40"><defs><style type="text/css">@font-face { font-family: uc-nexus-iconfont; src: url("chrome-extension://pogijhnlcfmcppgimcaccdkmbedjkmhi/res/font_9qmmi8b8jsxxbt9.woff") format("woff"), url("chrome-extension://pogijhnlcfmcppgimcaccdkmbedjkmhi/res/font_9qmmi8b8jsxxbt9.ttf") format("truetype"); }
   </style></defs><path d="M536.255427 195.182354c-7.804756-7.804756-17.966187-11.615549-28.311813-11.615549-9.43693 0-18.874883 3.449565-26.496467 10.163477-2.360767 1.452071-4.356214 3.267417-6.352685 5.262864L218.47792 455.611735c-15.607466 15.60542-15.607466 40.834011 0 56.43943 15.607466 15.607466 41.558511 15.607466 57.167001 0l193.46013-192.733583 0 600.526219c0 22.1423 17.787108 39.927361 39.927361 39.927361 22.140253 0 39.927361-17.785062 39.927361-39.927361L548.959773 319.317583 737.15704 508.422522c15.607466 15.607466 40.469714 15.607466 56.078203 0 15.607466-15.607466 15.425318-40.834011-0.182149-56.441477L536.255427 195.182354 536.255427 195.182354z" p-id="1036" fill="#333"/><path d="M101.784174 143.097092l816.674071 0c22.140253 0 39.925315-17.785062 39.925315-39.927361 0-22.140253-17.784038-39.925315-39.925315-39.925315L101.784174 63.244416c-22.140253 0-39.927361 17.785062-39.927361 39.925315C61.856813 125.31203 79.643921 143.097092 101.784174 143.097092L101.784174 143.097092z" p-id="1037" fill="#333"/></svg>
