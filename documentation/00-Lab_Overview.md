@@ -17,15 +17,22 @@
 
 1. **What is Ceph and what can it do?**
 2. **Ceph Rados Gateway Introduction**
-3. **Ceph Rados Gateway Multisite**
+3. **Ceph Rados Gateway Multisite Solution Intro**
+4. **Lab Overview**
+5. [**Getting Familiar with our Lab environment**](01-DC1_ceph_cluster.md)
+6. **Install and configure the second ceph cluster DC2**
+7. **Configure RadosGW in both clusters**
+8. **Configure RadosGW as an Active/Active Multisite Cluster**
+9. **Configure the S3CMD client and check the Multisite Deployment**
+10. **Configure ceph-metrics on cluster DC2**
 
 <!--BREAK-->
 
 #**Lab Overview**#
 
-First of all, it's my pleasure to welcome you to the Red Hat Summit 2019, here at the ... 
+First of all, it's my pleasure to welcome you to the Red Hat Summit 2019, here at the ...
 
-This hands-on lab aims to get you, the attendees, a bit closer to both SDS and Ceph, with a specific focus on both the usage and deployment integration..... 
+This hands-on lab aims to get you, the attendees, a bit closer to a Storage software defined solution like Ceph, with a special focus on Object Storage, Rados Gateway ...
 
 Whilst you'll be asked to use and explore some fundamental components within ceph, you won't need to install .....
 
