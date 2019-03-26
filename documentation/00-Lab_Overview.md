@@ -58,31 +58,31 @@ In most cases the lab instructions will use a string as a placeholder for your *
 * Make sure you know your *GUID*
 * Open a terminal session to log in to your host:
 
-----
+```
 ssh hostname-<GUID>.rhpds.opentlc.com
-----
+```
 
 * Or open a browser to access a web UI:
 
-----
+```
 https://hostname-<GUID>.rhods.opentlc.com
-----
+```
 
-WARNING: *Replace <GUID> with the GUID assigned to your seat!*
+>WARNING: *Replace <GUID> with the GUID assigned to your seat!*
 
 **Example**
 
 If your GUID is *83d4*, do this:
-----
+```
 ssh hostname-83d4.rhpds.opentlc.com
-----
+```
 
 TIP: The user will default to `lab-user` and SSH key authentication will be used automatically. If for any reason key authentication is not working and the SSH client is asking for a password, use *r3dh4t1!*
 
 Then become root:
-----
+```
 [lab-user@hostname-83d4 ~]$ sudo -i
-----
+```
 
 Once you have been able to connect to the bastion host via SSH, you can start the lab you will need to follow the Lab content index that will take you to a step by step guide of each exercise.
 
