@@ -16,9 +16,9 @@
 
 **Lab Contents**
 
-1. **What is Ceph and what can it do?**
+1. **What is Ceph and what can it do for You?**
 2. **Ceph Rados Gateway Introduction**
-3. **Ceph Rados Gateway Multisite Solution Introruction**
+3. **Ceph Rados Gateway Multisite introduction**
 5. [**Getting Familiar with our Lab environment**](01-DC1_ceph_cluster.md)
 6. [**Install and configure a second ceph cluster DC2**](02-DC2_ceph_cluster_installation.md)
 7. [**Configure RadosGW in both clusters**](03-RadosGW_configuration.md)
