@@ -53,7 +53,7 @@ upgrade_ceph_packages: False
 ceph_conf_overrides:
   global:
     max open files: 131072
-    mon allow pool delete = true
+    mon allow pool delete: true
     mon_pg_warn_max_per_osd: 0
     mon_pg_warn_min_per_osd: 0
   mon:
