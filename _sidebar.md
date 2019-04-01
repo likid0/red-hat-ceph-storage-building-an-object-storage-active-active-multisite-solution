@@ -1,5 +1,5 @@
 * [Lab Intro](/labIntro/00-Lab_Overview.md)
-* [Lab Intro](/labIntro/01-Lab_WhatIsCeph.md)
+* [Lab Intro: What is Ceph and what can it do for You?](/labIntro/01-Lab_WhatIsCeph.md)
 * [Lab Intro: Ceph Rados Gateway Introduction](/labIntro/02-Lab_RGW_Introduction.md)
 * [Lab Intro: Ceph Rados Gateway Multisite Introduction](/labIntro/03-Lab_RGW_MultiSite_Introduction.md)
 * [Lab Intro: Getting Familiar with our Lab environment](/labIntro/04-DC1_ceph_cluster.md)
