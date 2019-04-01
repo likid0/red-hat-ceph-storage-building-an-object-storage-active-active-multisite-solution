@@ -1145,17 +1145,17 @@ We can now go to a browser on your lab laptop and connect to the grapaha dashboa
 
 Once you have entered the grafana credentials you will be presented with the ceph-metrics landing page.
 
-<img src="images/01cephmetrics-ataglance.png" style="width:1200px;" border=0/>
+<img src="./images/01cephmetrics-ataglance.png" style="width:1200px;" border=0/>
 
 On the upper left of the page where it says Ceph At A Glance, you can access all the different ceph-metrics dashboards available, please take some time to explore.
 
-<img src="images/02cephmetrics-dashboards.png" style="width:1200px;" border=0/>
+<img src="./images/02cephmetrics-dashboards.png" style="width:1200px;" border=0/>
 
 Now that you are familiar with some of the ceph-metrics dashboard lets put some objects into the cluster and see how it's represented in grafana.
 
 First lets open the the "ceph storage backend" dashboard, and expand the "Disk/OSD Load" Summary and the "OSD Host CPU and Network Load" bullets
 
-<img src="images/03cephmetrics-backends.png" style="width:1200px;" border=0/>
+<img src="./images/03cephmetrics-backends.png" style="width:1200px;" border=0/>
 
 From the bastion host we are going to create a 2GB file and upload it to our DC2 cluster, once the file starts uploading we can switch to grafana and see how the metrics vary, we should see the total throughput and IOPs increase.
 
