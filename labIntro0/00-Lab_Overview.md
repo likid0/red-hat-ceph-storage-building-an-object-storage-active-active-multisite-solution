@@ -12,10 +12,10 @@
 
 **Lab Contents**
 
-1. [**What is Ceph and what can it do for You?**](/labIntro/01-Lab_WhatIsCeph.md)
-2. [**Ceph Rados Gateway Introduction**](/labIntro/02-Lab_RGW_Introduction.md)
-3. [**Ceph Rados Gateway Multisite introduction**](/labIntro/03-Lab_RGW_MultiSite_Introduction.md)
-4. [**Getting Familiar with our Lab environment**](/labIntro/04-DC1_ceph_cluster.md)
+1. [**What is Ceph and what can it do for You?**](/labIntro1/01-Lab-WhatIsCeph.md)
+2. [**Ceph Rados Gateway Introduction**](/labIntro2/02-Lab_RGW_Introduction.md)
+3. [**Ceph Rados Gateway Multisite introduction**](/labIntro3/03-Lab_RGW_MultiSite_Introduction.md)
+4. [**Getting Familiar with our Lab environment**](/labIntro4/04-DC1_ceph_cluster.md)
 
 **Hands-On Scenarios**
 
