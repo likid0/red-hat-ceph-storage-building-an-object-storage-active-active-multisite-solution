@@ -1,0 +1,1 @@
+# Ceph Rados Gateway Multisite ntroduction
