@@ -4,20 +4,22 @@
 
 **Date**  : 8th May 2019
 
-**Authors/Lab Owners**
+## **Authors/Lab Owners**
 * Daniel Dominguez <<ddomingu@redhat.com>>
 * Jorge Tudela <<jtudelag@redhat.com>>
 * Maurizio Garcia<<maugarci@redhat.com>>
 * Daniel Parkes <<dparkes@redhat.com>>
 
-**Lab Contents**
+## **Lab Contents**
+
+### **Lab Introduction Topics**
 
 1. [**What is Ceph and what can it do for You?**](/labIntro1/01-Lab-WhatIsCeph.md)
 2. [**Ceph Rados Gateway Introduction**](/labIntro2/02-Lab_RGW_Introduction.md)
 3. [**Ceph Rados Gateway Multisite introduction**](/labIntro3/03-Lab_RGW_MultiSite_Introduction.md)
 4. [**Getting Familiar with our Lab environment**](/labIntro4/04-DC1_ceph_cluster.md)
 
-**Hands-On Scenarios**
+### **Hands-On Scenarios**
 
 1. [**Install and configure a second ceph cluster DC2**](/scenario1/01-DC2_ceph_cluster_installation.md)
 2. [**Configure RadosGW in both clusters**](/scenario2/02-RadosGW_configuration.md)
@@ -26,7 +28,7 @@
 5. [**Configure ceph-metrics on cluster DC2**](/scenario5/05-DC2_cephmetrics_configuration.md)
 
 
-**Welcome**
+## **Welcome**
 
 First of all, it's my pleasure to welcome you to the Red Hat Summit 2019, here at the ...
 
@@ -35,11 +37,11 @@ This hands-on lab aims to get you, the attendees, a bit closer to an open Softwa
 Whilst you'll be asked to use and explore some fundamental components within ceph, you won't need to install .....
 
 
-**Access your Lab Environment**
+## **Access your Lab Environment**
 
 Every attendee gets her/his own lab environment. The labs have already been deployed, to access your lab you need a unique *Identifier (GUID)* that will be part of the hostnames and URL's you need to access.
 
-**Get *GUID* and Access Information**
+### **Get *GUID* and Access Information**
 
 The web browser of your laptop should default to ADD LINK TO GRABBER URL. On this web page *select the lab* your attending and enter the *Activation Key* that will be given by the lab instructor.
 
@@ -50,7 +52,7 @@ After submitting your input by clicking *Next* you will see the attendee welcome
 * The *hostnames / URLs* with your *GUID* for *accessing* your lab
 * A *link* to a *status page*
 
-**Access a host via SSH or Browser**
+### **Access a host via SSH or Browser**
 
 In most cases the lab instructions will use a string as a placeholder for your *GUID* like *<GUID>*.
 
