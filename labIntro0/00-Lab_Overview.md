@@ -89,4 +89,4 @@ Once you have been able to connect to the bastion host via SSH, you can start th
 
 If you have any problems at all during the Lab or have any questions about Red Hat, our RHCS ceph distribution, Rados Gateway, etc, please put your hand-up and a lab moderator will be with you shortly to assist - .....
 
-### [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
+## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
