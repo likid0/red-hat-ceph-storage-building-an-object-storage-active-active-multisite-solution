@@ -19,11 +19,11 @@
 
 **Hands-On Scenarios**
 
-1. [**Install and configure a second ceph cluster DC2**](02-DC2_ceph_cluster_installation.md)
-2. [**Configure RadosGW in both clusters**](03-RadosGW_configuration.md)
-3. [**Configure RadosGW as an Active/Active Multisite Cluster**](04-RadosGW_Multisite_Configuration.md)
-4. [**Configure a S3 client and check the Multisite Deployment**](05-Configure_S3_client.md)
-5. [**Configure ceph-metrics on cluster DC2**](06-DC2_cephmetrics_configuration.md)
+1. [**Install and configure a second ceph cluster DC2**](/scenario1/01-DC2_ceph_cluster_installation.md)
+2. [**Configure RadosGW in both clusters**](/scenario2/02-RadosGW_configuration.md)
+3. [**Configure RadosGW as an Active/Active Multisite Cluster**](/scenario3/03-RadosGW_Multisite_Configuration.md)
+4. [**Configure a S3 client and check the Multisite Deployment**](/scenario4/04-Configure_S3_client.md)
+5. [**Configure ceph-metrics on cluster DC2**](/scenario5/05-DC2_cephmetrics_configuration.md)
 
 
 **Welcome**
