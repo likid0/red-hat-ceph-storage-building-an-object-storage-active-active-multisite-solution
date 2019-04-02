@@ -24,7 +24,9 @@ export SECRET_KEY="redhat"
 
 Master zone: Execute the following commands in the RGW node of DC1 (ceph1).
 
-A realm contains the multi-site configuration of zone groups and zones and also serves to enforce a globally unique namespace within the realm. 
+### Create realm, zonegroup and zone in Master Zone
+
+A realm contains the multi-site configuration of zone groups and zones and also serves to enforce a globally unique namespace within the realm.
 Create the realm:
 ```
 radosgw-admin --cluster dc1 realm create --rgw-realm=${REALM} --default
@@ -99,31 +101,18 @@ radosgw-admin --cluster dc1 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=
 }
 ```
 
+### Create the sync user in Master Zone and start the RGW service.
 
-####
+At a high level, these are the steps we have to perform now:
 
+1. Create the sync-user.
+2. Assign the sync-user to the master zone.
+3. Update the period.
+4. Start RGW service in DC1 (cepha node)in the master zone nodes.
 
+#### Create the sync-user
 
 Create the sync user. Save the ACCESS_KEY and SECRET_KEY values from this command:
-```
-radosgw-admin --cluster dc1 user create --uid=${SYNC_USER} --display-name="Synchronization User" --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --system"
-```
-
-Assign the user to the master zone:
-```
-radosgw-admin --cluster dc1 zone modify --rgw-zone=${MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
-```
-
-Update the period:
-```
-radosgw-admin --cluster dc1 period update --commit
-```
-
-Start radosgw --cluster dc1 service in the master zone nodes:
-```
-cepha # systemctl enable ceph-radosgw@rgw.$(hostname -s) --now
-```
-
 ```
 radosgw-admin --cluster dc1 user create --uid=${SYNC_USER} --display-name="Synchronization User" --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --system
 {
@@ -166,6 +155,9 @@ radosgw-admin --cluster dc1 user create --uid=${SYNC_USER} --display-name="Synch
 }
 ```
 
+#### Assign the sync-user to the master zone
+
+Assign the user to the master zone:
 ```
 radosgw-admin --cluster dc1 zone modify --rgw-zone=${MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
 {
@@ -205,6 +197,9 @@ radosgw-admin --cluster dc1 zone modify --rgw-zone=${MASTER_ZONE} --access-key=$
 }
 ```
 
+#### Update the period
+
+Update the period:
 ```
 radosgw-admin --cluster dc1 period update --commit
 {
@@ -283,13 +278,17 @@ radosgw-admin --cluster dc1 period update --commit
 }
 ```
 
+### Start RGW service in DC1 (cepha node).
+
+Start RGW --cluster dc1 service in the master zone nodes.
+Start the service in the cepha node:
 ```
 ansible -b -m shell -a "systemctl enable ceph-radosgw@rgw.* --now" cepha
 cepha | SUCCESS | rc=0 >>
 Created symlink from /etc/systemd/system/multi-user.target.wants/ceph-radosgw@rgw.bastion.service to /etc/systemd/system/ceph-radosgw@.service.
 ```
 
-We can check with ceph status if the radosgw service is running:
+We can check with ceph status if the RGW service is running:
 ```
 ceph --cluster dc1 -s | grep rgw
     rgw: 1 daemon active
@@ -332,13 +331,12 @@ Update the period:
 radosgw-admin --cluster dc2 period update --commit
 ```
 
-Start radosgw service in the secondary zone nodes:
+Start RGW service in the secondary zone nodes:
 ```
 systemctl enable ceph-radosgw@rgw.$(hostname -s) --now
 ```
 
 Once we have finished the configuration of our second zone, we can check the sync status between zone dc1 and zone dc2
-
 ```
 radosgw-admin  --cluster dc1 sync status
           realm 80827d79-3fce-4b55-9e73-8c67ceab4f73 (summitlab)
@@ -396,7 +394,7 @@ pool 'default.rgw.log' removed
 ```
 
 ```
-for pool in $(rados --cluster dc2 lspools | grep ^default);do ceph --cluster dc1  osd pool delete ${pool} ${pool} --yes-i-really-really-mean-it;done
+for pool in $(rados --cluster dc2 lspools | grep ^default);do ceph --cluster dc2  osd pool delete ${pool} ${pool} --yes-i-really-really-mean-it;done
 
 pool 'default.rgw.control' does not exist
 pool 'default.rgw.meta' does not exist
