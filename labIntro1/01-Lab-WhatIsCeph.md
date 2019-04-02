@@ -29,7 +29,7 @@ Each Metadata Server (MDS) node runs the MDS daemon (ceph-mds), which manages me
 * **Object Gateway node**: (RGW) (Object Storage)
 Ceph Object Gateway node runs the Ceph RADOS Gateway daemon (ceph-radosgw), and is an object storage interface built on top of librados to provide applications with a RESTful gateway to Ceph Storage Clusters. The Ceph Object Gateway supports two interfaces: S3 and OpenStack Swift.
 
-<center><img src="labIntro1/images/ceph-cluster.jpg" style="width:800px;" border=0/></center>
+<center><img src="labIntro1/images/ceph-cluster.png" style="width:800px;" border=0/></center>
 
 
 # What can Red Hat Ceph Storage do for you?
