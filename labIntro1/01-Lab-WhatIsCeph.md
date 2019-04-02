@@ -21,6 +21,9 @@ At the heart of every Ceph deployment is the 'Ceph Storage Cluster.' It consists
 
 Red Hat Ceph Storage is a scalable, open, software-defined storage platform that combines the most stable version of the Ceph storage system with a Ceph management platform, deployment utilities, and support services.
 
+<center><img src="labIntro1/images/ceph-cluster.png" style="width:600px;" border=0/></center>
+
+
 Additionally, when using Red Hat Ceph Storage for File System or Block Storage, the following nodes would be needed as well:
 
 * **MDS nodes**: (FileSystem storage)
@@ -28,8 +31,6 @@ Each Metadata Server (MDS) node runs the MDS daemon (ceph-mds), which manages me
 
 * **Object Gateway node**: (RGW) (Object Storage)
 Ceph Object Gateway node runs the Ceph RADOS Gateway daemon (ceph-radosgw), and is an object storage interface built on top of librados to provide applications with a RESTful gateway to Ceph Storage Clusters. The Ceph Object Gateway supports two interfaces: S3 and OpenStack Swift.
-
-<center><img src="labIntro1/images/ceph-cluster.png" style="width:800px;" border=0/></center>
 
 
 ## What can Red Hat Ceph Storage do for you?
