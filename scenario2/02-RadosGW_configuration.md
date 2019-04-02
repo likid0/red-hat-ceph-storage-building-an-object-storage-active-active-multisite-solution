@@ -6,7 +6,7 @@ This step is mandatory before we can start configuring the multi-site.
 All RGWs services SHOULD BE STOPPED before following this procedure to create realms, zonegroups and zones.
 More info can be found in the [Red Hat Ceph Storage Object Gateway Guide For RHEL](https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html-single/object_gateway_guide_for_red_hat_enterprise_linux/index)
 
-From the bastion host we can check that RGWs containers are running on ceph1 (DC1) and cepha (DC2) nodes.
+From the bastion host we can check that RGWs containers are running on cepha (DC1) and ceph1 (DC2) nodes.
 ```
 [root@bastion ~]# ansible -b -m shell -a "docker ps | grep rgw" ceph1,cepha
 cepha | SUCCESS | rc=0 >>
