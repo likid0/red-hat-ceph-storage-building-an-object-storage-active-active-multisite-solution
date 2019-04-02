@@ -1,21 +1,41 @@
 # Ceph Rados Gateway Multisite Introduction
 
+## RGWs Multisite concepts
+
 We have seen how Ceph implements Object Storage APIs using RGWs components.
-Now, we can see the different set-ups that can be made using RGWs.
+Now, we can see the different multisite set-ups that can be made using RGWs.
 
-To understand them, first we need to understand some key concepts: realm, zone, zone-group and epoch.
+To understand multisite set-ups, first we need to understand some key multisite concepts: realm, zone, zone-group or period.
 
-A single zone configuration typically consists of one zone group containing one zone and one or more ceph-radosgw instances where you may load-balance gateway client requests between the instances. In a single zone configuration, typically multiple gateway instances point to a single Ceph storage cluster. However, Red Hat supports several multi-site configuration options for the Ceph Object Gateway:
+* **Realm**: Represents a globally unique namespace consisting of one or more zonegroups. Each zonegroups contains one or more zones and each zone contains buckets, where objects are stored.
+Realms also contain the notion of periods. Each period represents the state of the zonegroup and zone configuration in time. 
 
-* **Multi-zone**: A more advanced configuration consists of one zone group and multiple zones, each zone with one or more ceph-radosgw instances. Each zone is backed by its own Ceph Storage Cluster. Multiple zones in a zone group provides disaster recovery for the zone group should one of the zones experience a significant failure. In Red Hat Ceph Storage 2, each zone is active and may receive write operations. In addition to disaster recovery, multiple active zones may also serve as a foundation for content delivery networks. To configure multiple zones without replication, see Section 5.12, “Configuring Multiple Zones without Replication”.
+* **Period**: Every period contains a unique id and an epoch. A period’s epoch is incremented on every commit operation. Every realm has an associated current period, holding the current state of configuration of the zonegroups and storage policies. Each time you make a change to a zonegroup or zone, update the period and commit it. Each cluster map maintain a history of their map versions. Each of these versions is called epoch.
 
-* **Multi-zone-group**: Formerly called 'regions', Ceph Object Gateway can also support multiple zone groups, each zone group with one or more zones. Objects stored to zone groups within the same realm share a global namespace, ensuring unique object IDs across zone groups and zones.
+**NOTE**: Using a zonegroup with multiple zones is supported. Using multiple zonegroups is a
+technology preview only, and is not supported in production environments.
 
-* **Multiple Realms**: In Red Hat Ceph Storage 2, the Ceph Object Gateway supports the notion of realms, which can be a single zone group or multiple zone groups and a globally unique namespace for the realm. Multiple realms provides the ability to support numerous configurations and namespaces.
+<center><img src="labIntro3/images/ceph-realm.png" style="width:400px;" border=0/></center>
 
-* **Period**: A period holds the configuration structure for the current state of the realm. Every period contains a unique id and an epoch. A period’s epoch is incremented on every commit operation. Every realm has an associated current period, holding the current state of configuration of the zonegroups and storage policies. Any configuration change for a non master zone will increment the period’s epoch. 
-Changing the master zone to a different zone will trigger the following changes: - A new period is generated with a new period id and epoch of 1 - Realm’s current period is updated to point to the newly generated period id - Realm’s epoch is incremented
+* **Zone**: Defines a logical group consisting of one or more Ceph Object Gateway instances.Configuring zones differs from typical Ceph configuration procedures, because not all of the settings end up in a Ceph configuration file. There will be one zone that should be designated as the Master zone in a zonegroup
+The Master zone will handle all bucket and user creation.Secondary zone can receive bucket and user operations, but will redirect them to the Master zone. If the Master zone is down, bucket and user operations will fail
+It is possible to promote a secondary zone to Master zone.
 
+**NOTE**: Promoting a secondary zone is a complex operation. It is recommended only when the Master zone will be down for a long period of time.
+
+* **Zonegroup**: A zonegroup consists of multiple zones, this approximately corresponds to what used to be called as a region in pre Jewel releases for federated deployments. There should be a master zonegroup that will handle changes to the system configuration.
+
+## RGWs Multisite Configurations
+
+A single zone configuration typically consists of one zonegroup containing one zone and one or more ceph-radosgw instances where you may load-balance gateway client requests between the instances. In a single zone configuration, typically multiple gateway instances point to a single Ceph storage cluster.
+
+Multi-site (actually, multi-zone) consists of one zonegroup and multiple zones, each zone with one or more ceph-radosgw instances. Each zone is backed by its own RHCS. It provides disaster recovery and it is a foundation for Content Delivery Networks (CDN). The replication between zones is an asynchronous process
+
+**NOTE**: Other multi-site configurations exists, but are not currently supported by Red Hat: 
+* Multi-zonegroup
+* Multiple Realms
+
+<center><img src="labIntro3/images/ceph-multisite.png" style="width:400px;" border=0/></center>
 
 ## Resources
 
