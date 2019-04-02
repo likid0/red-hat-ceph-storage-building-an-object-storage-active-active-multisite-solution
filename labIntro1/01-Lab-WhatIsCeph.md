@@ -32,7 +32,7 @@ Ceph Object Gateway node runs the Ceph RADOS Gateway daemon (ceph-radosgw), and 
 <center><img src="labIntro1/images/ceph-cluster.png" style="width:800px;" border=0/></center>
 
 
-# What can Red Hat Ceph Storage do for you?
+## What can Red Hat Ceph Storage do for you?
 
 * **A single, open, and unified platform**
 Red Hat Ceph Storage delivers software-defined storage on your choice of industry-standard hardware. With block, object, and file storage combined into 1 platform, including the most recent addition of CephFS, Red Hat Ceph Storage efficiently and automatically manages all your data. It also supports backward compatibility to existing block storage resources using storage networking standards, iSCSI and Network File System (NFS).

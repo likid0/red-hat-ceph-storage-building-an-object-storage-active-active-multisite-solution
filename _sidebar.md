@@ -1,5 +1,5 @@
 * [Lab Intro](/labIntro0/00-Lab_Overview.md)
-* [What is Ceph and what can it do for You?](/labIntro1/01-Lab-WhatIsCeph.md)
+* [What is Ceph?](/labIntro1/01-Lab-WhatIsCeph.md)
 * [Ceph RGW Introduction](/labIntro2/02-Lab_RGW_Introduction.md)
 * [Ceph RGW Multisite Introduction](/labIntro3/03-Lab_RGW_MultiSite_Introduction.md)
 * [Getting Familiar with our Lab environment](/labIntro4/04-DC1_ceph_cluster.md)
