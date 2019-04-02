@@ -58,9 +58,11 @@ And add the following to the override section:
     rgw_zone: dc1
     rgw_thread_pool_size: 1024
 ```
+
 ```
 # vim /root/dc1/ceph-ansible/group_vars/rgws.yml
 ```
+
 ```
 ceph_rgw_docker_extra_env: "-e RGW_ZONE=dc1 -e RGW_ZONEGROUP=production"
 ```
@@ -70,6 +72,7 @@ Once modified we have to run the site-docker playbook again for DC1:
 # cd /root/dc1/ceph-ansible/
 # ansible-playbook site-docker.yml
 ```
+
 ## Configure RGWs in DC2
 
 We have to follow the same steps on our second cluster in DC2:
@@ -86,12 +89,13 @@ We have to follow the same steps on our second cluster in DC2:
     rgw_zone: dc2
     rgw_thread_pool_size: 1024
 ```
+
 ```
 # vim /root/dc2/ceph-ansible/group_vars/rgws.yml
 ceph_rgw_docker_extra_env: "-e RGW_ZONE=dc2 -e RGW_ZONEGROUP=production"
 ```
-You can see we are setting the same zonegroup "production" for the two clusters, while zone is gonna be different, DC1 and DC2.
 
+You can see we are setting the same zonegroup "production" for the two clusters, while zone is gonna be different, DC1 and DC2.
 ```
 #cd /root/dc2/ceph-ansible/
 #ansible-playbook site-docker.yml

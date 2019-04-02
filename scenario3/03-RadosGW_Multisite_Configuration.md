@@ -1,45 +1,33 @@
 # Rados Gateway Multisite Configuration
 
-
 A single zone configuration typically consists of one zone group containing one zone and one or more ceph-radosgw instances where you may load-balance gateway client requests between the instances. In a single zone configuration, typically multiple gateway instances point to a single Ceph storage cluster.
 
 In this lab we are going to deploy an advanced configuration that consists of one zone group and two zones, each zone with one(could be more) ceph-radosgw instances. Each zone is backed by its own Ceph Storage Cluster. Multiple zones in a zone group provides disaster recovery for the zone group should one of the zones experience a significant failure, Each zone is active and may receive write operations.
 
-Prepare multi-site environment:
+Prepare multi-site environment. Define and export the following variables:
 
 ```
-REALM="summitlab"
-ZONEGROUP="production"
-MASTER_ZONE="dc1"
-SECONDARY_ZONE="dc2"
-ENDPOINTS_MASTER_ZONE="http://cepha:8080"
-URL_MASTER_ZONE="http://cepha:8080"
-ENDPOINTS_SECONDARY_ZONE="http://ceph1:8080"
-URL_SECONDARY_ZONE="http://ceph1:8080"
-SYNC_USER="sync-user"
-ACCESS_KEY="redhat"
-SECRET_KEY="redhat"
+export REALM="summitlab"
+export ZONEGROUP="production"
+export MASTER_ZONE="dc1"
+export SECONDARY_ZONE="dc2"
+export ENDPOINTS_MASTER_ZONE="http://cepha:8080"
+export URL_MASTER_ZONE="http://cepha:8080"
+export ENDPOINTS_SECONDARY_ZONE="http://ceph1:8080"
+export URL_SECONDARY_ZONE="http://ceph1:8080"
+export SYNC_USER="sync-user"
+export ACCESS_KEY="redhat"
+export SECRET_KEY="redhat"
 ```
-Master zone: Execute the following commands in the RGW node of DC1 (ceph1)
 
+## Configure Master Zone
+
+Master zone: Execute the following commands in the RGW node of DC1 (ceph1).
+
+A realm contains the multi-site configuration of zone groups and zones and also serves to enforce a globally unique namespace within the realm. 
 Create the realm:
 ```
-	# radosgw-admin --cluster dc1 realm create --rgw-realm=${REALM} --default
-  ```
-Create the zonegroup with the RGW replication endpoints of the master zone:
-```
-	# radosgw-admin --cluster dc1 zonegroup create --rgw-zonegroup=${ZONEGROUP} --endpoints=${ENDPOINTS_MASTER_ZONE} --rgw-realm=${REALM} --master --default
-```  
-Create the zonegroup with the RGW replication endpoints of the master zone(cepha):
-```
-	# radosgw-admin --cluster dc1 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${MASTER_ZONE} --endpoints=${ENDPOINTS_MASTER_ZONE} --master --default
-```
-
-#####
-
-A realm contains the multi-site configuration of zone groups and zones and also serves to enforce a globally unique namespace within the realm.
-```
-[root@bastion ceph-ansible]# radosgw-admin --cluster dc1 realm create --rgw-realm=${REALM} --default
+radosgw-admin --cluster dc1 realm create --rgw-realm=${REALM} --default
 {
     "id": "81fb554d-079c-4047-8387-f68d16564cc3",
     "name": "summitlab",
@@ -47,9 +35,11 @@ A realm contains the multi-site configuration of zone groups and zones and also 
     "epoch": 1
 }
 ```
+
 A realm must have at least one zone group, which will serve as the master zone group for the realm.
+Create the zonegroup with the RGW replication endpoints of the master zone:
 ```
-[root@bastion ceph-ansible]# radosgw-admin --cluster dc1 zonegroup create --rgw-zonegroup=${ZONEGROUP} --endpoints=${ENDPOINTS_MASTER_ZONE} --rgw-realm=${REALM} --master --default
+radosgw-admin --cluster dc1 zonegroup create --rgw-zonegroup=${ZONEGROUP} --endpoints=${ENDPOINTS_MASTER_ZONE} --rgw-realm=${REALM} --master --default
 {
     "id": "00ba3e86-1207-49ba-9df6-cd2a8a07de2a",
     "name": "production",
@@ -67,10 +57,11 @@ A realm must have at least one zone group, which will serve as the master zone g
     "realm_id": "81fb554d-079c-4047-8387-f68d16564cc3"
 }
 ```
-Create a master zone for the multi-site configuration by opening a command line interface on a host identified to serve in the master zone group and zone. Then, execute the following:
 
+Create a master zone for the multi-site configuration by opening a command line interface on a host identified to serve in the master zone group and zone.
+Create the zones with the RGW replication endpoints of the master zone(cepha):
 ```
-[root@bastion ceph-ansible]# radosgw-admin --cluster dc1 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${MASTER_ZONE} --endpoints=${ENDPOINTS_MASTER_ZONE} --master --default
+radosgw-admin --cluster dc1 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${MASTER_ZONE} --endpoints=${ENDPOINTS_MASTER_ZONE} --master --default
 {
     "id": "6d1a4a77-75bb-45ca-8088-05d6e7d3e223",
     "name": "dc1",
@@ -115,22 +106,26 @@ Create a master zone for the multi-site configuration by opening a command line 
 
 Create the sync user. Save the ACCESS_KEY and SECRET_KEY values from this command:
 ```
-# radosgw-admin --cluster dc1 user create --uid=${SYNC_USER} --display-name="Synchronization User" --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --system"
+radosgw-admin --cluster dc1 user create --uid=${SYNC_USER} --display-name="Synchronization User" --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --system"
 ```
+
 Assign the user to the master zone:
 ```
-# radosgw-admin --cluster dc1 zone modify --rgw-zone=${MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
+radosgw-admin --cluster dc1 zone modify --rgw-zone=${MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
 ```
+
 Update the period:
 ```
-# radosgw-admin --cluster dc1 period update --commit
+radosgw-admin --cluster dc1 period update --commit
 ```
+
 Start radosgw --cluster dc1 service in the master zone nodes:
 ```
 cepha # systemctl enable ceph-radosgw@rgw.$(hostname -s) --now
 ```
+
 ```
-[root@bastion ceph-ansible]# radosgw-admin --cluster dc1 user create --uid=${SYNC_USER} --display-name="Synchronization User" --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --system
+radosgw-admin --cluster dc1 user create --uid=${SYNC_USER} --display-name="Synchronization User" --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --system
 {
     "user_id": "sync-user",
     "display_name": "Synchronization User",
@@ -170,8 +165,9 @@ cepha # systemctl enable ceph-radosgw@rgw.$(hostname -s) --now
     "type": "rgw"
 }
 ```
+
 ```
-[root@bastion ceph-ansible]#  radosgw-admin --cluster dc1 zone modify --rgw-zone=${MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
+radosgw-admin --cluster dc1 zone modify --rgw-zone=${MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
 {
     "id": "6d1a4a77-75bb-45ca-8088-05d6e7d3e223",
     "name": "dc1",
@@ -208,8 +204,9 @@ cepha # systemctl enable ceph-radosgw@rgw.$(hostname -s) --now
     "realm_id": "81fb554d-079c-4047-8387-f68d16564cc3"
 }
 ```
+
 ```
-[root@bastion ceph-ansible]# radosgw-admin --cluster dc1 period update --commit
+radosgw-admin --cluster dc1 period update --commit
 {
     "id": "9615afd8-819a-48bf-b309-66e79f874c8f",
     "epoch": 1,
@@ -287,57 +284,63 @@ cepha # systemctl enable ceph-radosgw@rgw.$(hostname -s) --now
 ```
 
 ```
-[root@bastion ceph-ansible]# ansible -b -m shell -a "systemctl enable ceph-radosgw@rgw.* --now" cepha
+ansible -b -m shell -a "systemctl enable ceph-radosgw@rgw.* --now" cepha
 cepha | SUCCESS | rc=0 >>
 Created symlink from /etc/systemd/system/multi-user.target.wants/ceph-radosgw@rgw.bastion.service to /etc/systemd/system/ceph-radosgw@.service.
 ```
-We can check with ceph status if the radosgw service is running:
 
+We can check with ceph status if the radosgw service is running:
 ```
-[root@bastion ~]# ceph --cluster dc1 -s | grep rgw
+ceph --cluster dc1 -s | grep rgw
     rgw: 1 daemon active
 ```
+
 And also a quick check with curl so we can verify we can access port 8080 provided by the RGW service:
 ```
-[root@bastion ~]# curl http://cepha:8080
+curl http://cepha:8080
 <?xml version="1.0" encoding="UTF-8"?><ListAllMyBucketsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Owner><ID>anonymous</ID><DisplayName></DisplayName></Owner><Buckets></Buckets></ListAllMyBucketsResult>
 ```
 
 With these basic checks we can move forward and configure our DC2 ceph cluster as the slave zone in our zone-group
 
+## Configure Secondary Zone
 
 Secondary zone: Execute the following commands in the RGW node of DC2 (ceph1)
 
-
 Pull the realm information:
 ```
-# radosgw-admin --cluster dc2 realm pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --rgw-realm=${REALM}
+radosgw-admin --cluster dc2 realm pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --rgw-realm=${REALM}
 ```
+
 Set the realm as the default one:
 ```
-# radosgw-admin --cluster dc2 realm default --rgw-realm=${REALM}
+radosgw-admin --cluster dc2 realm default --rgw-realm=${REALM}
 ```
+
 Pull the period information:
 ```
-# radosgw-admin --cluster dc2 period pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
+radosgw-admin --cluster dc2 period pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
 ```
+
 Create the secondary zone:
 ```
-# radosgw-admin --cluster dc2 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${SECONDARY_ZONE} --endpoints=${ENDPOINTS_SECONDARY_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
+radosgw-admin --cluster dc2 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${SECONDARY_ZONE} --endpoints=${ENDPOINTS_SECONDARY_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
 ```
+
 Update the period:
 ```
-# radosgw-admin --cluster dc2 period update --commit
+radosgw-admin --cluster dc2 period update --commit
 ```
+
 Start radosgw service in the secondary zone nodes:
 ```
-ceph1 # systemctl enable ceph-radosgw@rgw.$(hostname -s) --now
+systemctl enable ceph-radosgw@rgw.$(hostname -s) --now
 ```
 
 Once we have finished the configuration of our second zone, we can check the sync status between zone dc1 and zone dc2
 
 ```
-[root@bastion ceph-ansible]# radosgw-admin  --cluster dc1 sync status
+radosgw-admin  --cluster dc1 sync status
           realm 80827d79-3fce-4b55-9e73-8c67ceab4f73 (summitlab)
       zonegroup 88222e12-006a-4cac-a5ab-03925365d817 (production)
            zone 602f21ea-7664-4662-bad8-0c3840bb1d7a (dc1)
@@ -347,7 +350,10 @@ Once we have finished the configuration of our second zone, we can check the syn
                         full sync: 0/128 shards
                         incremental sync: 128/128 shards
                         data is caught up with source
-[root@bastion ceph-ansible]# radosgw-admin  --cluster dc2 sync status
+```
+
+```
+radosgw-admin  --cluster dc2 sync status
           realm 80827d79-3fce-4b55-9e73-8c67ceab4f73 (summitlab)
       zonegroup 88222e12-006a-4cac-a5ab-03925365d817 (production)
            zone ed9f1807-7bc8-48c0-b82f-0fa1511ba47b (dc2)
@@ -362,43 +368,49 @@ Once we have finished the configuration of our second zone, we can check the syn
                         data is caught up with source
 ```
 
-Lets clean-up the default rados gateway installation, by default when ever a rados gateway daemon starts it will configure and use a default zone and zonegroup, to avoid confusions it's always better to delete our default zone and zonegroups in both clusters.
+## Clean-up RGW installation in both clusters
 
-Once RadosGW services are working with the new values, delete default values for zonegroup and zone in the master zone:
+Lets clean-up the default RGW installation, by default when ever a RGW daemon starts, it will configure and use a default zone and zonegroup, to avoid confusions it's always better to delete our default zone and zonegroups in both clusters.
+
+Once RGW services are working with the new values, delete default values for zonegroup and zone in the master zone:
 ```
-		# radosgw-admin --cluster dc1 zonegroup remove --rgw-zonegroup=default --rgw-zone=default
-		# radosgw-admin --cluster dc1 period update --commit
-		# radosgw-admin --cluster dc1 zone delete --rgw-zone=default
-		# radosgw-admin --cluster dc1 period update --commit
-		# radosgw-admin --cluster dc2 zone delete --rgw-zone=default
-		# radosgw-admin --cluster dc2 period update --commit
-		# radosgw-admin --cluster dc1 zonegroup delete --rgw-zonegroup=default
-		# radosgw-admin --cluster dc1 period update --commit
-		# radosgw-admin --cluster dc2 zonegroup delete --rgw-zonegroup=default
-		# radosgw-admin --cluster dc2 period update --commit
+radosgw-admin --cluster dc1 zonegroup remove --rgw-zonegroup=default --rgw-zone=default
+radosgw-admin --cluster dc1 period update --commit
+radosgw-admin --cluster dc1 zone delete --rgw-zone=default
+radosgw-admin --cluster dc1 period update --commit
+radosgw-admin --cluster dc2 zone delete --rgw-zone=default
+radosgw-admin --cluster dc2 period update --commit
+radosgw-admin --cluster dc1 zonegroup delete --rgw-zonegroup=default
+radosgw-admin --cluster dc1 period update --commit
+radosgw-admin --cluster dc2 zonegroup delete --rgw-zonegroup=default
+radosgw-admin --cluster dc2 period update --commit
 ```
 
 In both cluster, delete default pools. DISCLAIMER: Data will be unaccessible after performing this operation:
 
 ```
-[root@bastion red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution]# for pool in $(rados --cluster dc1 lspools | grep ^default);do ceph --cluster dc1  osd pool delete ${pool} ${pool} --yes-i-really-really-mean-it;done
+for pool in $(rados --cluster dc1 lspools | grep ^default);do ceph --cluster dc1  osd pool delete ${pool} ${pool} --yes-i-really-really-mean-it;done
 pool 'default.rgw.control' removed
 pool 'default.rgw.meta' removed
 pool 'default.rgw.log' removed
 ```
+
 ```
-[root@bastion red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution]# for pool in $(rados --cluster dc2 lspools | grep ^default);do ceph --cluster dc1  osd pool delete ${pool} ${pool} --yes-i-really-really-mean-it;done
+for pool in $(rados --cluster dc2 lspools | grep ^default);do ceph --cluster dc1  osd pool delete ${pool} ${pool} --yes-i-really-really-mean-it;done
+
 pool 'default.rgw.control' does not exist
 pool 'default.rgw.meta' does not exist
 pool 'default.rgw.log' does not exist
 ```
 
-Now that our cluster is ready and we have cleaned up the default rgw pools, let's test our cluster uploading some objects.
+## Create RGW user in DC1
 
-First we need to create a rgw user, we have to save the access and secret key from the output.
+Now that our cluster is ready and we have cleaned up the default  pools, let's test our cluster uploading some objects.
+
+First we need to create a RGW user, we have to save the access and secret key from the output.
 
 ```
-[root@bastion red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution]# radosgw-admin --cluster dc1 user create --uid="summit19" --display-name="Redhat Summit User"
+radosgw-admin --cluster dc1 user create --uid="summit19" --display-name="Redhat Summit User"
 {
     "user_id": "summit19",
     "display_name": "Redhat Summit User",
@@ -438,19 +450,19 @@ First we need to create a rgw user, we have to save the access and secret key fr
 }
 ```
 
-Lets check that our summit19 is present in our master zone dc1:
+Lets check that our `summit19` is present in our master zone dc1:
 
 ```
-[root@bastion red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution]# radosgw-admin --cluster dc1 user list
+radosgw-admin --cluster dc1 user list
 [
     "summit19",
     "sync-user"
 ]
-
+```
 
 if we wait for both clusters to sync the metadata we can see that the rgw user is also present on cluster dc2:
-
-[root@bastion red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution]# radosgw-admin --cluster dc2 user list
+```
+radosgw-admin --cluster dc2 user list
 [
     "summit19",
     "sync-user"
