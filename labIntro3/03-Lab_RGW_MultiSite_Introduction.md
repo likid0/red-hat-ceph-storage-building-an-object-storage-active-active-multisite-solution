@@ -1,6 +1,6 @@
 # Ceph Rados Gateway Multisite Introduction
 
-## RGWs Multisite concepts
+## RGWs Multisite Concepts
 
 We have seen how Ceph implements Object Storage APIs using RGWs components.
 Now, we can see the different multisite set-ups that can be made using RGWs.

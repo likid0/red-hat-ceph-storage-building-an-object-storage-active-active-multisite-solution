@@ -1,4 +1,4 @@
-# Configure DC2 Ceph cluster
+# Install and Configure DC2 Ceph cluster
 
 On our bastion host we have ceph-ansible installed for us, because we are managing both of our ceph clusters from one bastion host, we have one ceph-ansible dir per ceph cluster:
 
