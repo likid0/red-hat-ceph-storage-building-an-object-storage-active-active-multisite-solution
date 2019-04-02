@@ -9,7 +9,7 @@ The RADOS Gateway supports two interfaces:
 
 RADOS Gateway is a FastCGI module for interacting with librados. Since it provides interfaces compatible with OpenStack Swift and Amazon S3, RADOS Gateway has its own user management. RADOS Gateway can store data in the same RADOS cluster used to store data from Ceph FS clients or RADOS block devices. The S3 and Swift APIs share a common namespace, so you may write data with one API and retrieve it with the other.
 
-<img src="labIntro2/images/ceph-rgw-arq.jpg" style="width:1200px;" border=0/>
+<center><img src="labIntro2/images/ceph-rgw-arq.jpg" style="width:400px;" border=0/></center>
 
 
 ## Resources
