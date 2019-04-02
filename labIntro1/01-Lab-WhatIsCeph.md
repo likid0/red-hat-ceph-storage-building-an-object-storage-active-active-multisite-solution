@@ -9,6 +9,8 @@ For example:
 * Block device interface
 * Filesystem interface
 
+<center><img src="labIntro1/images/ceph-components.png" style="width:600px;" border=0/></center>
+
 The power of Red Hat Ceph Storage can transform your organization’s IT infrastructure and your ability to manage vast amounts of data, especially for cloud computing platforms like RHEL OSP. Red Hat Ceph Storage delivers extraordinary scalability–thousands of clients accessing petabytes to exabytes of data and beyond.
 
 At the heart of every Ceph deployment is the 'Ceph Storage Cluster.' It consists of three types of daemons:
