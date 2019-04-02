@@ -243,9 +243,10 @@ For our DC1 cluster:
     objects: 219 objects, 1.09KiB
     usage:   6.05GiB used, 53.9GiB / 60.0GiB avail
     pgs:     32 active+clean
+```
 
 And for DC2 cluster:
-
+```
 [root@bastion ~]# ceph --cluster dc2 status
   cluster:
     id:     04e97e50-521d-4a25-8e46-dc9cc66fc7e2
