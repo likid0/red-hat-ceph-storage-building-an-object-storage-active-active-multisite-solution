@@ -2,7 +2,11 @@
 
 A single zone configuration typically consists of one zone group containing one zone and one or more ceph-radosgw instances where you may load-balance gateway client requests between the instances. In a single zone configuration, typically multiple gateway instances point to a single Ceph storage cluster.
 
-In this lab we are going to deploy an advanced configuration that consists of one zone group and two zones, each zone with one(could be more) ceph-radosgw instances. Each zone is backed by its own Ceph Storage Cluster. Multiple zones in a zone group provides disaster recovery for the zone group should one of the zones experience a significant failure, Each zone is active and may receive write operations.
+In this lab we are going to deploy an advanced configuration that consists of one zone group and two zones, each zone with three ceph-radosgw instances. Each zone is backed by its own Ceph Storage Cluster. Multiple zones in a zone group provides disaster recovery for the zone group should one of the zones experience a significant failure. Each zone is active and may receive write operations.
+
+A logical representation of realm, zonegroup and zone of our deployment is represented in the following diagram:
+
+<center><img src="scenario3/images/RH-Summit-RGW-Realm.png" border=0/></center>
 
 Prepare multi-site environment. Define and export the following variables:
 
