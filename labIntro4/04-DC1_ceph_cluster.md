@@ -12,16 +12,16 @@ Here is a Diagram of the Lab environment
 <center><img src="labIntro4/images/lab_description.jpg" border=0/></center>
 
 
-### Network details for DC1 datacenter RHCS deployment
+## Network details for DC1 datacenter RHCS deployment
 
-#### DC1 has 2 networks:
+### DC1 has 2 networks:
 
 | Network Name     | CIDR     |
 | :------------- | :------------- |
 | Ceph Public Network       |    10.0.0.0/24    |
 | Ceph Private Network      |    192.168.0.0/24 |
 
-#### DC1 has the following VMs:
+### DC1 has the following VMs:
 
 
 * 1 HA proxy node:
@@ -47,17 +47,16 @@ Here is a Diagram of the Lab environment
 | metricsd.summit.lab       |  10.0.0.14     |
 
 
-### Network details for DC2 datacenter RHCS deployment
+## Network details for DC2 datacenter RHCS deployment
 
-#### DC2 has 2 networks:
+### DC2 has 2 networks:
 
 | Network Name     | CIDR     |
 | :------------- | :------------- |
 | Ceph Public Network       |    172.16.0.0/24    |
 | Ceph Private Network      |    192.168.1.0/24 |
 
-#### DC2 has the following VMs:
-
+### DC2 has the following VMs:
 
 * 1 HA proxy node:
 
@@ -97,9 +96,6 @@ To save some time the RHCS ceph cluster and Ceph-Netrics is already deployed for
 The bastion host is configured as a ceph client so you can check the status of the RHCS ceph cluster installed in dc1 using:
 
 `ceph --cluster dc1 -s`
-
-
-
 
 First we will deploy the second (DC2) RHCS Ceph cluster, configure the RGWs services there.
 
