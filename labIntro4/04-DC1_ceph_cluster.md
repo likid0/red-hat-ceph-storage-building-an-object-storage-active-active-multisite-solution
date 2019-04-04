@@ -1,17 +1,19 @@
 # Getting Familiar with our Lab environment
 
-Our Lab environment is composed by two separated Ceph clusters. One (DC1) is already deployed for you.
+Our Lab environment is composed of two Datacenters, DC1 and DC2,  with one Red hat Ceph Storage Cluster on each site.
 
+The Red hat Ceph Storage Cluster (DC1) is already deployed for you.
 
+<center><img src="labIntro4/images/lab_description.jpg" style="width:600px;" border=0/></center>
 
-DC1 has 2 networks:
+###DC1 has 2 networks:
 
 | Network Name     | CIDR     |
 | :------------- | :------------- |
 | Ceph Public Network       |    10.0.0.0/24    |
 | Ceph Private Network      |    192.168.0.0/24 |
 
-DC1 has the following VMs:
+###DC1 has the following VMs:
 
 
 * 1 HA proxy node:
