@@ -67,7 +67,7 @@ And add the following to the override section:
 ceph_rgw_docker_extra_env: "-e RGW_ZONE=dc1 -e RGW_ZONEGROUP=production"
 ```
 
-Once modified we have to run the site-docker playbook again for DC1. However all changes mentioned above are exclusively related rgw. In this case the **-l** option can be used to limit the playbook execution to rgws hostgroup.
+Once modified we have to run the site-docker playbook again for DC1. However all changes mentioned above are exclusively related to rgw. In this case the __-l__ option can be used to limit the playbook execution to rgws hostgroup.
 
 ```
 # cd /root/dc1/ceph-ansible/
