@@ -32,7 +32,7 @@
 
 First of all, it's my pleasure to welcome you to the Red Hat Summit 2019, here at the ...
 
-This hands-on lab aims to get you, the attendees, a bit closer to an open Software Defined Storage solution like Ceph, in this lab we are going to  focus on Object Storage, Rados Gateway ...
+This hands-on lab aims to get you, the attendees, a bit closer to an open Software Defined Storage solution like Ceph, in this lab we are going to focus on Object Storage, Rados Gateway ...
 
 Whilst you'll be asked to use and explore some fundamental components within ceph, you won't need to install .....
 
@@ -60,13 +60,13 @@ In most cases the lab instructions will use a string as a placeholder for your *
 * Open a terminal session to log in to your host:
 
 ```
-ssh hostname-<GUID>.rhpds.opentlc.com
+ssh bastion-<GUID>.rhpds.opentlc.com
 ```
 
 * Or open a browser to access a web UI:
 
 ```
-https://hostname-<GUID>.rhods.opentlc.com
+https://bastion-<GUID>.rhods.opentlc.com
 ```
 
 >WARNING: *Replace <GUID> with the GUID assigned to your seat!*
@@ -75,14 +75,14 @@ https://hostname-<GUID>.rhods.opentlc.com
 
 If your GUID is *83d4*, do this:
 ```
-ssh hostname-83d4.rhpds.opentlc.com
+ssh bastion-83d4.rhpds.opentlc.com
 ```
 
 >TIP: The user will default to `lab-user` and SSH key authentication will be used automatically. If for any reason key authentication is not working and the SSH client is asking for a password, use *r3dh4t1!*
 
 Then become root:
 ```
-[lab-user@hostname-83d4 ~]$ sudo -i
+[lab-user@bastion ~]$ sudo -i
 ```
 
 Once you have been able to connect to the bastion host via SSH, you can start the lab you will need to follow the Lab content index that will take you to a step by step guide of each exercise.
