@@ -7,7 +7,7 @@
 ## **Authors/Lab Owners**
 * Daniel Dominguez <<ddomingu@redhat.com>>
 * Jorge Tudela <<jtudelag@redhat.com>>
-* Maurizio Garcia<<maugarci@redhat.com>>
+* Maurizio Garcia <<maugarci@redhat.com>>
 * Daniel Parkes <<dparkes@redhat.com>>
 
 ## **Lab Contents**
