@@ -23,8 +23,11 @@
 </head>
 <body><div id="readme" class="container"><article class="markdown-body entry-content"><h1 id="getting-familiar-with-our-lab-environment">Getting Familiar with our Lab environment</h1>
 <p>Our Lab environment is composed of two Datacenters, DC1 and DC2,  with one Red hat Ceph Storage Cluster(RHCS) on each site.</p>
+<p>Once you access your Lab Environment you will be on the bastion host, this node has access to both DCs, from the Bastion host you have access to all servers via ssh with the cloud-user user, so for example to connect to cepha you can use:</p>
+<p><code>bastion# ssh cloud-user@cepha
+ cepha$ sudo -i</code></p>
 <p>Here is a Diagram of the Lab environment</p>
-<center><img src="labIntro4/images/lab_description.jpg" style="width:600px;" border="0/"></center>
+<center><img src="labIntro4/images/lab_description.jpg" style="height:500px;" border="0/"></center>
 
 
 <h3 id="network-details-for-dc1-datacenter-rhcs-deployment">Network details for DC1 datacenter RHCS deployment</h3>
@@ -178,11 +181,12 @@
 <li>2 x Ceph OSD Services</li>
 <li>1 x CEPH RGW Service</li>
 </ul>
-<p>To save some time the Red hat Ceph Storage Cluster(RHCS) in DC1 is already deployed for you. </p>
-<p>The idea is that you first we will deploy the second (DC2) Ceph cluster, configure the RGWs there,
-then configure an active/active multi-site replication, so objects are replicated across clusters,
-and each Ceph cluster RGWs are working in a active mode.</p>
-<p>Finally we will deploy</p>
+<p>To save some time the Red hat Ceph Storage Cluster(RHCS) and Ceph-Netrics is already deployed for you in DC1.</p>
+<p>The idea is that you first we will deploy the second (DC2) RHCS Ceph cluster, configure the RGWs services there,
+then configure RGW active/active multi-site replication, so objects are replicated across clusters,
+and both Ceph cluster RGWs are working in a active mode.</p>
+<p>Once we have the RGW mulsitiste configured we will use a S3 client to test our deployment</p>
+<p>Finally we will deploy ceph-metrics on DC2, so we can check how our cluster if performing while we are uploading objects with our S3 client.</p>
 <h2 id="-home-"><a href="https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/"><strong>-- HOME --</strong></a></h2>
 </article></div><div style="background-color: #b4b2b2;width: 50px;height:50px;line-height: 50px;text-align: center;position: fixed;bottom: 10px;right: 10px;padding-top:5px;" onclick="document.documentElement.scrollTop = document.body.scrollTop =0;">
   <svg t="1533629773982" class="icon" style="" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1035" xlink="http://www.w3.org/1999/xlink" width="40" height="40"><defs><style type="text/css">@font-face { font-family: uc-nexus-iconfont; src: url("chrome-extension://pogijhnlcfmcppgimcaccdkmbedjkmhi/res/font_9qmmi8b8jsxxbt9.woff") format("woff"), url("chrome-extension://pogijhnlcfmcppgimcaccdkmbedjkmhi/res/font_9qmmi8b8jsxxbt9.ttf") format("truetype"); }
