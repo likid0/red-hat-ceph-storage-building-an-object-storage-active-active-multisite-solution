@@ -105,9 +105,6 @@ Once we have the RGW mulsi-tiste configured we will use a S3 client to test our 
 
 Finally we will deploy Ceph-Metrics on DC2, so we can check how our cluster is performing while we are uploading objects with the S3 client.
 
-You can start with the first exercise following this link:
-
-[Install and configure RHCS ceph cluster in DC2 site](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario1/01-DC2_ceph_cluster_installation)
-
+## [**Next: Install and configure RHCS ceph cluster in DC2 site**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario1/01-DC2_ceph_cluster_installation)
 
 ## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)

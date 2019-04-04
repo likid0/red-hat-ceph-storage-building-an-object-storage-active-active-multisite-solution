@@ -186,5 +186,8 @@ The file is also accessible from zone DC1, our active/active multisite cluster i
 s3cmd -c ~/s3-dc1.cfg  ls  s3://my-second-bucket
 2019-03-25 08:20    181085   s3://my-second-bucket/messages
 ```
+https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario5/05-DC2_cephmetrics_configuration
+
+## [**Next: Configure ceph-metrics on DC2**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario5/05-DC2_cephmetrics_configuration)
 
 ## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)

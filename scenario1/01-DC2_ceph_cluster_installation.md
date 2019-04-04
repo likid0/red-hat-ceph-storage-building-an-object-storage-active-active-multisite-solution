@@ -335,11 +335,8 @@ There is also the OSD status command where we can see the status of the OSDs, di
 +----+-------------------------+-------+-------+--------+---------+--------+---------+-----------+
 ```
 
-So once we have checked that both clusters are healthy and ready to be used, let's start with the configuration of our rgw multisite.
+So once we have checked that both clusters are healthy and ready to be used, let's start with the configuration of our RGW multisite.
 
-
-[Scenario2. RadosGW Configuration](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario2/02-RadosGW_configuration)
-
-
+## [**Next: RGW Configuration**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario2/02-RadosGW_configuration)
 
 ## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)

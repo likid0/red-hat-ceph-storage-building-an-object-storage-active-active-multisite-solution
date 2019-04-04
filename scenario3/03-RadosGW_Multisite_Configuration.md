@@ -471,4 +471,6 @@ radosgw-admin --cluster dc2 user list
 ]
 ```
 
+## [**Next: Configure S3 client**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario4/04-Configure_S3_client)
+
 ## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)

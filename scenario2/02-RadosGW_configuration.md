@@ -102,6 +102,8 @@ You can see we are setting the same zonegroup "production" for the two clusters,
 #ansible-playbook -i site-docker.yml -l rgws
 ```
 
+## [**Next: RGW Multisite Configuration**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario3/03-RadosGW_Multisite_Configuration)
+
 ## Sources
 
 * [Red Hat Ceph Storage Object Gateway Guide For RHEL](https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html-single/object_gateway_guide_for_red_hat_enterprise_linux/index)
