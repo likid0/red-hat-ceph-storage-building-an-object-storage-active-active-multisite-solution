@@ -15,7 +15,7 @@ Here is and example:
 
 Remember, s3cmd is installed in the bastion host:
 ```
-s3cmd --configure
+[root@bastion ~]# s3cmd --configure
 
 Enter new values or accept defaults in brackets with Enter.
 Refer to user manual for detailed description of all options.
@@ -72,7 +72,7 @@ Configuration saved to '/root/.s3cfg'
 As you can see the configuration for the client has been saved to the following path /root/.s3cfg , lets change the name of the config file to /root/s3-dc1.cfg
 
 ```
-mv /root/.s3cfg /root/s3-dc1.cfg
+[root@bastion ~]# mv /root/.s3cfg /root/s3-dc1.cfg
 ```  
 
 ## Create a bucket
@@ -80,12 +80,12 @@ mv /root/.s3cfg /root/s3-dc1.cfg
 Let's create a first bucket using the `s3cmd mb` command, because are not using the default location for the config file of /root/.s3cfg. we need to specify with `-c ~/s3-dc1.cfg` the location of our s3cmd config:
 
 ```
-s3cmd -c ~/s3-dc1.cfg mb s3://my-first-bucket
+[root@bastion ~]# s3cmd -c ~/s3-dc1.cfg mb s3://my-first-bucket
 Bucket 's3://my-first-bucket/' created
 ```
 
 ```
-s3cmd -c ~/s3-dc1.cfg ls
+[root@bastion ~]# s3cmd -c ~/s3-dc1.cfg ls
 2019-03-24 17:49  s3://my-first-bucket
 ```
 
@@ -94,12 +94,12 @@ s3cmd -c ~/s3-dc1.cfg ls
 Let's upload a file, we are going to use the s3cmd RPM as an example:
 
 ```
-ls
+[root@bastion ~]# ls
 anaconda-ks.cfg  ansible  ceph-ansible-keys  dc1  dc2  original-ks.cfg  red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution  s3cmd-2.0.2-1.el7.noarch.rpm  sync-repos.sh
 ```
 
 ```
-s3cmd -c ~/s3-dc1.cfg put s3cmd-2.0.2-1.el7.noarch.rpm s3://my-first-bucket/
+[root@bastion ~]# s3cmd -c ~/s3-dc1.cfg put s3cmd-2.0.2-1.el7.noarch.rpm s3://my-first-bucket/
 
 upload: 's3cmd-2.0.2-1.el7.noarch.rpm' -> 's3://my-first-bucket/s3cmd-2.0.2-1.el7.noarch.rpm'  [1 of 1]
  194693 of 194693   100% in    2s    85.00 kB/s  done
@@ -126,7 +126,7 @@ If we run the sync status command after running a put of a large object we would
 
 From the bastion:
 ```
-radosgw-admin  --cluster dc2 sync status
+[root@bastion ~]# radosgw-admin  --cluster dc2 sync status
           realm 80827d79-3fce-4b55-9e73-8c67ceab4f73 (summitlab)
       zonegroup 88222e12-006a-4cac-a5ab-03925365d817 (production)
            zone ed9f1807-7bc8-48c0-b82f-0fa1511ba47b (dc2)
@@ -147,7 +147,7 @@ We can also check that the replication is working by connecting to the second zo
 
 From the bastion:
 ```
-radosgw-admin --cluster dc2 bucket list
+[root@bastion ~]# radosgw-admin --cluster dc2 bucket list
 [
     "my-first-bucket"
 ]
@@ -155,7 +155,7 @@ radosgw-admin --cluster dc2 bucket list
 
 Our bucket has been created lets take a look at the objects inside the DC2 data pool:
 ```
-rados --cluster dc2  -p dc2.rgw.buckets.data ls
+[root@bastion ~]# rados --cluster dc2  -p dc2.rgw.buckets.data ls
 602f21ea-7664-4662-bad8-0c3840bb1d7a.314154.1_s3cmd-2.0.2-1.el7.noarch.rpm
 ```
 
@@ -165,25 +165,24 @@ As we explained in the introduction RGW can be use as an active/active object st
 
 First we need to create a config file that is pointing to the endpoints of DC(ceph1:8080), we are going to use sed to create a new file from our current DC1 s3cmd configuration file, we only need to replace the endpoint from cepha to ceph1,there is no need to use a different user, all the metadata, including users is replicated between both sites.
 ```
-sed 's/cepha/ceph1/g' /root/s3-dc1.cfg > /root/s3-dc2.cfg
-
-s3cmd -c ~/s3-dc2.cfg  ls
+[root@bastion ~]# sed 's/cepha/ceph1/g' /root/s3-dc1.cfg > /root/s3-dc2.cfg
+[root@bastion ~]# s3cmd -c ~/s3-dc2.cfg  ls
 2019-03-24 17:49  s3://my-first-bucket
 ```
 
 We can create a bucket in dc2 and store a file:
 ```
-s3cmd -c ~/s3-dc2.cfg  mb  s3://my-second-bucket
+[root@bastion ~]# s3cmd -c ~/s3-dc2.cfg  mb  s3://my-second-bucket
 Bucket 's3://my-second-bucket/' created
 
-s3cmd -c ~/s3-dc2.cfg  put /var/log/messages  s3://my-second-bucket
+[root@bastion ~]# s3cmd -c ~/s3-dc2.cfg  put /var/log/messages  s3://my-second-bucket
 upload: '/var/log/messages' -> 's3://my-second-bucket/messages'  [1 of 1]
  181085 of 181085   100% in    0s    10.22 MB/s  done
  ```
 
 The file is also accessible from zone DC1, our active/active multisite cluster is working without issues.
  ```
-s3cmd -c ~/s3-dc1.cfg  ls  s3://my-second-bucket
+[root@bastion ~]# s3cmd -c ~/s3-dc1.cfg  ls  s3://my-second-bucket
 2019-03-25 08:20    181085   s3://my-second-bucket/messages
 ```
 https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario5/05-DC2_cephmetrics_configuration
