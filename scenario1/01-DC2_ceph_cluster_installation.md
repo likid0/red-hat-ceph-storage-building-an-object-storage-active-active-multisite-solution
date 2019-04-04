@@ -266,9 +266,9 @@ And for DC2 cluster:
     pgs:     32 active+clean
 ```
 
-Information that we get from the status command, we can see that the cluster global heath is `ok`. In the services section we can see that we have 3 mons running on ceph1,ceph2,ceph3, and active manager currently running on ceph2 with 2 `stanby` nodes ceph1,ceph2 in case ceph2 fails. 
+Information that we get from the status command, we can see that the cluster global heath is `ok`. In the services section we can see that we have 3 mons running on ceph1,ceph2,ceph3, and active manager currently running on ceph2 with 2 `stanby` nodes ceph1,ceph2 in case ceph2 fails.
 
-We have also 6 OSDs, 2 OSDs per node(disks vdc,vdd), all the the 6 OSDs are `up` and `in`; We also can see 1 RGW daemon running. 
+We have also 6 OSDs, 2 OSDs per node(disks vdc,vdd), all the the 6 OSDs are `up` and `in`; We also can see 1 RGW daemon running.
 
 Finally on the data section we can see that 3 have 3 pools created, these 4 pools have a total 32 pgs (Placement Groups) used, we can see the current cluster usage at the moment is 6GB out the 60gb we have available(each OSD has 10gb, 2 ODSs per 3 nodes gives us our 60gb), and the 32 pgs are in `active-clean` state.
 
@@ -336,5 +336,10 @@ There is also the OSD status command where we can see the status of the OSDs, di
 ```
 
 So once we have checked that both clusters are healthy and ready to be used, let's start with the configuration of our rgw multisite.
+
+
+[Scenario2. RadosGW Configuration](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario2/02-RadosGW_configuration)
+
+
 
 ## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
