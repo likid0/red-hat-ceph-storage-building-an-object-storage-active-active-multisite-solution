@@ -4,7 +4,7 @@ Our Lab environment is composed of two Datacenters, DC1 and DC2,  with one Red h
 
 Here is a Diagram of the Lab environment
 
-<center><img src="labIntro4/images/lab_description.jpg" style="width:600px;" border=0/></center>
+<center><img src="labIntro4/images/lab_description.jpg" style="height:500px;" style="width:600px;" border=0/></center>
 
 
 ### Network details for DC1 datacenter RHCS deployment
