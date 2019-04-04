@@ -26,6 +26,7 @@
 3. [**Configure RadosGW as an Active/Active Multisite Cluster**](/scenario3/03-RadosGW_Multisite_Configuration.md)
 4. [**Configure a S3 client and check the Multisite Deployment**](/scenario4/04-Configure_S3_client.md)
 5. [**Configure ceph-metrics on cluster DC2**](/scenario5/05-DC2_cephmetrics_configuration.md)
+6. [**Playing with S3 policies**](/scenario6/06-S3_policies.md)
 
 
 ## **Welcome**
