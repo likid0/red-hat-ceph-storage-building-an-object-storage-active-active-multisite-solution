@@ -1,19 +1,22 @@
 # Getting Familiar with our Lab environment
 
-Our Lab environment is composed of two Datacenters, DC1 and DC2,  with one Red hat Ceph Storage Cluster on each site.
+Our Lab environment is composed of two Datacenters, DC1 and DC2,  with one Red hat Ceph Storage Cluster(RHCS) on each site.
 
-The Red hat Ceph Storage Cluster (DC1) is already deployed for you.
+Here is a Diagram of the Lab environment
 
 <center><img src="labIntro4/images/lab_description.jpg" style="width:600px;" border=0/></center>
 
-###DC1 has 2 networks:
+
+### Network details for DC1 datacenter RHCS deployment
+
+#### DC1 has 2 networks:
 
 | Network Name     | CIDR     |
 | :------------- | :------------- |
 | Ceph Public Network       |    10.0.0.0/24    |
 | Ceph Private Network      |    192.168.0.0/24 |
 
-###DC1 has the following VMs:
+#### DC1 has the following VMs:
 
 
 * 1 HA proxy node:
@@ -21,7 +24,6 @@ The Red hat Ceph Storage Cluster (DC1) is already deployed for you.
 | Hostname     | IP     |
 | :------------- | :------------- |
 | lbdc1.summit.lab       |  10.0.0.100      |
-
 
 
 * 3 ceph nodes:
@@ -40,12 +42,50 @@ The Red hat Ceph Storage Cluster (DC1) is already deployed for you.
 | metricsd.summit.lab       |  10.0.0.14     |
 
 
+### Network details for DC2 datacenter RHCS deployment
 
-Each cluster consists of 3 VMs, each VM will run:
+#### DC2 has 2 networks:
 
-* 1 Ceph Monitor Service
-* 2 Ceph OSD Services
-* 1 CEPH RGW Service
+| Network Name     | CIDR     |
+| :------------- | :------------- |
+| Ceph Public Network       |    172.16.0.0/24    |
+| Ceph Private Network      |    192.168.1.0/24 |
+
+#### DC2 has the following VMs:
+
+
+* 1 HA proxy node:
+
+| Hostname     | IP     |
+| :------------- | :------------- |
+| lbdc1.summit.lab       |  172.16.0.100      |
+
+
+* 3 ceph nodes:
+
+| Hostname     | IP     |
+| :------------- | :------------- |
+| ceph1.summit.lab       |  172.16.0.11     |
+| ceph2.summit.lab       |  172.16.0.12     |
+| ceph3.summit.lab       |  172.16.0.13     |  
+
+
+* 1 Ceph Metrics node:
+
+| Hostname     | IP     |
+| :------------- | :------------- |
+| metrics4.summit.lab       |  172.16.0.14     |
+
+
+Each RHCS cluster consists of 3 VMs, each VM will run:
+
+* 1 x Ceph Monitor Service
+* 1 x Ceph MGR service
+* 2 x Ceph OSD Services
+* 1 x CEPH RGW Service
+
+
+To save some time the Red hat Ceph Storage Cluster(RHCS) in DC1 is already deployed for you. 
 
 The idea is that you first we will deploy the second (DC2) Ceph cluster, configure the RGWs there,
 then configure an active/active multi-site replication, so objects are replicated across clusters,

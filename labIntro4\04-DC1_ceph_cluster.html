@@ -22,11 +22,13 @@
 </style>
 </head>
 <body><div id="readme" class="container"><article class="markdown-body entry-content"><h1 id="getting-familiar-with-our-lab-environment">Getting Familiar with our Lab environment</h1>
-<p>Our Lab environment is composed of two Datacenters, DC1 and DC2,  with one Red hat Ceph Storage Cluster on each site.</p>
-<p>The Red hat Ceph Storage Cluster (DC1) is already deployed for you.</p>
+<p>Our Lab environment is composed of two Datacenters, DC1 and DC2,  with one Red hat Ceph Storage Cluster(RHCS) on each site.</p>
+<p>Here is a Diagram of the Lab environment</p>
 <center><img src="labIntro4/images/lab_description.jpg" style="width:600px;" border="0/"></center>
 
-<p>###DC1 has 2 networks:</p>
+
+<h3 id="network-details-for-dc1-datacenter-rhcs-deployment">Network details for DC1 datacenter RHCS deployment</h3>
+<h4 id="dc1-has-2-networks-">DC1 has 2 networks:</h4>
 <table>
 <thead>
 <tr>
@@ -43,7 +45,7 @@
 <td align="left">192.168.0.0/24</td>
 </tr>
 </tbody></table>
-<p>###DC1 has the following VMs:</p>
+<h4 id="dc1-has-the-following-vms-">DC1 has the following VMs:</h4>
 <ul>
 <li>1 HA proxy node:</li>
 </ul>
@@ -97,12 +99,86 @@
 <td align="left">10.0.0.14</td>
 </tr>
 </tbody></table>
-<p>Each cluster consists of 3 VMs, each VM will run:</p>
+<h3 id="network-details-for-dc2-datacenter-rhcs-deployment">Network details for DC2 datacenter RHCS deployment</h3>
+<h4 id="dc2-has-2-networks-">DC2 has 2 networks:</h4>
+<table>
+<thead>
+<tr>
+<th align="left">Network Name</th>
+<th align="left">CIDR</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Ceph Public Network</td>
+<td align="left">172.16.0.0/24</td>
+</tr>
+<tr>
+<td align="left">Ceph Private Network</td>
+<td align="left">192.168.1.0/24</td>
+</tr>
+</tbody></table>
+<h4 id="dc2-has-the-following-vms-">DC2 has the following VMs:</h4>
 <ul>
-<li>1 Ceph Monitor Service</li>
-<li>2 Ceph OSD Services</li>
-<li>1 CEPH RGW Service</li>
+<li>1 HA proxy node:</li>
 </ul>
+<table>
+<thead>
+<tr>
+<th align="left">Hostname</th>
+<th align="left">IP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">lbdc1.summit.lab</td>
+<td align="left">172.16.0.100</td>
+</tr>
+</tbody></table>
+<ul>
+<li>3 ceph nodes:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Hostname</th>
+<th align="left">IP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">ceph1.summit.lab</td>
+<td align="left">172.16.0.11</td>
+</tr>
+<tr>
+<td align="left">ceph2.summit.lab</td>
+<td align="left">172.16.0.12</td>
+</tr>
+<tr>
+<td align="left">ceph3.summit.lab</td>
+<td align="left">172.16.0.13</td>
+</tr>
+</tbody></table>
+<ul>
+<li>1 Ceph Metrics node:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Hostname</th>
+<th align="left">IP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">metrics4.summit.lab</td>
+<td align="left">172.16.0.14</td>
+</tr>
+</tbody></table>
+<p>Each RHCS cluster consists of 3 VMs, each VM will run:</p>
+<ul>
+<li>1 x Ceph Monitor Service</li>
+<li>1 x Ceph MGR service</li>
+<li>2 x Ceph OSD Services</li>
+<li>1 x CEPH RGW Service</li>
+</ul>
+<p>To save some time the Red hat Ceph Storage Cluster(RHCS) in DC1 is already deployed for you. </p>
 <p>The idea is that you first we will deploy the second (DC2) Ceph cluster, configure the RGWs there,
 then configure an active/active multi-site replication, so objects are replicated across clusters,
 and each Ceph cluster RGWs are working in a active mode.</p>
