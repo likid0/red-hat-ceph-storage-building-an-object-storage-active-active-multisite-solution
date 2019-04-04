@@ -90,17 +90,28 @@ Each RHCS cluster consists of 3 VMs, each VM will run:
 * 1 x CEPH RGW Service
 
 
-To save some time the Red hat Ceph Storage Cluster(RHCS) and Ceph-Netrics is already deployed for you in DC1.
+## Lab exercises
+
+To save some time the RHCS ceph cluster and Ceph-Netrics is already deployed for you in DC1.
+
+The bastion host is configured as a ceph client so you can check the status of the RHCS ceph cluster installed in dc1 using:
+
+`ceph --cluster dc1 -s`
 
 
 
-The idea is that you first we will deploy the second (DC2) RHCS Ceph cluster, configure the RGWs services there,
-then configure RGW active/active multi-site replication, so objects are replicated across clusters,
-and both Ceph cluster RGWs are working in a active mode.
 
-Once we have the RGW mulsitiste configured we will use a S3 client to test our deployment
+First we will deploy the second (DC2) RHCS Ceph cluster, configure the RGWs services there.
 
-Finally we will deploy ceph-metrics on DC2, so we can check how our cluster if performing while we are uploading objects with our S3 client.
+In second place we will configure RGW multi-site replication, where objects can be uploaded to both sites and then replicated to the other cluster
+
+Once we have the RGW mulsi-tiste configured we will use a S3 client to test our deployment.
+
+Finally we will deploy Ceph-Metrics on DC2, so we can check how our cluster is performing while we are uploading objects with the S3 client.
+
+You can start with the first exercise following this link:
+
+[Install and configure RHCS ceph cluster in DC2 site](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario1/01-DC2_ceph_cluster_installation)
 
 
 ## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
