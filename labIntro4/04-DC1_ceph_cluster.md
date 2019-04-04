@@ -9,9 +9,7 @@ Once you access your Lab Environment you will be on the bastion host, this node 
 
 Here is a Diagram of the Lab environment
 
-[comment]: # <center><img src="labIntro4/images/lab_description.jpg" border=0/></center>
-
-<img src="labIntro4/images/lab_description.jpg"/>
+<img src="labIntro4/images/lab_description.jpg" width="120" height="120"/>
 
 
 ## Network details for DC1 datacenter RHCS deployment
