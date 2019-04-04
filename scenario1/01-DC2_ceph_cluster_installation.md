@@ -25,7 +25,7 @@ Go into our ceph-ansible configuration dir for DC2 cluster:
 
 We have a pre-defined inventory, with our Ceph nodes for our cluster in DC2.
 
-Like we have mentioned before we are going to run the MONs, MGRs, OSDs on the 3 ceph nodes ceph1,2,3.
+Like we have mentioned before we are going to run the MONs, MGRs, OSDs on the 3 ceph nodes ceph[1,2,3]
 We are also adding our Ceph nodes and the bastion host as clients so the ceph-keys get copied to the nodes and we can run Ceph commands from the bastion.
 
 Finally we will configure a RGW service to run on ceph1 node.
