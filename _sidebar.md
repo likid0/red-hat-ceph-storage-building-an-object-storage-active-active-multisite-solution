@@ -8,3 +8,4 @@
 * [Scenario 3 - Configure RGW Multisite Cluster](/scenario3/03-RadosGW_Multisite_Configuration.md)
 * [Scenario 4 - Configure a S3 client](/scenario4/04-Configure_S3_client.md)
 * [Scenario 5 - Configure ceph-metrics on DC2](/scenario5/05-DC2_cephmetrics_configuration.md)
+* [Scenario 6 - S3 policies](/scenario6/06-S3_policies.md)
