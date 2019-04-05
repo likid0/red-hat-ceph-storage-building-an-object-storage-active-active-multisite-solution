@@ -1,145 +1,219 @@
-## Giving external users access to our buckets
+# S3 policies: Giving external users access to our buckets
+
+From previous labs, we have two different users:
+- summit19
+- test-user
+
+In this lab we are going to check how S3 policies work and how we can allow access to our personal buckets to other users.
 
 
-We need to connect to our metrics virtual machine it's hostname is metrics4
-
-```
-[root@bastion ~]# ssh cloud-user@metrics4
-Warning: Permanently added 'metrics4,172.16.0.14' (ECDSA) to the list of known hosts.
-Last login: Fri Mar 22 18:49:10 2019 from 172.16.0.10
-[cloud-user@metrics4 ~]$ sudo -i
-```
-
-We have cephmetrics-ansible already pre-installed on the system, lets check
+Using *summit19* user credentials, we are going to create a new bucket
 
 ```
-[root@metrics4 ~]# yum list installed | grep -i cephmetrics
-cephmetrics-ansible.x86_64       2.0.2-1.el7cp               @rhel-7-server-rhceph-3-tools-rpms
-
+[root@bastion ~]# s3cmd -c ~/s3-dc1.cfg mb s3://test-s3-policies
+Bucket 's3://test-s3-policies/' created
 ```
 
-The ansible playbooks are stored in /usr/share/cephmetrics-ansible/
+Verify that we can upload new objects to our recently created bucket
 
 ```
-[root@metrics4 ~]# cd /usr/share/cephmetrics-ansible/
-[root@metrics4 cephmetrics-ansible]# ls
-ansible.cfg  group_vars  inventory  inventory.sample  playbook.yml  purge.yml  README.md  roles
+[root@bastion ~]# s3cmd -c ~/s3-dc1.cfg put /etc/hostname s3://test-s3-policies/test
+PENDING RESULT
 ```
 
-Lets check the all.yml group_vars variable file, here we can specify the name of the cluster, if we want to do a containerized deployment, were is our registry and also specify the grafana users to access the metrics dashboard.
-
-To try and save some time, the inventory and the variables have already been pre-configured for you.
+Using *test-user* credentials, try to list the content of the bucket *test-s3-policies*
 
 ```
-[root@metrics4 cephmetrics-ansible]# cat group_vars/all.yml
-dummy:
-
-cluster_name: dc2
-
-containerized: true
-
-# Set the backend options, mgr+prometheus or cephmetrics+graphite
-#backend:
-#  metrics: mgr  # mgr, cephmetrics
-#  storage: prometheus  # prometheus, graphite
-
-# Turn on/off devel_mode
-#devel_mode: true
-
-# Set grafana admin user and password
-# You need to change these in the web UI on an already deployed machine, first
-# New deployments work fine
-grafana:
-  admin_user: admin
-  admin_password: redhat01
-  container_name: 172.16.0.10:5000/rhceph/rhceph-3-dashboard-rhel7
-prometheus:
-  container_name: 172.16.0.10:5000/openshift3/prometheus
-  etc_hosts:
-    172.16.0.11: ceph1.summit.lab
-    172.16.0.12: ceph2.summit.lab
-    172.16.0.13: ceph3.summit.lab
-    172.16.0.14: metrics4.summit.lab
+[root@bastion ~]# s3cmd -c ~/s3-test-user-dc1.cfg ls s3://test-s3-policies
+PENDING RESULT (EXPECTED RESULT: 403 Forbidden)
 ```
 
-We can now run the installation playbook.
+To allow other users to access one of our buckets, we need to write a new policy in JSON format.
+
+We can specify fine-grain actions. All possible actions are documented in [upstream Ceph documentation](
+http://docs.ceph.com/docs/luminous/radosgw/bucketpolicy/)
+
+Create a new file with our bucket policy
 
 ```
-[root@metrics4 cephmetrics-ansible]# ansible-playbook -i inventory playbook.yml
+[root@bastion ~]# vim policy.json
+{
+	"Version": "2012-10-17",
+	"Id": "test-s3-policies",
+	"Statement": [{
+			"Sid": "bucket-owner-full-permission",
+			"Effect": "Allow",
+			"Principal": {
+				"AWS": [
+					"arn:aws:iam:::user/summit19"
+				]
+			},
+			"Action": [
+				"s3:*"
+			],
+			"Resource": [
+				"arn:aws:s3:::*"
+			]
+		},
+		{
+			"Sid": "test-user-list-bucket",
+			"Effect": "Allow",
+			"Principal": {
+				"AWS": [
+					"arn:aws:iam:::user/test-user"
+				]
+			},
+			"Action": [
+				"s3:ListBucket"
+			],
+			"Resource": [
+				"arn:aws:s3:::*"
+			]
+		},
+		{
+			"Sid": "test-user-read",
+			"Effect": "Allow",
+			"Principal": {
+				"AWS": [
+					"arn:aws:iam:::user/test-user"
+				]
+			},
+			"Action": [
+				"s3:GetObject"
+			],
+			"Resource": [
+				"arn:aws:s3:::test-s3-policies/*"
+			]
+		}
+	]
+}
 ```
 
-If everything has gone fine during the installation you should see a recap similar to this one
+Using *summit19* user credentials, set the new policy to *test-s3-policies* buckets
 
 ```
-PLAY RECAP ************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
-ceph1                      : ok=22   changed=4    unreachable=0    failed=0   
-ceph2                      : ok=13   changed=2    unreachable=0    failed=0   
-ceph3                      : ok=13   changed=2    unreachable=0    failed=0   
-localhost                  : ok=1    changed=0    unreachable=0    failed=0   
-metrics4                   : ok=76   changed=19   unreachable=0    failed=0   
+[root@bastion ~]# s3cmd -c ~/s3-dc1.cfg setpolicy policy.json s3://test-s3-policies/test
+PENDING RESULT
 ```
 
-We can now go to a browser on your lab laptop and connect to the grapaha dashboard.
-
-> NOTE: On the provided URL you have to replace GUID with the GUID assigned to your lab.
-
-> NOTE: You will have to use http, to keep it simple we are not using ssl.
-
-|    Param  | Configuration    |
-| :------------- | :------------- |
-| URL       | http://metricsd-GUID.rhpds.opentlc.com:3000   |
-| User | admin |
-|Password | redhat01 |
-
-
-Once you have entered the grafana credentials you will be presented with the ceph-metrics landing page.
-
-<center><img src="scenario5/images/01cephmetrics-ataglance.png" style="width:1200px;" border=0/></center>
-
-On the upper left of the page where it says Ceph At A Glance, you can access all the different ceph-metrics dashboards available, please take some time to explore.
-
-<center><img src="scenario5/images/02cephmetrics-dashboards.png" style="width:1200px;" border=0/></center>
-
-Now that you are familiar with some of the ceph-metrics dashboard lets put some objects into the cluster and see how it's represented in grafana.
-
-First lets open the the "ceph storage backend" dashboard, and expand the "Disk/OSD Load" Summary and the "OSD Host CPU and Network Load" bullets
-
-<center><img src="scenario5/images/03cephmetrics-backends.png" style="width:1200px;" border=0/></center>
-
-From the bastion host we are going to create a 2GB file and upload it to our DC2 cluster, once the file starts uploading we can switch to grafana and see how the metrics vary, we should see the total throughput and IOPs increase.
+Using *test-user* credentials, try to list the content of *test-s3-policies* buckets
 
 ```
-[root@bastion ~]# fallocate -l 2G testfile
-[root@bastion ~]# s3cmd -c ~/s3-dc2.cfg  put testfile  s3://my-second-bucket
+[root@bastion ~]# s3cmd -c ~/s3-test-user-dc1.cfg ls s3://test-s3-policies
+PENDING RESULT (EXPECTED RESULT: 200 OK)
 ```
 
-Also check via the ceph cli that the DC1 zone is doing a sync to keep up with changes in dc2
+Using *test-user* credentials, try to read the content of the test file
 
 ```
-[root@bastion ~]# radosgw-admin  --cluster dc1 sync status
-          realm 80827d79-3fce-4b55-9e73-8c67ceab4f73 (summitlab)
-      zonegroup 88222e12-006a-4cac-a5ab-03925365d817 (production)
-           zone 602f21ea-7664-4662-bad8-0c3840bb1d7a (dc1)
-  metadata sync no sync (zone is master)
-      data sync source: ed9f1807-7bc8-48c0-b82f-0fa1511ba47b (dc2)
-                        syncing
-                        full sync: 0/128 shards
-                        incremental sync: 128/128 shards
-                        1 shards are recovering
-                        recovering shards: [52]
+[root@bastion ~]# s3cmd -c ~/s3-test-user-dc1.cfg get s3://test-s3-policies/test /tmp/test
+PENDING RESULT (EXPECTED RESULT: 200 OK)
+[root@bastion ~]# cat /tmp/test
+PENDING RESULT
 ```
 
-We can also see, how our total storage available for both clusters has decreased
+Using *test-user* credentials, try to put a new object in *test-s3-policies* bucket
 
 ```
-[root@bastion ~]# ceph --cluster dc2  df | head -3
-GLOBAL:
-    SIZE        AVAIL       RAW USED     %RAW USED
-    60.0GiB     43.6GiB      16.4GiB         27.30
-[root@bastion ~]# ceph --cluster dc1  df | head -3
-GLOBAL:
-    SIZE        AVAIL       RAW USED     %RAW USED
-    60.0GiB     43.6GiB      16.4GiB         27.30
+[root@bastion ~]# s3cmd -c ~/s3-test-user-dc1.cfg put /etc/GREP_COLORS s3://test-s3-policies/test-user-file
+PENDING RESULT (EXPECTED RESULT: 403 Forbidden)
+```
+
+Modify our current bucket policy and allow *test-user* to write and delete objects in the *test-s3-policies* bucket
+
+```
+[root@bastion ~]# vim policy.json
+{
+	"Version": "2012-10-17",
+	"Id": "test-s3-policies",
+	"Statement": [{
+			"Sid": "bucket-owner-full-permission",
+			"Effect": "Allow",
+			"Principal": {
+				"AWS": [
+					"arn:aws:iam:::user/summit19"
+				]
+			},
+			"Action": [
+				"s3:*"
+			],
+			"Resource": [
+				"arn:aws:s3:::*"
+			]
+		},
+		{
+			"Sid": "test-user-list-bucket",
+			"Effect": "Allow",
+			"Principal": {
+				"AWS": [
+					"arn:aws:iam:::user/test-user"
+				]
+			},
+			"Action": [
+				"s3:ListBucket"
+			],
+			"Resource": [
+				"arn:aws:s3:::*"
+			]
+		},
+		{
+			"Sid": "test-user-read",
+			"Effect": "Allow",
+			"Principal": {
+				"AWS": [
+					"arn:aws:iam:::user/test-user"
+				]
+			},
+			"Action": [
+				"s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject"
+			],
+			"Resource": [
+				"arn:aws:s3:::test-s3-policies/*"
+			]
+		}
+	]
+}
+```
+
+Using *summit19* user credentials, set the new policy to *test-s3-policies* buckets
+
+```
+[root@bastion ~]# s3cmd -c ~/s3-dc1.cfg setpolicy policy.json s3://test-s3-policies/test
+PENDING RESULT
+```
+
+Using *test-user* credentials, try to list the content of *test-s3-policies* buckets
+
+```
+[root@bastion ~]# s3cmd -c ~/s3-test-user-dc1.cfg ls s3://test-s3-policies
+PENDING RESULT (EXPECTED RESULT: 200 OK)
+```
+
+Using *test-user* credentials, try to read the content of the test file
+
+```
+[root@bastion ~]# s3cmd -c ~/s3-test-user-dc1.cfg get s3://test-s3-policies/test /tmp/test
+PENDING RESULT (EXPECTED RESULT: 200 OK)
+[root@bastion ~]# cat /tmp/test
+PENDING RESULT
+```
+
+Using *test-user* credentials, try to put a new object in *test-s3-policies* bucket
+
+```
+[root@bastion ~]# s3cmd -c ~/s3-test-user-dc1.cfg put /etc/GREP_COLORS s3://test-s3-policies/test-user-file
+PENDING RESULT (EXPECTED RESULT: 200 OK)
+```
+
+Using *test-user* credentials, try to delete an object in *test-s3-policies* bucket
+
+```
+[root@bastion ~]# s3cmd -c ~/s3-test-user-dc1.cfg rm s3://test-s3-policies/test-user-file
+PENDING RESULT (EXPECTED RESULT: 200 OK)
+[root@bastion ~]# s3cmd -c ~/s3-test-user-dc1.cfg rm s3://test-s3-policies/test
+PENDING RESULT (EXPECTED RESULT: 200 OK)
 ```
 
 ## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
