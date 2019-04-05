@@ -19,6 +19,8 @@
       - python-docker
       - ceph-common
       - ipa-client
+      - tmux
+      - screen
 
 
   - import_tasks: task_config_network.yaml

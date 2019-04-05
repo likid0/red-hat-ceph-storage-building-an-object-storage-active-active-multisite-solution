@@ -17,7 +17,7 @@ metricsd
 metricsd
 
 [rgws]
-cepha
+ceph[a:c]
 
 [cephdc1]
 ceph[a:c]

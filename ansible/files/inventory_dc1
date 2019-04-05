@@ -18,6 +18,8 @@ metricsd
 
 [rgws]
 cepha
+cephb
+cephc
 
 [0bastion]
 bastion  ansible_connection=local
