@@ -91,7 +91,7 @@ Each RHCS cluster consists of 3 VMs, each VM will run:
 
 ## Lab exercises
 
-To save some time the RHCS ceph cluster and Ceph-Netrics is already deployed for you in DC1.
+To save some time the RHCS ceph cluster and Cephmetrics are already deployed for you in DC1.
 
 The bastion host is configured as a ceph client so you can check the status of the RHCS ceph cluster installed in dc1 using:
 
