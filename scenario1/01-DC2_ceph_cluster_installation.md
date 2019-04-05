@@ -303,7 +303,7 @@ pool 4 'default.rgw.log' replicated size 3 min_size 2 crush_rule 0 object_hash r
 
 To check how much space our pools are using, we can use the `ceph df` command to get a summary of space usage per pool in the cluster:
 ```
-[root@bastion ~]# ceph --cluster dc2  df
+[root@bastion ~]# ceph --cluster dc2 df
 GLOBAL:
     SIZE        AVAIL       RAW USED     %RAW USED
     60.0GiB     53.9GiB      6.03GiB         10.06
