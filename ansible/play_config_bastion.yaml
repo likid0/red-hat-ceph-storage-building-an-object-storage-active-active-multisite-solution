@@ -21,6 +21,7 @@
       - ipa-client
       - tmux
       - screen
+      - vim
 
 
   - import_tasks: task_config_network.yaml
