@@ -15,9 +15,9 @@ export REALM="summitlab"
 export ZONEGROUP="production"
 export MASTER_ZONE="dc1"
 export SECONDARY_ZONE="dc2"
-export ENDPOINTS_MASTER_ZONE="http://cepha:8080,cephb:8080,cephc:8080"
+export ENDPOINTS_MASTER_ZONE="http://cepha:8080,http://cephb:8080,http://cephc:8080"
 export URL_MASTER_ZONE="http://cepha:8080"
-export ENDPOINTS_SECONDARY_ZONE="http://ceph1:8080,ceph2:8080,ceph3:8080"
+export ENDPOINTS_SECONDARY_ZONE="http://ceph1:8080,http://ceph2:8080,http://ceph3:8080"
 export URL_SECONDARY_ZONE="http://ceph1:8080"
 export SYNC_USER="sync-user"
 export ACCESS_KEY="redhat"
@@ -104,6 +104,55 @@ radosgw-admin --cluster dc1 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=
     "realm_id": "81fb554d-079c-4047-8387-f68d16564cc3"
 }
 ```
+
+Let's do some checks before we continue into the next step, first lets list our realm,zonegroup and master zone that we just created with the radosgw-admin.
+
+```
+[root@bastion ceph-ansible]# radosgw-admin --cluster dc1 realm list
+{
+    "default_info": "4596a75e-1663-4940-9e4c-a51554a48b53",
+    "realms": [
+        "summitlab"
+    ]
+}
+
+[root@bastion ceph-ansible]# radosgw-admin --cluster dc1 zonegroup list
+{
+    "default_info": "35712d7d-9582-4dcd-b545-612829a27ad6",
+    "zonegroups": [
+        "production",
+        "default"
+    ]
+}
+
+[root@bastion ceph-ansible]# radosgw-admin --cluster dc1 zone list
+{
+    "default_info": "0163e851-3af0-4aa2-b01a-4ad11e4a86bd",
+    "zones": [
+        "dc1",
+        "default"
+    ]
+}
+```
+
+Also let's check our endpoints are configured ok:
+
+```
+[root@bastion ~]# radosgw-admin --cluster dc1 zonegroup  get production | grep -A 3 endpoints
+    "endpoints": [
+        "http://cepha:8080",
+        "http://cephb:8080",
+        "http://cephc:8080"
+--
+            "endpoints": [
+                "http://cepha:8080",
+                "http://cephb:8080",
+                "http://cephc:8080"
+```
+
+If everything looks ok, we can continue with the nex step
+
+
 
 ### Create the sync user in Master Zone and start the RGW service.
 
@@ -205,32 +254,35 @@ radosgw-admin --cluster dc1 zone modify --rgw-zone=${MASTER_ZONE} --access-key=$
 
 Update the period:
 ```
-radosgw-admin --cluster dc1 period update --commit
 {
-    "id": "9615afd8-819a-48bf-b309-66e79f874c8f",
+    "id": "72480644-e86d-4508-990c-ad4440266a3b",
     "epoch": 1,
-    "predecessor_uuid": "a188d0d3-cfe9-45e2-97c9-604d9d21221b",
+    "predecessor_uuid": "8d1ee72b-c987-4b16-85d1-7b663d4def60",
     "sync_status": [],
     "period_map": {
-        "id": "9615afd8-819a-48bf-b309-66e79f874c8f",
+        "id": "72480644-e86d-4508-990c-ad4440266a3b",
         "zonegroups": [
             {
-                "id": "00ba3e86-1207-49ba-9df6-cd2a8a07de2a",
+                "id": "35712d7d-9582-4dcd-b545-612829a27ad6",
                 "name": "production",
                 "api_name": "production",
                 "is_master": "true",
                 "endpoints": [
-                    "http://cepha:8080"
+                    "http://cepha:8080",
+                    "http://cephb:8080",
+                    "http://cephc:8080"
                 ],
                 "hostnames": [],
                 "hostnames_s3website": [],
-                "master_zone": "6d1a4a77-75bb-45ca-8088-05d6e7d3e223",
+                "master_zone": "0163e851-3af0-4aa2-b01a-4ad11e4a86bd",
                 "zones": [
                     {
-                        "id": "6d1a4a77-75bb-45ca-8088-05d6e7d3e223",
+                        "id": "0163e851-3af0-4aa2-b01a-4ad11e4a86bd",
                         "name": "dc1",
                         "endpoints": [
-                            "http://cepha:8080"
+                            "http://cepha:8080",
+                            "http://cephb:8080",
+                            "http://cephc:8080"
                         ],
                         "log_meta": "false",
                         "log_data": "false",
@@ -248,18 +300,18 @@ radosgw-admin --cluster dc1 period update --commit
                     }
                 ],
                 "default_placement": "default-placement",
-                "realm_id": "81fb554d-079c-4047-8387-f68d16564cc3"
+                "realm_id": "4596a75e-1663-4940-9e4c-a51554a48b53"
             }
         ],
         "short_zone_ids": [
             {
-                "key": "6d1a4a77-75bb-45ca-8088-05d6e7d3e223",
-                "val": 3389843235
+                "key": "0163e851-3af0-4aa2-b01a-4ad11e4a86bd",
+                "val": 3978111802
             }
         ]
     },
-    "master_zonegroup": "00ba3e86-1207-49ba-9df6-cd2a8a07de2a",
-    "master_zone": "6d1a4a77-75bb-45ca-8088-05d6e7d3e223",
+    "master_zonegroup": "35712d7d-9582-4dcd-b545-612829a27ad6",
+    "master_zone": "0163e851-3af0-4aa2-b01a-4ad11e4a86bd",
     "period_config": {
         "bucket_quota": {
             "enabled": false,
@@ -276,7 +328,7 @@ radosgw-admin --cluster dc1 period update --commit
             "max_objects": -1
         }
     },
-    "realm_id": "81fb554d-079c-4047-8387-f68d16564cc3",
+    "realm_id": "4596a75e-1663-4940-9e4c-a51554a48b53",
     "realm_name": "summitlab",
     "realm_epoch": 2
 }
@@ -284,24 +336,35 @@ radosgw-admin --cluster dc1 period update --commit
 
 ### Start RGW service in DC1 (cepha node).
 
-Start RGW --cluster dc1 service in the master zone nodes.
-Start the service in the cepha node:
+
+Now we can check that the RGW services should be running on our 3 nodes
 ```
-ansible -b -m shell -a "systemctl enable ceph-radosgw@rgw.* --now" cepha
+[root@bastion ~]# ceph --cluster dc1 -s | grep -i rgw
+    rgw: 3 daemons active
+    
+[root@bastion ~]# ansible -b -m shell -a "docker ps | grep rgw" cepha,cephb,cephc
+cephc | SUCCESS | rc=0 >>
+5995d5b99881        10.0.0.10:5000/rhceph/rhceph-3-rhel7:latest   "/entrypoint.sh"    About a minute ago   Up About a minute                       ceph-rgw-cephc
+
+cephb | SUCCESS | rc=0 >>
+14c3bbd08ac5        10.0.0.10:5000/rhceph/rhceph-3-rhel7:latest   "/entrypoint.sh"    About a minute ago   Up About a minute                       ceph-rgw-cephb
+
 cepha | SUCCESS | rc=0 >>
-Created symlink from /etc/systemd/system/multi-user.target.wants/ceph-radosgw@rgw.bastion.service to /etc/systemd/system/ceph-radosgw@.service.
+88b10f4aabd7        10.0.0.10:5000/rhceph/rhceph-3-rhel7:latest   "/entrypoint.sh"    2 minutes ago       Up 2 minutes                            ceph-rgw-cepha
 ```
 
-We can check with ceph status if the RGW service is running:
-```
-ceph --cluster dc1 -s | grep rgw
-    rgw: 1 daemon active
-```
 
-And also a quick check with curl so we can verify we can access port 8080 provided by the RGW service:
+And also a quick check with curl so we can verify we can access port 8080 provided by the RGW service on each node:
 ```
-curl http://cepha:8080
-<?xml version="1.0" encoding="UTF-8"?><ListAllMyBucketsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Owner><ID>anonymous</ID><DisplayName></DisplayName></Owner><Buckets></Buckets></ListAllMyBucketsResult>
+[root@bastion ~]# for NODE in a b c; do echo -e "\n" ; curl http://ceph${NODE}:8080; done
+
+
+<?xml version="1.0" encoding="UTF-8"?><Error><Code>NoSuchBucket</Code><BucketName>cepha</BucketName><RequestId>tx000000000000000000004-005cab7931-4b24e-dc1</RequestId><HostId>4b24e-dc1-production</HostId></Error>
+
+<?xml version="1.0" encoding="UTF-8"?><Error><Code>NoSuchBucket</Code><BucketName>cephb</BucketName><RequestId>tx000000000000000000004-005cab7931-48b05-dc1</RequestId><HostId>48b05-dc1-production</HostId></Error>
+
+<?xml version="1.0" encoding="UTF-8"?><Error><Code>NoSuchBucket</Code><BucketName>cephc</BucketName><RequestId>tx000000000000000000004-005cab7931-48b02-dc1</RequestId><HostId>48b02-dc1-production</HostId></Error>
+
 ```
 
 With these basic checks we can move forward and configure our DC2 ceph cluster as the slave zone in our zone-group
