@@ -133,7 +133,7 @@ ceph_rgw_docker_extra_env: "-e RGW_ZONE=dc2 -e RGW_ZONEGROUP=production"
 You can see we are setting the same zonegroup "production" for the two clusters, while zone is gonna be different, DC1 and DC2.
 ```
 #cd /root/dc2/ceph-ansible/
-#ansible-playbook -i inventoy site-docker.yml -l rgws
+#ansible-playbook -i inventory site-docker.yml -l rgws
 ```
 
 ## [**Next: RGW Multisite Configuration**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario3/03-RadosGW_Multisite_Configuration)
