@@ -136,6 +136,21 @@ You can see we are setting the same zonegroup "production" for the two clusters,
 #ansible-playbook -i inventory site-docker.yml -l rgws
 ```
 
+Once the playbook run finishes on both clusters, you should have 0 errors in the play recap of both clusters
+```
+PLAY RECAP ************************************************************************************************************************************************************************************************************************************
+cepha                      : ok=516  changed=30   unreachable=0    failed=0   
+cephb                      : ok=413  changed=25   unreachable=0    failed=0   
+cephc                      : ok=416  changed=26   unreachable=0    failed=0   
+```
+
+You won't see your RadosGW service listed in the ceph status command, don't worry this is normal, we have configured our rados gw services as part as a Realm/Zone that don't exist, thats why the service doesn't start, in the next section we are going to create the real,zonegroup and zones, then we can check that our Rados Gatewat Daemons are running like expected.
+```
+[root@bastion ceph-ansible]# ceph --cluster dc1 -s | grep rgw
+[root@bastion ceph-ansible]# 
+```
+
+
 ## [**Next: RGW Multisite Configuration**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario3/03-RadosGW_Multisite_Configuration)
 
 ## Sources
