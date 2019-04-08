@@ -144,7 +144,7 @@ cephb                      : ok=413  changed=25   unreachable=0    failed=0
 cephc                      : ok=416  changed=26   unreachable=0    failed=0   
 ```
 
-You won't see your RadosGW service listed in the ceph status command, don't worry this is normal, we have configured our rados gw services as part as a Realm/Zone that don't exist, thats why the service doesn't start, in the next section we are going to create the real,zonegroup and zones, then we can check that our Rados Gatewat Daemons are running like expected.
+You won't see your RadosGW service listed in the ceph status command, don't worry this is normal, we have configured our rados gw services as part of a Realm/Zone that currently don't exist, thats why the RGW service doesn't start, in the next section we are going to create the realm,zonegroup and zones, then we can check that our Rados Gatewat Daemons are running like expected.
 ```
 [root@bastion ceph-ansible]# ceph --cluster dc1 -s | grep rgw
 [root@bastion ceph-ansible]# 
