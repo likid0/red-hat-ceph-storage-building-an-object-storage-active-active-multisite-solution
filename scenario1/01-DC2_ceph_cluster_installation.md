@@ -204,7 +204,11 @@ copy_admin_key: true
 
 ## Run ceph-ansible installer!!
 
-With all the variables ready we can start the deployment of the Ceph cluster, on the root of the ceph-ansible dir /root/dc2/ceph-ansible we need to run the site-docker.yml playbook.
+With all the variables ready we can start the deployment of the Ceph cluster, 
+
+>WARNING: before running the installation we recommend using screen or tmux to avoid installation problems in case there are network issues.
+
+On the root of the ceph-ansible dir /root/dc2/ceph-ansible we need to run the site-docker.yml playbook.
 ```
 [root@bastion ~]# cd ~/dc2/ceph-ansible
 [root@bastion ceph-ansible]# cp site-docker.yml.sample site-docker.yml
