@@ -100,6 +100,29 @@ We have to follow the same steps on our second cluster in DC2:
     rgw_enable_apis: s3,admin
     rgw_zone: dc2
     rgw_thread_pool_size: 1024
+    rgw dns name: s3.dc2.summit.lab
+  client.rgw.ceph2:
+    host: ceph2
+    keyring: /var/lib/ceph/radosgw/ceph-rgw.ceph2/keyring
+    log file: /var/log/ceph/ceph-rgw-ceph2.log
+    rgw frontends: civetweb port=172.16.0.12:8080 num_threads=1024
+    rgw_dynamic_resharding: false
+    debug_civetweb: "0/1"
+    rgw_enable_apis: s3,admin
+    rgw_zone: dc2
+    rgw_thread_pool_size: 1024
+    rgw dns name: s3.dc2.summit.lab
+  client.rgw.ceph3:
+    host: ceph3
+    keyring: /var/lib/ceph/radosgw/ceph-rgw.ceph3/keyring
+    log file: /var/log/ceph/ceph-rgw-ceph3.log
+    rgw frontends: civetweb port=172.16.0.13:8080 num_threads=1024
+    rgw_dynamic_resharding: false
+    debug_civetweb: "0/1"
+    rgw_enable_apis: s3,admin
+    rgw_zone: dc2
+    rgw_thread_pool_size: 1024
+    rgw dns name: s3.dc2.summit.lab
 ```
 
 ```
