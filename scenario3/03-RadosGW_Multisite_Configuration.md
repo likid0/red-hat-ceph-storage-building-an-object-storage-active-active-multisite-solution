@@ -474,6 +474,8 @@ Now that our cluster is ready and we have cleaned up the default  pools, let's t
 
 First we need to create a RGW user, we have to save the access and secret key from the output.
 
+> NOTE: Save the access_key and secret_key You will need them for the next exercise
+
 ```
 radosgw-admin --cluster dc1 user create --uid="summit19" --display-name="Redhat Summit User"
 {
