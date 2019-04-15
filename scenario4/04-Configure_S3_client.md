@@ -9,7 +9,7 @@ s3cmd.noarch                  2.0.2-1.el7             installed
 
 Lets run the s3cmd command with the configure parameter so we can do a bootstrap config of our s3 client, we are going to first create the configuration for the dc1 zone:
 
-Please fill in the requested data by the application, we use the Access Key and the Secret key from the summit19 user that we created previously, and use cepha:8080 as the S3 endpoint:
+Please fill in the requested data by the application, we use the Access Key and the Secret key from the summit19 user that we created previously, and use s3.dc1.summit.lab as the S3 endpoint:
 
 Here is and example:
 
@@ -26,11 +26,11 @@ Secret Key: SJ15woJx8hnAz2mNGV78oUPSC3gliowojbOPf2Tb
 Default Region [US]: US
 
 Use "s3.amazonaws.com" for S3 Endpoint and not modify it to the target Amazon S3.
-S3 Endpoint [s3.amazonaws.com]: cepha:8080                    
+S3 Endpoint [s3.amazonaws.com]: s3.dc1.summit.lab                    
 
 Use "%(bucket)s.s3.amazonaws.com" to the target Amazon S3. "%(bucket)s" and "%(location)s" vars can be used
 if the target S3 system supports dns based buckets.
-DNS-style bucket+hostname:port template for accessing a bucket [%(bucket)s.s3.amazonaws.com]: cepha:8080
+DNS-style bucket+hostname:port template for accessing a bucket [%(bucket)s.s3.amazonaws.com]: s3.dc1.summit.lab
 
 Encryption password is used to protect your files from reading
 by unauthorized persons while in transfer to S3
@@ -50,8 +50,8 @@ New settings:
   Access Key: ZHFNL7J6CJCZRZ0VSVO5
   Secret Key: SJ15woJx8hnAz2mNGV78oUPSC3gliowojbOPf2Tb
   Default Region: US
-  S3 Endpoint: cepha:8080
-  DNS-style bucket+hostname:port template for accessing a bucket: cepha:8080
+  S3 Endpoint: s3.dc1.summit.lab
+  DNS-style bucket+hostname:port template for accessing a bucket: s3.dc1.summit.lab
   Encryption password:
   Path to GPG program: /usr/bin/gpg
   Use HTTPS protocol: False
