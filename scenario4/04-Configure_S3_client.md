@@ -165,7 +165,7 @@ As we explained in the introduction RGW can be use as an active/active object st
 
 First we need to create a config file that is pointing to the endpoints of DC(ceph1:8080), we are going to use sed to create a new file from our current DC1 s3cmd configuration file, we only need to replace the endpoint from cepha to ceph1,there is no need to use a different user, all the metadata, including users is replicated between both sites.
 ```
-[root@bastion ~]# sed 's/cepha/ceph1/g' /root/s3-dc1.cfg > /root/s3-dc2.cfg
+[root@bastion ~]# sed 's/s3.dc1.summit.lab/s3.dc2.summit.lab/g' /root/s3-dc1.cfg > /root/s3-dc2.cfg
 [root@bastion ~]# s3cmd -c ~/s3-dc2.cfg  ls
 2019-03-24 17:49  s3://my-first-bucket
 ```
