@@ -9,17 +9,14 @@ ceph[1:3]
 
 [clients]
 ceph[1:3]
-0bastion
+bastion ansible_connection=local
 metrics4
 
 [ceph-grafana]
 metrics4
 
 [rgws]
-ceph1
-
-[0bastion]
-bastion  ansible_connection=local
+ceph[1:3]
 
 [all:vars]
 ansible_user=cloud-user

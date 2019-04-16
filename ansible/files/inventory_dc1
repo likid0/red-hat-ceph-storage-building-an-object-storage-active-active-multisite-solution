@@ -10,7 +10,7 @@ ceph[a:c]
 
 [clients]
 ceph[a:c]
-bastion
+bastion ansible_connection=local
 metricsd
 
 [ceph-grafana]
@@ -20,9 +20,6 @@ metricsd
 cepha
 cephb
 cephc
-
-[0bastion]
-bastion  ansible_connection=local
 
 [all:vars]
 ansible_user=cloud-user
