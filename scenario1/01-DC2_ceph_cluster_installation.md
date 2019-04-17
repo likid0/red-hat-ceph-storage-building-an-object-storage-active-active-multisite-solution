@@ -206,7 +206,7 @@ copy_admin_key: true
 
 With all the variables ready we can start the deployment of the Ceph cluster, 
 
->WARNING: before running the installation we recommend using screen or tmux to avoid installation problems in case there are network issues.
+>WARNING: before running the installation we recommend using screen or tmux to avoid problems in case there are network issues.
 
 On the root of the ceph-ansible dir /root/dc2/ceph-ansible we need to run the site-docker.yml playbook.
 ```
@@ -287,13 +287,15 @@ Information that we get from the status command, we can see that the cluster glo
 
 We have also 6 OSDs, 2 OSDs per node(disks vdc and vdd). All six OSDs are `up` and `in`; We can also see three RadosGW daemons running.
 
-Finally on the data section we can see that we have four pools created. These 4 pools have a total of 32 PGs (Placement Groups) used and we can see that the current cluster usage at the moment is 6 GB out of the 60 GB we have available (each OSD has 10 GB, 2 ODSs per 3 nodes gives us our 60 GB), and the 32 PGs are in `active-clean` state.
+Finally on the data section we can see differences between clusters,
+
+DC1 doesn't have any pools created, DC2 has have four pools created. These 4 pools have a total of 32 PGs (Placement Groups) used and we can see that the current cluster usage at the moment is 6 GB out of the 60 GB we have available (each OSD has 10 GB, 2 ODSs per 3 nodes gives us our 60 GB), and the 32 PGs are in `active-clean` state.
 
 ### Check both clusters pools
 
 So with just one command we have a summary of our cluster state. We can dig a little bit deeper, for example let's check what pools we have in the cluster and how much space they are using.
 
-We have 4 pools created on the installation by the RadosGW, the pools are replicated and the size is 3, which means that for each object that we write is replicated two times, so in total we will have three copies of the object.
+On DC2 We have 4 pools created during the installation of the RadosGW daemons, the pools are replicated and the size is 3, which means that for each object that we write is replicated two times, so in total we will have three copies of the object.
 
 ```
 [root@bastion ~]# ceph --cluster dc2  osd pool ls detail
