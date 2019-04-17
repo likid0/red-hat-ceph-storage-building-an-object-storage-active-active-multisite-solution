@@ -103,13 +103,16 @@ The bastion host is configured as a Ceph client so you can check the status of t
 [root@bastion ~]# ceph --cluster dc1 -s
 ```
 
-First we will deploy the second (DC2) RHCS cluster and configure the RadosGW service there.
+First we will deploy the second (DC2) RHCS cluster and check it's working fine.
 
-In second place we will configure RGW multi-site replication, where objects can be uploaded to both sites and then replicated to the other cluster
+In second place we will configure Rados Gateway on both RH ceph storage clusters.
+
+Next we will configure RGW multi-site replication, where objects can be uploaded to both sites and then replicated to the other cluster.
 
 Once we have the RGW multi-site configured we will use a S3 client to test our deployment.
 
 Finally we will deploy Cephmetrics on DC2, so we can check how our cluster is performing while we are uploading objects with the S3 client.
+
 
 ## [**Next: Install and configure RHCS ceph cluster in DC2 site**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario1/01-DC2_ceph_cluster_installation)
 
