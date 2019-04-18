@@ -21,8 +21,8 @@ non-zero return code
 ```
 
 
-We have to do some modifications on the Ceph configuration files of all the RadosGW nodes so we can specify the zone for each RadosGW daemon.
-We are going to make use of ceph-ansible to implement these changes.
+As we mentioned before we are going to make use of ceph-ansible to deploy and configure the RadosGW servives, we have to do some modifications to the ceph-ansible group vars to achive our goal:
+
 
 ## Configure RGWs in DC1
 
