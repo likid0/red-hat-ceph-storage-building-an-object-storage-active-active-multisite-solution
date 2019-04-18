@@ -18,7 +18,7 @@ Verify that we can upload new objects to our recently created bucket
 
 ```
 [root@bastion ~]# s3cmd -c ~/s3-dc1.cfg put /etc/hostname s3://test-s3-policies/test
-PENDING RESULT
+Bucket 's3://test-s3-policies/' created
 ```
 
 Using *test-user* credentials, try to list the content of the bucket *test-s3-policies*
