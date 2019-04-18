@@ -313,7 +313,7 @@ From the bastion:
 ]
 ```
 
-Our bucket has been created lets take a look at the objects inside the DC2 data pool:
+Our bucket has been created lets take a look using the rados command at the objects inside the DC2 data pool:
 ```
 [root@bastion ~]# rados --cluster dc2  -p dc2.rgw.buckets.data ls
 602f21ea-7664-4662-bad8-0c3840bb1d7a.314154.1_s3cmd-2.0.2-1.el7.noarch.rpm
@@ -323,7 +323,7 @@ Our bucket has been created lets take a look at the objects inside the DC2 data 
 
 As we explained in the introduction RGW can be use as an active/active object storage Multisite solution, lets double check we can also put objects into our second zone DC2.
 
-First we need to create a config file that is pointing to the endpoints of DC(ceph1:8080), we are going to use sed to create a new file from our current DC1 s3cmd configuration file, we only need to replace the endpoint from cepha to ceph1,there is no need to use a different user, all the metadata, including users is replicated between both sites.
+First we need to create a config file that is pointing to the endpoints of DC2 (s3.dc2.summit.lab), we are going to use sed to create a new file from our current DC1 s3cmd configuration file, we only need to replace the endpoint from cepha to ceph1,there is no need to use a different user, all the metadata, including users is replicated between both sites.
 ```
 [root@bastion ~]# sed 's/s3.dc1.summit.lab/s3.dc2.summit.lab/g' /root/s3-dc1.cfg > /root/s3-dc2.cfg
 [root@bastion ~]# s3cmd -c ~/s3-dc2.cfg  ls
@@ -345,6 +345,25 @@ The file is also accessible from zone DC1, our active/active multisite cluster i
 [root@bastion ~]# s3cmd -c ~/s3-dc1.cfg  ls  s3://my-second-bucket
 2019-03-25 08:20    181085   s3://my-second-bucket/messages
 ```
+
+Another quick example we we create a file upload it to DC2 and download it from DC1:
+
+```
+[root@bastion ~]# echo "File Uploaded to DC2" > DC2-file.txt
+[root@bastion ~]#  s3cmd -c ~/s3-dc2.cfg  put DC2-file.txt s3://my-second-bucket
+upload: 'DC2-file.txt' -> 's3://my-second-bucket/DC2-file.txt'  [1 of 1]
+ 21 of 21   100% in    0s  1719.62 B/s  done
+[root@bastion ~]# rm DC2-file.txt 
+rm: remove regular file ‘DC2-file.txt’? y
+[root@bastion ~]# s3cmd -c ~/s3-dc1.cfg get s3://my-second-bucket/DC2-file.txt
+download: 's3://my-second-bucket/DC2-file.txt' -> './DC2-file.txt'  [1 of 1]
+ 21 of 21   100% in    0s     2.90 kB/s  done
+[root@bastion ~]# cat DC2-file.txt 
+File Uploaded to DC2
+
+```
+
+
 https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario5/05-DC2_cephmetrics_configuration
 
 ## [**Next: Configure ceph-metrics on DC2**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario5/05-DC2_cephmetrics_configuration)
