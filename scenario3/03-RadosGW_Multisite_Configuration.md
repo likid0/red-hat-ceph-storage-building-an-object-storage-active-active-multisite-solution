@@ -176,7 +176,7 @@ At a high level, these are the steps we have to perform now:
 
 #### Create the sync-user
 
-Create the sync user. Save the ACCESS_KEY and SECRET_KEY values from this command:
+Create the sync user. This is a system RGW user that will be used by both clusters to connect to each other so they can sync the data between them
 ```
 radosgw-admin --cluster dc1 user create --uid=${SYNC_USER} --display-name="Synchronization User" --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --system
 {
@@ -265,6 +265,7 @@ radosgw-admin --cluster dc1 zone modify --rgw-zone=${MASTER_ZONE} --access-key=$
 
 Update the period:
 ```
+radosgw-admin --cluster dc1 period update --commit
 {
     "id": "72480644-e86d-4508-990c-ad4440266a3b",
     "epoch": 1,
@@ -347,8 +348,23 @@ Update the period:
 
 ### Start RGW service in DC1 (cepha node).
 
+Once we have finished the configuration of the Realm,Zonegroup and Zone we can start our rados gateway services in DC1
 
-Now we can check that the RGW services should be running on our 3 nodes
+```
+[root@bastion ceph-ansible]# cd ~/dc1/ceph-ansible/
+[root@bastion ceph-ansible]# for i in a b c; do ansible -b -i inventory -m shell -a "systemctl start ceph-radosgw@rgw.ceph${i}.service" ceph${i}; done
+cepha | SUCCESS | rc=0 >>
+
+
+cephb | SUCCESS | rc=0 >>
+
+
+cephc | SUCCESS | rc=0 >>
+```
+
+
+
+Lets check that the RGW services should be running on our 3 nodes
 ```
 [root@bastion ~]# ceph --cluster dc1 -s | grep -i rgw
     rgw: 3 daemons active
@@ -380,26 +396,26 @@ And also a quick check with curl so we can verify we can access port 8080 provid
 
 With these basic checks we can move forward and configure our DC2 ceph cluster as the slave zone in our zone-group
 
-## Configure Secondary Zone
+## Configure Secondary Zone(DC2)
 
 Secondary zone: Execute the following commands in the RGW node of DC2 (ceph1)
 
-Pull the realm information:
+Pull the realm information from our Master Zone(DC1), here we are using the access-key and the secret from the sync user we created previously:
 ```
 radosgw-admin --cluster dc2 realm pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --rgw-realm=${REALM}
 ```
 
-Set the realm as the default one:
+Set the realm we just pulled from the Master Zone(Summitlab) as the default one for cluster DC2:
 ```
 radosgw-admin --cluster dc2 realm default --rgw-realm=${REALM}
 ```
 
-Pull the period information:
+Pull the period information from the master zone:
 ```
 radosgw-admin --cluster dc2 period pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
 ```
 
-Create the secondary zone:
+Now that we have the info from the latest period in DC2,  let's create a new zone, this zone is for cluster DC2 and will be the secondary zone for our master zone DC1
 ```
 radosgw-admin --cluster dc2 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${SECONDARY_ZONE} --endpoints=${ENDPOINTS_SECONDARY_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
 ```
@@ -411,7 +427,8 @@ radosgw-admin --cluster dc2 period update --commit
 
 Start RGW service in the secondary zone nodes:
 ```
-systemctl enable ceph-radosgw@rgw.$(hostname -s) --now
+cd ~/dc2/ceph-ansible/
+for i in 1 2 3 ; do ansible -b -i inventory -m shell -a "systemctl stop ceph-radosgw@rgw.ceph${i}.service" ceph${i}; done
 ```
 
 Once we have finished the configuration of our second zone, we can check the sync status between zone dc1 and zone dc2
