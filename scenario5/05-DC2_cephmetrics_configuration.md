@@ -106,11 +106,12 @@ First lets open the the "ceph storage backend" dashboard, and expand the "Disk/O
 
 <center><img src="scenario5/images/03cephmetrics-backends.png" style="width:1200px;" border=0/></center>
 
-From the bastion host we are going to create a 2GB file and upload it to our DC2 cluster, once the file starts uploading we can switch to grafana and see how the metrics vary, we should see the total throughput and IOPs increase.
+From the bastion host we are going to create a 3GB file and upload it to our DC2 cluster, then we will download it several times, once the file starts uploading we can switch to grafana and see how the metrics vary, we should see the total throughput and IOPs increase.
 
 ```
-[root@bastion ~]# fallocate -l 2G testfile
+[root@bastion ~]# fallocate -l 3G testfile
 [root@bastion ~]# s3cmd -c ~/s3-dc2.cfg  put testfile  s3://my-second-bucket
+[root@bastion ~]# for i in 1 2 3 4 5; do s3cmd -c ~/s3-dc2.cfg  get  s3://my-second-bucket/testfile --force; done
 ```
 
 Also check via the ceph cli that the DC1 zone is doing a sync to keep up with changes in dc2
@@ -129,7 +130,12 @@ Also check via the ceph cli that the DC1 zone is doing a sync to keep up with ch
                         recovering shards: [52]
 ```
 
-We can also see, how our total storage available for both clusters has decreased
+From the Grafana ceph-metrics dashboard select the "Ceph Cluster" dashboard, You will be able to see the troughput and IOPs per pool, and we can see that the busiest pool is the dc2.rgw.buckets.data. For example You can also check the TOP 5 pools by capacity used.
+
+<center><img src="scenario5/images/04cephmetrics-pools.png" style="width:1200px;" border=0/></center>
+
+
+We can also see with the CLI ceph df command how our total storage available for both clusters has decreased.
 
 ```
 [root@bastion ~]# ceph --cluster dc2  df | head -3
