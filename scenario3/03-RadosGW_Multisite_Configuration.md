@@ -420,7 +420,7 @@ Now that we have the info from the latest period in DC2,  let's create a new zon
 radosgw-admin --cluster dc2 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${SECONDARY_ZONE} --endpoints=${ENDPOINTS_SECONDARY_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
 ```
 
-Update the period:
+Update the period, we are now updating the period for our multisite configuration with the information of the new secondary zone we just created, once the period is updated, Master Zone DC1 will know it has a seconday zone DC2 that needs to be in sync:
 ```
 radosgw-admin --cluster dc2 period update --commit
 ```
@@ -428,8 +428,22 @@ radosgw-admin --cluster dc2 period update --commit
 Start RGW service in the secondary zone nodes:
 ```
 cd ~/dc2/ceph-ansible/
-for i in 1 2 3 ; do ansible -b -i inventory -m shell -a "systemctl stop ceph-radosgw@rgw.ceph${i}.service" ceph${i}; done
+for i in 1 2 3 ; do ansible -b -i inventory -m shell -a "systemctl start ceph-radosgw@rgw.ceph${i}.service" ceph${i}; done
 ```
+
+Like we did with DC1 let's run a quic check with curl so we can verify we can access port 8080 provided by the RGW service on each node:
+```
+[root@bastion ~]# for NODE in a b c; do echo -e "\n" ; curl http://ceph${NODE}:8080; done
+
+
+<?xml version="1.0" encoding="UTF-8"?><Error><Code>NoSuchBucket</Code><BucketName>cepha</BucketName><RequestId>tx000000000000000000004-005cab7931-4b24e-dc1</RequestId><HostId>4b24e-dc1-production</HostId></Error>
+
+<?xml version="1.0" encoding="UTF-8"?><Error><Code>NoSuchBucket</Code><BucketName>cephb</BucketName><RequestId>tx000000000000000000004-005cab7931-48b05-dc1</RequestId><HostId>48b05-dc1-production</HostId></Error>
+
+<?xml version="1.0" encoding="UTF-8"?><Error><Code>NoSuchBucket</Code><BucketName>cephc</BucketName><RequestId>tx000000000000000000004-005cab7931-48b02-dc1</RequestId><HostId>48b02-dc1-production</HostId></Error>
+
+```
+
 
 Once we have finished the configuration of our second zone, we can check the sync status between zone dc1 and zone dc2
 ```
