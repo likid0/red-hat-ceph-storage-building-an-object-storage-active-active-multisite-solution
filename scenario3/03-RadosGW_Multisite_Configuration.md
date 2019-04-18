@@ -479,21 +479,73 @@ radosgw-admin  --cluster dc2 sync status
 
 Lets clean-up the default RGW installation, by default when ever a RGW daemon starts, it will configure and use a default zone and zonegroup, to avoid confusions it's always better to delete our default zone and zonegroups in both clusters.
 
-Once RGW services are working with the new values, delete default values for zonegroup and zone in the master zone:
+Once RGW services are working with the new values, delete the default zonegroup and zones.
+
+First we remove the zone default from the zonegroup default so we can delete it
+
 ```
 radosgw-admin --cluster dc1 zonegroup remove --rgw-zonegroup=default --rgw-zone=default
 radosgw-admin --cluster dc1 period update --commit
+radosgw-admin --cluster dc2 zonegroup remove --rgw-zonegroup=default --rgw-zone=default
+radosgw-admin --cluster dc2 period update --commit
+```
+
+Now we can delete the default zone from both clusters:
+
+```
 radosgw-admin --cluster dc1 zone delete --rgw-zone=default
 radosgw-admin --cluster dc1 period update --commit
 radosgw-admin --cluster dc2 zone delete --rgw-zone=default
 radosgw-admin --cluster dc2 period update --commit
+```
+
+Finaly we delete the default zonegroup:
+
+```
 radosgw-admin --cluster dc1 zonegroup delete --rgw-zonegroup=default
 radosgw-admin --cluster dc1 period update --commit
 radosgw-admin --cluster dc2 zonegroup delete --rgw-zonegroup=default
 radosgw-admin --cluster dc2 period update --commit
 ```
 
-In both cluster, delete default pools. DISCLAIMER: Data will be unaccessible after performing this operation:
+We can check that now the default zone and zonegroups don¡t appear when we list the available zones and zonegroups:
+
+```
+[root@bastion ceph-ansible]# for i in 1 2 ; do radosgw-admin --cluster dc${i} zone list ; radosgw-admin --cluster dc${i} zonegroup list; done
+{
+    "default_info": "1341a958-8371-4133-85ec-cc8c7fd23bb3",
+    "zones": [
+        "dc1"
+    ]
+}
+
+{
+    "default_info": "36ce8c58-4da2-41e6-8be6-e247cd2f27c2",
+    "zonegroups": [
+        "production"
+    ]
+}
+
+{
+    "default_info": "aaeadbfd-ce91-4efa-a39a-dfed4ee31239",
+    "zones": [
+        "dc2"
+    ]
+}
+
+{
+    "default_info": "36ce8c58-4da2-41e6-8be6-e247cd2f27c2",
+    "zonegroups": [
+        "production"
+    ]
+}
+
+```
+
+
+To leave everything nice and tidy we can remove the RGW default pools created during the initial deployment. 
+
+> NOTE: Data from the default RGW pools will be unaccessible after performing this operation:
 
 ```
 for pool in $(rados --cluster dc1 lspools | grep ^default);do ceph --cluster dc1  osd pool delete ${pool} ${pool} --yes-i-really-really-mean-it;done
