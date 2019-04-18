@@ -47,9 +47,6 @@ metrics4
 [ceph-grafana]
 metrics4
 
-[rgws]
-ceph[1:3]
-
 [all:vars]
 ansible_user=cloud-user
 ```
@@ -272,24 +269,22 @@ And for DC2 cluster:
  
   services:
     mon: 3 daemons, quorum ceph1,ceph2,ceph3
-    mgr: ceph2(active), standbys: ceph1, ceph3
+    mgr: ceph1(active), standbys: ceph2, ceph3
     osd: 6 osds: 6 up, 6 in
-    rgw: 3 daemons active
  
   data:
-    pools:   4 pools, 32 pgs
-    objects: 191 objects, 3.08KiB
+    pools:   0 pools, 0 pgs
+    objects: 0 objects, 0B
     usage:   6.02GiB used, 54.0GiB / 60.0GiB avail
-    pgs:     32 active+clean
+    pgs: 
 ```
 
 Information that we get from the status command, we can see that the cluster global heath is `ok`. In the services section we can see that we have three MONs running on *ceph1*, *ceph2* and *ceph3* and active manager currently running on *ceph2* with 2 `standby` nodes *ceph1* and *ceph3* in case *ceph2* fails.
 
 We have also 6 OSDs, 2 OSDs per node(disks vdc and vdd). All six OSDs are `up` and `in`; We can also see three RadosGW daemons running.
 
-Finally on the data section we can see differences between clusters,
+Finally on the data section, we still don't have any pools created, once we install RadosGW we will see that several pools get created during deployment.
 
-DC1 doesn't have any pools created, DC2 has have four pools created. These 4 pools have a total of 32 PGs (Placement Groups) used and we can see that the current cluster usage at the moment is 6 GB out of the 60 GB we have available (each OSD has 10 GB, 2 ODSs per 3 nodes gives us our 60 GB), and the 32 PGs are in `active-clean` state.
 
 ### Check both clusters pools
 
