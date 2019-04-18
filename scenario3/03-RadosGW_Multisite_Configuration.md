@@ -562,73 +562,7 @@ pool 'default.rgw.meta' does not exist
 pool 'default.rgw.log' does not exist
 ```
 
-## Create RGW user in DC1
 
-Now that our cluster is ready and we have cleaned up the default  pools, let's test our cluster uploading some objects.
-
-First we need to create a RGW user, we have to save the access and secret key from the output.
-
-> NOTE: Save the access_key and secret_key You will need them for the next exercise
-
-```
-radosgw-admin --cluster dc1 user create --uid="summit19" --display-name="Redhat Summit User"
-{
-    "user_id": "summit19",
-    "display_name": "Redhat Summit User",
-    "email": "",
-    "suspended": 0,
-    "max_buckets": 1000,
-    "auid": 0,
-    "subusers": [],
-    "keys": [
-        {
-            "user": "summit19",
-            "access_key": "ZHFNL7J6CJCZRZ0VSVO5",
-            "secret_key": "SJ15woJx8hnAz2mNGV78oUPSC3gliowojbOPf2Tb"
-        }
-    ],
-    "swift_keys": [],
-    "caps": [],
-    "op_mask": "read, write, delete",
-    "default_placement": "",
-    "placement_tags": [],
-    "bucket_quota": {
-        "enabled": false,
-        "check_on_raw": false,
-        "max_size": -1,
-        "max_size_kb": 0,
-        "max_objects": -1
-    },
-        "enabled": false,
-        "check_on_raw": false,
-        "max_size": -1,
-        "max_size_kb": 0,
-        "max_objects": -1
-    },
-    "temp_url_keys": [],
-    "user_quota": {
-    "type": "rgw"
-}
-```
-
-Lets check that our `summit19` is present in our master zone dc1:
-
-```
-radosgw-admin --cluster dc1 user list
-[
-    "summit19",
-    "sync-user"
-]
-```
-
-if we wait for both clusters to sync the metadata we can see that the rgw user is also present on cluster dc2:
-```
-radosgw-admin --cluster dc2 user list
-[
-    "summit19",
-    "sync-user"
-]
-```
 
 ## [**Next: Configure S3 client**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario4/04-Configure_S3_client)
 
