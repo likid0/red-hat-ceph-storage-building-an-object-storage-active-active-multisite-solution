@@ -9,6 +9,9 @@ A logical representation of realm, zonegroup and zone of our deployment is repre
 <center><img src="scenario3/images/RH-Summit-RGW-Realm.png" border=0/></center>
 
 
+
+
+
 First lets be sure the rados GW services are stoped in all the nodes or pur 2 clusters:
 
 ```
@@ -17,6 +20,9 @@ First lets be sure the rados GW services are stoped in all the nodes or pur 2 cl
 # cd /root/dc2/ceph-ansible
 # for i in 1 2 3 ; do ansible -b -i inventory -m shell -a "systemctl stop ceph-radosgw@rgw.ceph${i}.service" ceph${i}; done
 ```
+
+> NOTE: All RadosGW services **SHOULD BE STOPPED** before following this procedure to create realms, zonegroups and zones.
+More info can be found in the [Red Hat Ceph Storage Object Gateway Guide For RHEL](https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html-single/object_gateway_guide_for_red_hat_enterprise_linux/index)
 
 
 Prepare multi-site environment. Define and export variables, here we export all the variables we are going to need during the configuration of the Realm.Zonegroup and Zones, our master zone is going to be DC1 and seconday DC2.
