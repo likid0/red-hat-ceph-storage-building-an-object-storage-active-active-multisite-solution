@@ -70,7 +70,7 @@ Edit the all.yml file in ceph-ansible node for DC1 and add the following lines t
 ceph_rgw_docker_extra_env: "-e RGW_ZONE=dc1 -e RGW_ZONEGROUP=production"
 ```
 
-Before executing the ansible playbook, we need to enable on the ansible inventory our new RadosGW nodes.
+Before executing the ansible playbook, we need to check if our 3 nodes are listed in the [rgws] group. In DC1 one they have already been added for us.
 
 ```
 [root@bastion ~]# vim ~/dc1/ceph-ansible/inventory
@@ -152,7 +152,37 @@ We have to follow the same steps on our second cluster in DC2:
 ceph_rgw_docker_extra_env: "-e RGW_ZONE=dc2 -e RGW_ZONEGROUP=production"
 ```
 
-Once modified we have to run the site-docker playbook again for DC1. However all changes mentioned above are exclusively related to the RadosGW service. In this case the -l option can be used to limit the playbook execution to rgws hostgroup.
+We now have to modify the inventory so we can add our 3 ceph nodes under the [rgws] group section:
+```
+[root@bastion ceph-ansible]# cd /root/dc2/ceph-ansible
+[root@bastion ceph-ansible]# cat inventory 
+[mons]
+ceph[1:3]
+
+[mgrs]
+ceph[1:3]
+
+[osds]
+ceph[1:3]
+
+[clients]
+ceph[1:3]
+bastion ansible_connection=local
+metrics4
+
+[ceph-grafana]
+metrics4
+
+[rgws]
+ceph[1:3]
+
+[all:vars]
+ansible_user=cloud-user
+
+```
+
+
+Once modified we have to run the site-docker playbook again for DC2. However all changes mentioned above are exclusively related to the RadosGW service. In this case the -l option can be used to limit the playbook execution to rgws hostgroup.
 
 ```
 [root@bastion ~]# cd ~/dc2/ceph-ansible/
