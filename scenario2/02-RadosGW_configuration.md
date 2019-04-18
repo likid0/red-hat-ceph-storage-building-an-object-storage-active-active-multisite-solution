@@ -1,6 +1,7 @@
 # RGWs Configuration in Both Clusters
 
-RGWs are already running, but we have to configure both the zone and zonegroup in each cluster. 
+We are going to deploy the RadosGW service on the 3 nodes we have per-cluster, once we have our RadosGW services running on each cluster we will be ready to starte the multi-site configuration.
+
 This step is mandatory before we can start configuring the multi-site.
 
 All RadosGW services **SHOULD BE STOPPED** before following this procedure to create realms, zonegroups and zones.
@@ -17,14 +18,6 @@ non-zero return code
 
 cephb | FAILED | rc=1 >>
 non-zero return code
-```
-
-But, in DC2 we have installed RadosGW services in *ceph1*, *ceph2* and *ceph3* nodes. Using the following command we can stop RadosGW service on these nodes
-```
-[root@bastion ~]#  ansible -b -m shell -a "systemctl stop ceph-radosgw@rgw.ceph*" ceph1,ceph2,ceph3
-ceph1 | SUCCESS | rc=0 >>
-ceph2 | SUCCESS | rc=0 >>
-ceph3 | SUCCESS | rc=0 >>
 ```
 
 
