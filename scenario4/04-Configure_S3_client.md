@@ -1,4 +1,3 @@
-
 Now that our Multi-Site RGW cluster is configured, let's test everything is working like expected by configuring a cluent to upload some objects.
 
 
@@ -70,9 +69,96 @@ radosgw-admin --cluster dc2 user list
 ```
 
 
+# Starting the Haproxy LoadBalancers.
+
+In the lab Introduction we mentioned that we had 1 load balancer for each site, this HAproxy loadbalancer will take care of distributing the incoming S3 client requests among the 3 RGW intances we have in each DC. 
+
+
+<img src="labIntro4/images/lab_description.jpg" height="220"/>
+
+
+Let's quickly check the configuration of each HAproxy, we have a frontend ip binded this is the IP the clients use to connect, and then our backend with the IPs of the 3 RGW instances we have in DC1.
+the frontend IP 10.0.0.100 resolves to s3.dc1.summit.lab, this is the name we will use to configure our s3 client in DC1
+
+```
+[root@bastion ~]# ssh cloud-user@lbdc1 cat /etc/haproxy/haproxy.cfg | tail
+Warning: Permanently added 'lbdc1,10.0.0.100' (ECDSA) to the list of known hosts.
+frontend ceph_front
+    bind 10.0.0.100:80
+    default_backend ceph_back
+
+
+backend ceph_back
+    balance source
+    server cepha 10.0.0.11:8080 check
+    server cephb 10.0.0.12:8080 check
+    server cephc 10.0.0.13:8080 check
+```
+
+Here is the same config with the IPs of DC2. The frontend IP 172.16.0.100 resolves to s3.dc2.summit.lab
+
+```
+[root@bastion ~]# ssh cloud-user@lbdc2 cat /etc/haproxy/haproxy.cfg | tail
+Warning: Permanently added 'lbdc2,172.16.0.100' (ECDSA) to the list of known hosts.
+frontend ceph_front
+    bind 172.16.0.100:80
+    default_backend ceph_back
+
+
+backend ceph_back
+    balance source
+    server ceph1 172.16.0.11:8080 check
+    server ceph2 172.16.0.12:8080 check
+    server ceph3 172.16.0.13:8080 check
+```
+
+We have to start the haproxy service on both nodes lbdc1 and lbdc2
+
+```
+[root@bastion ~]# ansible -b -a "systemctl restart haproxy"  lbdc*
+lbdc1 | SUCCESS | rc=0 >>
+
+
+lbdc2 | SUCCESS | rc=0 >>
+
+
+[root@bastion ~]# ansible -b -a "systemctl status haproxy"  lbdc*
+lbdc2 | SUCCESS | rc=0 >>
+● haproxy.service - HAProxy Load Balancer
+   Loaded: loaded (/usr/lib/systemd/system/haproxy.service; enabled; vendor preset: disabled)
+   Active: active (running) since Thu 2019-04-18 10:42:51 EDT; 9s ago
+ Main PID: 3527 (haproxy-systemd)
+   CGroup: /system.slice/haproxy.service
+           ├─3527 /usr/sbin/haproxy-systemd-wrapper -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid
+           ├─3528 /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -Ds
+           └─3529 /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -Ds
+
+Apr 18 10:42:51 lbdc2.rhpds.opentlc.com systemd[1]: Stopped HAProxy Load Balancer.
+Apr 18 10:42:51 lbdc2.rhpds.opentlc.com systemd[1]: Started HAProxy Load Balancer.
+Apr 18 10:42:51 lbdc2.rhpds.opentlc.com haproxy-systemd-wrapper[3527]: haproxy-systemd-wrapper: executing /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -Ds
+Apr 18 10:42:51 lbdc2.rhpds.opentlc.com haproxy-systemd-wrapper[3527]: [WARNING] 107/104251 (3528) : config : log format ignored for frontend 'ceph_front' since it has no log address.
+
+lbdc1 | SUCCESS | rc=0 >>
+● haproxy.service - HAProxy Load Balancer
+   Loaded: loaded (/usr/lib/systemd/system/haproxy.service; enabled; vendor preset: disabled)
+   Active: active (running) since Thu 2019-04-18 10:42:51 EDT; 9s ago
+ Main PID: 3637 (haproxy-systemd)
+   CGroup: /system.slice/haproxy.service
+           ├─3637 /usr/sbin/haproxy-systemd-wrapper -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid
+           ├─3639 /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -Ds
+           └─3641 /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -Ds
+
+Apr 18 10:42:51 lbdc1.rhpds.opentlc.com systemd[1]: Stopped HAProxy Load Balancer.
+Apr 18 10:42:51 lbdc1.rhpds.opentlc.com systemd[1]: Started HAProxy Load Balancer.
+Apr 18 10:42:51 lbdc1.rhpds.opentlc.com haproxy-systemd-wrapper[3637]: haproxy-systemd-wrapper: executing /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -Ds
+Apr 18 10:42:51 lbdc1.rhpds.opentlc.com haproxy-systemd-wrapper[3637]: [WARNING] 107/104251 (3639) : config : log format ignored for frontend 'ceph_front' since it has no log address.
+
+```
+
 
 
 # Configure S3 Client
+
 
 We are now going to configure and S3 client so we can upload objects to our rgw cluster, for this lab we are going to be using a cli tool called s3cmd, s3cmd is already pre-installed on the bastion host:
 
