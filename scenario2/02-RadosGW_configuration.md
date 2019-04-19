@@ -94,7 +94,7 @@ cephc                      : ok=416  changed=26   unreachable=0    failed=0
 
 ## Configure RGWs in DC2
 
-We have to follow the same steps on our second cluster in DC2:
+We have to follow the same steps on our second cluster in DC2, in the all.yml vars file we have to add under the ceph_conf_overrides section at the end of the file, the following configuration:
 ```
 [root@bastion ~]# vim ~/dc2/ceph-ansible/group_vars/all.yml
   client.rgw.ceph1:
