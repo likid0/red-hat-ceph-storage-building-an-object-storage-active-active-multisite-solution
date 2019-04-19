@@ -1,6 +1,6 @@
 # Getting Familiar with our Lab environment
 
-Our Lab environment is composed of two Datacenters, DC1 and DC2,  with one Red Hat Ceph Storage Cluster (RHCS) on each site. Each ceph cluster has 2 Networks the public and Cluster/private network, there is a Load Balancer in each Site, it will distribute the client requests among the Rados GW services running in each site.
+Our Lab environment is composed of two Datacenters, DC1 and DC2,  with one Red Hat Ceph Storage Cluster (RHCS) on each site. Each ceph cluster has 2 Networks the public and Cluster/private network, there is a Load Balancer in each site, it will be in charge of distributing the client requests among the Rados GW services running in each site.
 
 
 Here is a diagram of the Lab environment
