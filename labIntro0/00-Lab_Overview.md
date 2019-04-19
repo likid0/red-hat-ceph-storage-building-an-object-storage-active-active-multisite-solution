@@ -31,11 +31,7 @@
 
 ## **Welcome**
 
-First of all, it's my pleasure to welcome you to the Red Hat Summit 2019, here at the ...
-
-This hands-on lab aims to get you, the attendees, a bit closer to an open Software Defined Storage solution like Ceph, in this lab we are going to focus on Object Storage, Rados Gateway ...
-
-Whilst you'll be asked to use and explore some fundamental components within ceph, you won't need to install .....
+First of all, it's my pleasure to welcome you to the Red Hat Summit 2019, here at the Boston Convention and Exhibition Center.
 
 
 ## **Access your Lab Environment**
