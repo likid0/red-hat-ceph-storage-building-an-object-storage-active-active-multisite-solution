@@ -106,7 +106,7 @@ First lets open the the "ceph storage backend" dashboard, and expand the "Disk/O
 
 <center><img src="scenario5/images/03cephmetrics-backends.png" style="width:1200px;" border=0/></center>
 
-From the bastion host we are going to create a 3GB file and upload it to our DC2 cluster, then we will download it several times, once the file starts uploading we can switch to grafana and see how the metrics vary, we should see the total throughput and IOPs increase.
+From the bastion host we are going to create a 3GB file and upload it to our DC2 cluster, then we will download it several times, once the file starts downloading we can switch to grafana and see how the metrics vary, we should see the total throughput and IOPs increase.
 
 ```
 [root@bastion ~]# fallocate -l 3G testfile
@@ -135,7 +135,7 @@ From the Grafana ceph-metrics dashboard select the "Ceph Cluster" dashboard, You
 <center><img src="scenario5/images/04cephmetrics-pools.png" style="width:1200px;" border=0/></center>
 
 
-We can also see with the CLI ceph df command how our total storage available for both clusters has decreased.
+We can also see with the CLI ceph df command how our total storage available for both clusters has decreased after we have uploaded the 3gb file from DC2 and it has got replicated to DC1.
 
 ```
 [root@bastion ~]# ceph --cluster dc2  df | head -3
