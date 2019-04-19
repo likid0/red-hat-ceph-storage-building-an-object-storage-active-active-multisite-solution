@@ -1,15 +1,7 @@
 # Getting Familiar with our Lab environment
 
-Our Lab environment is composed of two Datacenters, DC1 and DC2,  with one Red Hat Ceph Storage Cluster (RHCS) on each site.
+Our Lab environment is composed of two Datacenters, DC1 and DC2,  with one Red Hat Ceph Storage Cluster (RHCS) on each site. Each ceph cluster has 2 Networks the public and Cluster/private network, there is a Load Balancer in each Site, it will distribute the client requests among the Rados GW services running in each site.
 
-Once you access your Lab Environment you will be on the bastion host, this node has access to both DCs, from the Bastion host you have access to all servers via ssh with the *cloud-user* user, so for example to connect to host *cepha* you can use:
-
-```
-[lab-user@bastion ~]$ sudo -i
-[root@bastion ~]# ssh cloud-user@cepha
-[cloud-user@cepha ~]$ sudo -i
-[root@cepha ~]#
-```
 
 Here is a diagram of the Lab environment
 
@@ -95,6 +87,16 @@ Each RHCS cluster consists of 3 VMs, each VM will run:
 
 ## Lab exercises
 
+Once you access your Lab Environment you will be on the bastion host, this node has access to both DCs, from the Bastion host you have access to all servers via ssh with the *cloud-user* user, so for example to connect to host *cepha* you can use:
+
+```
+[lab-user@bastion ~]$ sudo -i
+[root@bastion ~]# ssh cloud-user@cepha
+[cloud-user@cepha ~]$ sudo -i
+[root@cepha ~]#
+```
+
+
 To save some time the RHCS cluster and Cephmetrics are already deployed for you in DC1.
 
 The bastion host is configured as a Ceph client so you can check the status of the RHCS cluster installed in DC1 using:
@@ -103,15 +105,15 @@ The bastion host is configured as a Ceph client so you can check the status of t
 [root@bastion ~]# ceph --cluster dc1 -s
 ```
 
-First we will deploy the second (DC2) RHCS cluster and check it's working fine.
+1. First we will deploy the second (DC2) RHCS cluster and check it's working fine.
 
-In second place we will configure Rados Gateway on both RH ceph storage clusters.
+2. In second place we will configure Rados Gateway on both RH ceph storage clusters.
 
-Next we will configure RGW multi-site replication, where objects can be uploaded to both sites and then replicated to the other cluster.
+3. Next we will configure RGW multi-site replication, where objects can be uploaded to both sites and then replicated to the other cluster.
 
-Once we have the RGW multi-site configured we will use a S3 client to test our deployment.
+4. Once we have the RGW multi-site configured we will use a S3 client to test our deployment.
 
-Finally we will deploy Cephmetrics on DC2, so we can check how our cluster is performing while we are uploading objects with the S3 client.
+5. Finally we will deploy Cephmetrics on DC2, so we can check how our cluster is performing while we are uploading objects with the S3 client.
 
 
 ## [**Next: Install and configure RHCS ceph cluster in DC2 site**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario1/01-DC2_ceph_cluster_installation)
