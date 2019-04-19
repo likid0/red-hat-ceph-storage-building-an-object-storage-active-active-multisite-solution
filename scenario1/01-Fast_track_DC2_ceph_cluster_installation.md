@@ -215,21 +215,7 @@ We have also 6 OSDs, 2 OSDs per node(disks vdc and vdd). All six OSDs are `up` a
 
 Finally on the data section we can see that we have four pools created. These 4 pools have a total of 32 PGs (Placement Groups) used and we can see that the current cluster usage at the moment is 6 GB out of the 60 GB we have available (each OSD has 10 GB, 2 ODSs per 3 nodes gives us our 60 GB), and the 32 PGs are in `active-clean` state.
 
-### Check both clusters pools
 
-So with just one command we have a summary of our cluster state. We can dig a little bit deeper, for example let's check what pools we have in the cluster and how much space they are using.
-
-We have 4 pools created on the installation by the RadosGW, the pools are replicated and the size is 3, which means that for each object that we write is replicated two times, so in total we will have three copies of the object.
-```
-[root@bastion ~]# ceph --cluster dc2  osd pool ls detail
-```
-
-### Check both clusters available space
-
-To check how much space our pools are using, we can use the `ceph df` command to get a summary of space usage per pool in the cluster:
-```
-[root@bastion ~]# ceph --cluster dc2 df
-```
 
 ### Check both clusters OSDs
 
