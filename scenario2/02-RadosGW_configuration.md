@@ -184,6 +184,30 @@ ceph3                      : ok=413  changed=24   unreachable=0    failed=0
 [root@bastion ceph-ansible]#
 ```
 
+### Check both clusters pools
+
+let's check what pools we have in the cluster, now that RadosGW has been deployed we should see 3 pools
+
+We have 1 pool created on the installation by the RadosGW, the pool is replicated and the size is 3, which means that for each object that we write is replicated two times, so in total we will have three copies of the object.
+```
+[root@bastion ceph-ansible]# ceph --cluster dc1 osd pool ls detail
+pool 1 '.rgw.root' replicated size 3 min_size 2 crush_rule 0 object_hash rjenkins pg_num 8 pgp_num 8 last_change 28 flags hashpspool stripe_width 0 application rgw
+```
+
+### Check both clusters available space
+
+To check how much space our pools are using, we can use the `ceph df` command to get a summary of space usage per pool in the cluster:
+```
+[root@bastion ~]# ceph --cluster dc2 df
+GLOBAL:
+    SIZE        AVAIL       RAW USED     %RAW USED 
+    60.0GiB     54.0GiB      6.02GiB         10.03 
+POOLS:
+    NAME          ID     USED        %USED     MAX AVAIL     OBJECTS 
+    .rgw.root     1      3.08KiB         0       17.0GiB           8 
+
+```
+
 
 ## [**Next: RGW Multisite Configuration**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario3/03-RadosGW_Multisite_Configuration)
 
