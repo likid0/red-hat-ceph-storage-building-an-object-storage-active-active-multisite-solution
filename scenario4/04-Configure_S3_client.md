@@ -49,7 +49,7 @@ radosgw-admin --cluster dc1 user create --uid="summit19" --display-name="Redhat 
 }
 ```
 
-Lets check that our `summit19` is present in our master zone dc1:
+Lets check that our user `summit19` is present in our master zone dc1:
 
 ```
 radosgw-admin --cluster dc1 user list
@@ -59,7 +59,8 @@ radosgw-admin --cluster dc1 user list
 ]
 ```
 
-if we wait for both clusters to sync the metadata we can see that the rgw user is also present on cluster dc2:
+if we wait for both clusters to sync the metadata we can see that the rgw user `summit19` is also present on cluster dc2:
+
 ```
 radosgw-admin --cluster dc2 user list
 [
