@@ -224,8 +224,10 @@ download: 's3://test-s3-policies/test' -> '/tmp/test'  [1 of 1]
 Using *test-user* credentials, try to put a new object in *test-s3-policies* bucket
 
 ```
-[root@bastion ~]# s3cmd -c ~/s3-test-user-dc1.cfg put /etc/GREP_COLORS s3://test-s3-policies/test-user-file
-PENDING RESULT (EXPECTED RESULT: 403 Forbidden)
+[root@bastion ~]#  s3cmd -c ~/s3-dc1-user2.cfg put /etc/GREP_COLORS s3://test-s3-policies/test-user-file
+upload: '/etc/GREP_COLORS' -> 's3://test-s3-policies/test-user-file'  [1 of 1]
+ 94 of 94   100% in    0s    13.44 kB/s  done
+ERROR: S3 error: 403 (AccessDenied)
 ```
 
 Modify our current bucket policy and allow *test-user* to write and delete objects in the *test-s3-policies* bucket
@@ -286,43 +288,36 @@ Modify our current bucket policy and allow *test-user* to write and delete objec
 }
 ```
 
-Using *summit19* user credentials, set the new policy to *test-s3-policies* buckets
+Using *user1* user credentials, set the new policy to *test-s3-policies* buckets
 
 ```
 [root@bastion ~]# s3cmd -c ~/s3-dc1.cfg setpolicy policy.json s3://test-s3-policies/test
 PENDING RESULT
 ```
 
-Using *test-user* credentials, try to list the content of *test-s3-policies* buckets
+Using *user2* credentials, try to list the content of *test-s3-policies* buckets
 
 ```
-[root@bastion ~]# s3cmd -c ~/s3-test-user-dc1.cfg ls s3://test-s3-policies
-PENDING RESULT (EXPECTED RESULT: 200 OK)
+[root@bastion ~]#  s3cmd -c ~/s3-dc1-user2.cfg ls s3://test-s3-policies
+2019-04-19 14:57       754   s3://test-s3-policies/test
 ```
 
-Using *test-user* credentials, try to read the content of the test file
+
+Using *user2* credentials, try to put a new object in *test-s3-policies* bucket
 
 ```
-[root@bastion ~]# s3cmd -c ~/s3-test-user-dc1.cfg get s3://test-s3-policies/test /tmp/test
-PENDING RESULT (EXPECTED RESULT: 200 OK)
-[root@bastion ~]# cat /tmp/test
-PENDING RESULT
+[root@bastion ~]#  s3cmd -c ~/s3-dc1-user2.cfg put /etc/GREP_COLORS s3://test-s3-policies/test-user-file
+upload: '/etc/GREP_COLORS' -> 's3://test-s3-policies/test-user-file'  [1 of 1]
+ 94 of 94   100% in    0s     7.51 kB/s  done
 ```
 
-Using *test-user* credentials, try to put a new object in *test-s3-policies* bucket
+Using *user2* credentials, try to delete an object in *test-s3-policies* bucket
 
 ```
-[root@bastion ~]# s3cmd -c ~/s3-test-user-dc1.cfg put /etc/GREP_COLORS s3://test-s3-policies/test-user-file
-PENDING RESULT (EXPECTED RESULT: 200 OK)
-```
-
-Using *test-user* credentials, try to delete an object in *test-s3-policies* bucket
-
-```
-[root@bastion ~]# s3cmd -c ~/s3-test-user-dc1.cfg rm s3://test-s3-policies/test-user-file
-PENDING RESULT (EXPECTED RESULT: 200 OK)
-[root@bastion ~]# s3cmd -c ~/s3-test-user-dc1.cfg rm s3://test-s3-policies/test
-PENDING RESULT (EXPECTED RESULT: 200 OK)
+[root@bastion ~]#  s3cmd -c ~/s3-dc1-user2.cfg rm s3://test-s3-policies/test-user-file
+delete: 's3://test-s3-policies/test-user-file'
+[root@bastion ~]#  s3cmd -c ~/s3-dc1-user2.cfg rm s3://test-s3-policies/test-user-file
+delete: 's3://test-s3-policies/test-user-file'
 ```
 
 ## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
