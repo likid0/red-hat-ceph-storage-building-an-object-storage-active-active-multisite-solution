@@ -366,7 +366,7 @@ File Uploaded to DC2
 ```
 
 
-https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario5/05-DC2_cephmetrics_configuration
+
 
 ## [**Next: Configure ceph-metrics on DC2**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario5/05-DC2_cephmetrics_configuration)
 
