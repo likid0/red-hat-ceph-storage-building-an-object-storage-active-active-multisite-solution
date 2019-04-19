@@ -1,4 +1,4 @@
-Now that our Multi-Site RGW cluster is configured, let's test everything is working like expected by configuring a cluent to upload some objects.
+Now that our Multi-Site RGW cluster is configured, let's test everything is working like expected by configuring a client to upload some objects.
 
 
 ## Create RGW user in DC1
@@ -78,7 +78,7 @@ In the lab Introduction we mentioned that we had 1 load balancer for each site, 
 
 
 Let's quickly check the configuration of each HAproxy, we have a frontend ip binded this is the IP the clients use to connect, and then our backend with the IPs of the 3 RGW instances we have in DC1.
-the frontend IP 10.0.0.100 resolves to s3.dc1.summit.lab, this is the name we will use to configure our s3 client in DC1
+the frontend IP *10.0.0.100* resolves to *s3.dc1.summit.lab*, this is the name we will use to configure our s3 client in DC1
 
 ```
 [root@bastion ~]# ssh cloud-user@lbdc1 cat /etc/haproxy/haproxy.cfg | tail
@@ -95,7 +95,7 @@ backend ceph_back
     server cephc 10.0.0.13:8080 check
 ```
 
-Here is the same config with the IPs of DC2. The frontend IP 172.16.0.100 resolves to s3.dc2.summit.lab
+Here is the same config with the IPs of DC2. The frontend IP *172.16.0.100* resolves to *s3.dc2.summit.lab*
 
 ```
 [root@bastion ~]# ssh cloud-user@lbdc2 cat /etc/haproxy/haproxy.cfg | tail
@@ -169,7 +169,7 @@ s3cmd.noarch                  2.0.2-1.el7             installed
 
 Lets run the s3cmd command with the configure parameter so we can do a bootstrap config of our s3 client, we are going to first create the configuration for the dc1 zone:
 
-Please fill in the requested data by the application, we use the Access Key and the Secret key from the summit19 user that we created previously, and use s3.dc1.summit.lab as the S3 endpoint:
+Please fill in the requested data by the application, we use the Access Key and the Secret key from the *summit19* user that we created previously, and use *s3.dc1.summit.lab* as the *S3 endpoint*:
 
 Here is and example:
 
@@ -282,7 +282,8 @@ And with the `s3cmd du` option we can see the disk used by each object:
 
 ## Check multisite replication
 
-If we run the sync status command after running a put of a large object we would be able to see the secondary cluster doing a sync to keep up with the master
+If we run the sync status command after running a put of a large object we would be able to see the secondary cluster doing a sync to keep up with the master.
+The sync status parameter that is provided by the radosgw-admin CLI gives us an output that is divided in 2 SYNC sections metadata(users,acls,etc) and data(the actual data objects).
 
 From the bastion:
 ```
