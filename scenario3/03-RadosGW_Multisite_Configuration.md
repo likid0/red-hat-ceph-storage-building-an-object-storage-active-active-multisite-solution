@@ -227,7 +227,7 @@ radosgw-admin --cluster dc1 user create --uid=${SYNC_USER} --display-name="Synch
 
 #### Assign the sync-user to the master zone
 
-Assign the user to the master zone:
+Assign the sync user we created before to the master zone:
 ```
 radosgw-admin --cluster dc1 zone modify --rgw-zone=${MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
 {
@@ -386,6 +386,13 @@ cepha | SUCCESS | rc=0 >>
 88b10f4aabd7        10.0.0.10:5000/rhceph/rhceph-3-rhel7:latest   "/entrypoint.sh"    2 minutes ago       Up 2 minutes                            ceph-rgw-cepha
 ```
 
+We should now have 3 new dc1 pools that have been created by Rados during the startup of the service:
+
+```
+[root@bastion ceph-ansible]# ceph --cluster dc1 osd lspools 
+1 .rgw.root,2 dc1.rgw.control,3 dc1.rgw.meta,4 dc1.rgw.log,
+```
+
 
 And also a quick check with curl so we can verify we can access port 8080 provided by the RGW service on each node:
 ```
@@ -409,26 +416,253 @@ Secondary zone: Execute the following commands in the RGW node of DC2 (ceph1)
 Pull the realm information from our Master Zone(DC1), here we are using the access-key and the secret from the sync user we created previously:
 ```
 radosgw-admin --cluster dc2 realm pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --rgw-realm=${REALM}
+2019-04-19 09:28:25.620757 7fb46137de00  1 error read_lastest_epoch .rgw.root:periods.075aa943-2b7c-4209-80b7-eabafb2f74d0.latest_epoch
+2019-04-19 09:28:25.643588 7fb46137de00  1 Set the period's master zonegroup fd0929f8-98e5-4b9e-9493-7b68038f9826 as the default
+{
+    "id": "ad9b57f0-f988-4c1f-84b5-d8f73bf4698c",
+    "name": "summitlab",
+    "current_period": "075aa943-2b7c-4209-80b7-eabafb2f74d0",
+    "epoch": 2
+}
 ```
 
 Set the realm we just pulled from the Master Zone(Summitlab) as the default one for cluster DC2:
 ```
 radosgw-admin --cluster dc2 realm default --rgw-realm=${REALM}
+
 ```
 
 Pull the period information from the master zone:
 ```
 radosgw-admin --cluster dc2 period pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
+2019-04-19 09:28:53.555244 7f23f1f48e00  1 found existing latest_epoch 1 >= given epoch 1, returning r=-17
+{
+    "id": "075aa943-2b7c-4209-80b7-eabafb2f74d0",
+    "epoch": 1,
+    "predecessor_uuid": "43eeda2c-f158-4a4c-840f-ec5516c94d19",
+    "sync_status": [],
+    "period_map": {
+        "id": "075aa943-2b7c-4209-80b7-eabafb2f74d0",
+        "zonegroups": [
+            {
+                "id": "fd0929f8-98e5-4b9e-9493-7b68038f9826",
+                "name": "production",
+                "api_name": "production",
+                "is_master": "true",
+                "endpoints": [
+                    "http://cepha:8080",
+                    "http://cephb:8080",
+                    "http://cephc:8080"
+                ],
+                "hostnames": [],
+                "hostnames_s3website": [],
+                "master_zone": "7c8cfb46-2570-4b57-89f8-b5a4debb8767",
+                "zones": [
+                    {
+                        "id": "7c8cfb46-2570-4b57-89f8-b5a4debb8767",
+                        "name": "dc1",
+                        "endpoints": [
+                            "http://cepha:8080",
+                            "http://cephb:8080",
+                            "http://cephc:8080"
+                        ],
+                        "log_meta": "false",
+                        "log_data": "false",
+                        "bucket_index_max_shards": 0,
+                        "read_only": "false",
+                        "tier_type": "",
+                        "sync_from_all": "true",
+                        "sync_from": []
+                    }
+                ],
+                "placement_targets": [
+                    {
+                        "name": "default-placement",
+                        "tags": []
+                    }
+                ],
+                "default_placement": "default-placement",
+                "realm_id": "ad9b57f0-f988-4c1f-84b5-d8f73bf4698c"
+            }
+        ],
+        "short_zone_ids": [
+            {
+                "key": "7c8cfb46-2570-4b57-89f8-b5a4debb8767",
+                "val": 222441854
+            }
+        ]
+    },
+    "master_zonegroup": "fd0929f8-98e5-4b9e-9493-7b68038f9826",
+    "master_zone": "7c8cfb46-2570-4b57-89f8-b5a4debb8767",
+    "period_config": {
+        "bucket_quota": {
+            "enabled": false,
+            "check_on_raw": false,
+            "max_size": -1,
+            "max_size_kb": 0,
+            "max_objects": -1
+        },
+        "user_quota": {
+            "enabled": false,
+            "check_on_raw": false,
+            "max_size": -1,
+            "max_size_kb": 0,
+            "max_objects": -1
+        }
+    },
+    "realm_id": "ad9b57f0-f988-4c1f-84b5-d8f73bf4698c",
+    "realm_name": "summitlab",
+    "realm_epoch": 2
+}
 ```
 
 Now that we have the info from the latest period in DC2,  let's create a new zone, this zone is for cluster DC2 and will be the secondary zone for our master zone DC1
 ```
 radosgw-admin --cluster dc2 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${SECONDARY_ZONE} --endpoints=${ENDPOINTS_SECONDARY_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
+2019-04-19 09:29:10.843299 7f028ace3e00  0 failed reading obj info from .rgw.root:zone_info.7c8cfb46-2570-4b57-89f8-b5a4debb8767: (2) No such file or directory
+2019-04-19 09:29:10.843350 7f028ace3e00  0 WARNING: could not read zone params for zone id=7c8cfb46-2570-4b57-89f8-b5a4debb8767 name=dc1
+{
+    "id": "bf4a5715-8561-4b19-ba01-a2a7ed7b4668",
+    "name": "dc2",
+    "domain_root": "dc2.rgw.meta:root",
+    "control_pool": "dc2.rgw.control",
+    "gc_pool": "dc2.rgw.log:gc",
+    "lc_pool": "dc2.rgw.log:lc",
+    "log_pool": "dc2.rgw.log",
+    "intent_log_pool": "dc2.rgw.log:intent",
+    "usage_log_pool": "dc2.rgw.log:usage",
+    "reshard_pool": "dc2.rgw.log:reshard",
+    "user_keys_pool": "dc2.rgw.meta:users.keys",
+    "user_email_pool": "dc2.rgw.meta:users.email",
+    "user_swift_pool": "dc2.rgw.meta:users.swift",
+    "user_uid_pool": "dc2.rgw.meta:users.uid",
+    "system_key": {
+        "access_key": "redhat",
+        "secret_key": "redhat"
+    },
+    "placement_pools": [
+        {
+            "key": "default-placement",
+            "val": {
+                "index_pool": "dc2.rgw.buckets.index",
+                "data_pool": "dc2.rgw.buckets.data",
+                "data_extra_pool": "dc2.rgw.buckets.non-ec",
+                "index_type": 0,
+                "compression": ""
+            }
+        }
+    ],
+    "metadata_heap": "",
+    "tier_config": [],
+    "realm_id": "ad9b57f0-f988-4c1f-84b5-d8f73bf4698c"
+}
+
 ```
 
 Update the period, we are now updating the period for our multisite configuration with the information of the new secondary zone we just created, once the period is updated, Master Zone DC1 will know it has a seconday zone DC2 that needs to be in sync:
 ```
 radosgw-admin --cluster dc2 period update --commit
+2019-04-19 09:29:22.594724 7f9558376e00  1 Cannot find zone id=bf4a5715-8561-4b19-ba01-a2a7ed7b4668 (name=dc2), switching to local zonegroup configuration
+Sending period to new master zone 7c8cfb46-2570-4b57-89f8-b5a4debb8767
+{
+    "id": "075aa943-2b7c-4209-80b7-eabafb2f74d0",
+    "epoch": 2,
+    "predecessor_uuid": "43eeda2c-f158-4a4c-840f-ec5516c94d19",
+    "sync_status": [],
+    "period_map": {
+        "id": "075aa943-2b7c-4209-80b7-eabafb2f74d0",
+        "zonegroups": [
+            {
+                "id": "fd0929f8-98e5-4b9e-9493-7b68038f9826",
+                "name": "production",
+                "api_name": "production",
+                "is_master": "true",
+                "endpoints": [
+                    "http://cepha:8080",
+                    "http://cephb:8080",
+                    "http://cephc:8080"
+                ],
+                "hostnames": [],
+                "hostnames_s3website": [],
+                "master_zone": "7c8cfb46-2570-4b57-89f8-b5a4debb8767",
+                "zones": [
+                    {
+                        "id": "7c8cfb46-2570-4b57-89f8-b5a4debb8767",
+                        "name": "dc1",
+                        "endpoints": [
+                            "http://cepha:8080",
+                            "http://cephb:8080",
+                            "http://cephc:8080"
+                        ],
+                        "log_meta": "false",
+                        "log_data": "true",
+                        "bucket_index_max_shards": 0,
+                        "read_only": "false",
+                        "tier_type": "",
+                        "sync_from_all": "true",
+                        "sync_from": []
+                    },
+                    {
+                        "id": "bf4a5715-8561-4b19-ba01-a2a7ed7b4668",
+                        "name": "dc2",
+                        "endpoints": [
+                            "http://ceph1:8080",
+                            "http://ceph2:8080",
+                            "http://ceph3:8080"
+                        ],
+                        "log_meta": "false",
+                        "log_data": "true",
+                        "bucket_index_max_shards": 0,
+                        "read_only": "false",
+                        "tier_type": "",
+                        "sync_from_all": "true",
+                        "sync_from": []
+                    }
+                ],
+                "placement_targets": [
+                    {
+                        "name": "default-placement",
+                        "tags": []
+                    }
+                ],
+                "default_placement": "default-placement",
+                "realm_id": "ad9b57f0-f988-4c1f-84b5-d8f73bf4698c"
+            }
+        ],
+        "short_zone_ids": [
+            {
+                "key": "7c8cfb46-2570-4b57-89f8-b5a4debb8767",
+                "val": 222441854
+            },
+            {
+                "key": "bf4a5715-8561-4b19-ba01-a2a7ed7b4668",
+                "val": 1157648815
+            }
+        ]
+    },
+    "master_zonegroup": "fd0929f8-98e5-4b9e-9493-7b68038f9826",
+    "master_zone": "7c8cfb46-2570-4b57-89f8-b5a4debb8767",
+    "period_config": {
+        "bucket_quota": {
+            "enabled": false,
+            "check_on_raw": false,
+            "max_size": -1,
+            "max_size_kb": 0,
+            "max_objects": -1
+        },
+        "user_quota": {
+            "enabled": false,
+            "check_on_raw": false,
+            "max_size": -1,
+            "max_size_kb": 0,
+            "max_objects": -1
+        }
+    },
+    "realm_id": "ad9b57f0-f988-4c1f-84b5-d8f73bf4698c",
+    "realm_name": "summitlab",
+    "realm_epoch": 2
+}
+
 ```
 
 Start RGW service in the secondary zone nodes:
