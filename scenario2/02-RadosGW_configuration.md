@@ -2,23 +2,6 @@
 
 We are going to deploy the RadosGW service on the 3 nodes we have per-cluster, once we have our RadosGW services running on each cluster we will be ready to starte the multi-site configuration.
 
-This step is mandatory before we can start configuring the multi-site.
-
-All RadosGW services **SHOULD BE STOPPED** before following this procedure to create realms, zonegroups and zones.
-More info can be found in the [Red Hat Ceph Storage Object Gateway Guide For RHEL](https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html-single/object_gateway_guide_for_red_hat_enterprise_linux/index)
-
-Because we have not installed RadosGW services yet, from the bastion host we can check that RadosGW containers are not running in DC1 nodes
-```
-[root@bastion ~]# ansible -b -m shell -a "docker ps | grep rgw" cepha,cephb,cephc
-cepha | FAILED | rc=1 >>
-non-zero return code
-
-cephc | FAILED | rc=1 >>
-non-zero return code
-
-cephb | FAILED | rc=1 >>
-non-zero return code
-```
 
 
 As we mentioned before we are going to make use of ceph-ansible to deploy and configure the RadosGW servives, we have to do some modifications to the ceph-ansible group vars to achive our goal:
