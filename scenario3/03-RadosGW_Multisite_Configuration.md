@@ -783,24 +783,6 @@ We can check that now the default zone and zonegroups don¡t appear when we list
 ```
 
 
-To leave everything nice and tidy we can remove the RGW default pools created during the initial deployment. 
-
-> NOTE: Data from the default RGW pools will be unaccessible after performing this operation:
-
-```
-for pool in $(rados --cluster dc1 lspools | grep ^default);do ceph --cluster dc1  osd pool delete ${pool} ${pool} --yes-i-really-really-mean-it;done
-pool 'default.rgw.control' removed
-pool 'default.rgw.meta' removed
-pool 'default.rgw.log' removed
-```
-
-```
-for pool in $(rados --cluster dc2 lspools | grep ^default);do ceph --cluster dc2  osd pool delete ${pool} ${pool} --yes-i-really-really-mean-it;done
-
-pool 'default.rgw.control' does not exist
-pool 'default.rgw.meta' does not exist
-pool 'default.rgw.log' does not exist
-```
 
 
 
