@@ -291,8 +291,7 @@ Modify our current bucket policy and allow *test-user* to write and delete objec
 Using *user1* user credentials, set the new policy to *test-s3-policies* buckets
 
 ```
-[root@bastion ~]# s3cmd -c ~/s3-dc1.cfg setpolicy policy.json s3://test-s3-policies/test
-PENDING RESULT
+[root@bastion ~]# s3cmd -c ~/s3-dc1-user1.cfg setpolicy policy.json s3://test-s3-policies/test
 ```
 
 Using *user2* credentials, try to list the content of *test-s3-policies* buckets
