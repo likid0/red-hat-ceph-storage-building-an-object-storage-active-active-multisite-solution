@@ -57,13 +57,10 @@ In most cases the lab instructions will use a string as a placeholder for your *
 * Open a terminal session to log in to your host:
 
 ```
-ssh bastion-<GUID>.rhpds.opentlc.com
+ssh lab-user@bastion-<GUID>.rhpds.opentlc.com
 ```
 
-* Or open a browser to access a web UI:
 
-```
-https://bastion-<GUID>.rhods.opentlc.com
 ```
 
 >WARNING: *Replace <GUID> with the GUID assigned to your seat!*
@@ -72,7 +69,7 @@ https://bastion-<GUID>.rhods.opentlc.com
 
 If your GUID is *83d4*, do this:
 ```
-ssh bastion-83d4.rhpds.opentlc.com
+ssh lab-user@bastion-83d4.rhpds.opentlc.com
 ```
 
 >TIP: The user will default to `lab-user` and SSH key authentication will be used automatically. If for any reason key authentication is not working and the SSH client is asking for a password, use *r3dh4t1!*
