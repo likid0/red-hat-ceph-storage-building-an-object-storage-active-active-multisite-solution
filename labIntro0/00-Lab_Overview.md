@@ -60,9 +60,6 @@ In most cases the lab instructions will use a string as a placeholder for your *
 ssh lab-user@bastion-<GUID>.rhpds.opentlc.com
 ```
 
-
-```
-
 >WARNING: *Replace <GUID> with the GUID assigned to your seat!*
 
 **Example**
