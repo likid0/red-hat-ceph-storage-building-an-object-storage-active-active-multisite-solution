@@ -26,7 +26,7 @@ The ansible playbooks are stored in /usr/share/cephmetrics-ansible/
 ansible.cfg  group_vars  inventory  inventory.sample  playbook.yml  purge.yml  README.md  roles
 ```
 
-Lets check the all.yml group_vars variable file, here we can specify the name of the cluster, if we want to do a containerized deployment, were is our registry and also specify the grafana users to access the metrics dashboard.
+Lets check the `group_vars/all.yml` variable file, here we can specify the name of the cluster, if we want to do a containerized deployment, were is our registry and also specify the grafana users to access the metrics dashboard.
 
 To try and save some time, the inventory and the variables have already been pre-configured for you.
 
@@ -79,7 +79,7 @@ localhost                  : ok=1    changed=0    unreachable=0    failed=0
 metrics4                   : ok=76   changed=19   unreachable=0    failed=0   
 ```
 
-We can now go to a browser on your lab laptop and connect to the grapaha dashboard.
+We can now go to a browser on your lab laptop and connect to the grafana dashboard.
 
 > NOTE: On the provided URL you have to replace GUID with the GUID assigned to your lab.
 
@@ -87,7 +87,7 @@ We can now go to a browser on your lab laptop and connect to the grapaha dashboa
 
 |    Param  | Configuration    |
 | :------------- | :------------- |
-| URL       | http://metricsd-GUID.rhpds.opentlc.com:3000   |
+| URL       | http://metrics4-GUID.rhpds.opentlc.com:3000   |
 | User | admin |
 |Password | redhat01 |
 
