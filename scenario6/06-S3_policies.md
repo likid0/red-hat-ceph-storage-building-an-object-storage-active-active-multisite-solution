@@ -7,7 +7,6 @@ For this lab, we are going to create two new users:
 
 In this lab we are going to check how S3 policies work and how we can allow access to our personal buckets to other users.
 
-
 Let's create both users, we are going to specify a very simple access key and secret for the user to keep it simple.
 
 ```
