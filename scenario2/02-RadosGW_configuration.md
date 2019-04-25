@@ -1,12 +1,12 @@
 # RGWs Configuration in Both Clusters
 
-We are going to deploy the RadosGW service on the 3 nodes we have per-cluster, once we have our RadosGW services running on each cluster we will be ready to starte the multi-site configuration.
+We are going to deploy the RGW service on the 3 nodes we have per-cluster, once we have our RGW services running on each cluster we will be ready to start the multi-site configuration.
 
-As we mentioned before we are going to make use of ceph-ansible to deploy and configure the RadosGW servives, we have to do some modifications to the ceph-ansible group vars to achive our goal:
+As we mentioned before, we are going to make use of ceph-ansible to deploy and configure the RGW services, we have to do some modifications to the ceph-ansible group vars to achieve our goal:
 
 ## Configure RGWs in DC1
 
-Edit the all.yml file in ceph-ansible node for DC1 and add the following lines to the override section:
+Edit the `all.yml` file in ceph-ansible node for DC1 and add the following lines to the override section:
  ```
 [root@bastion ~]# vim ~/dc1/ceph-ansible/group_vars/all.yml
   client.rgw.cepha:
@@ -44,14 +44,11 @@ Edit the all.yml file in ceph-ansible node for DC1 and add the following lines t
 **NOTE: This is no longer needed with recent ceph versions. It was only needed with Ceph 3.0**
 ```
 [root@bastion ~]# vim /root/dc1/ceph-ansible/group_vars/rgws.yml
-```
 
-```
 ceph_rgw_docker_extra_env: "-e RGW_ZONE=dc1 -e RGW_ZONEGROUP=production"
 ```
 
 Before executing the ansible playbook, we need to check if our 3 nodes are listed in the [rgws] group. In DC1 one they have already been added for us.
-
 ```
 [root@bastion ~]# vim ~/dc1/ceph-ansible/inventory
 [mons]
@@ -78,7 +75,7 @@ ceph[a:c]
 ansible_user=cloud-user
 ```
 
-Once modified we have to run the site-docker playbook again for DC1. However all changes mentioned above are exclusively related to the RadosGW service. In this case the -l option can be used to limit the playbook execution to rgws hostgroup.
+Once modified we have to run the `site-docker.yml` playbook again for DC1. However all changes mentioned above are exclusively related to the RGW service. In this case the -l option can be used to limit the playbook execution to rgws hostgroup.
 
 ```
 [root@bastion ~]# cd ~/dc1/ceph-ansible/
@@ -91,7 +88,8 @@ cephc                      : ok=416  changed=26   unreachable=0    failed=0
 
 ## Configure RGWs in DC2
 
-We have to follow the same steps on our second cluster in DC2, in the all.yml vars file we have to add under the ceph_conf_overrides section at the end of the file, the following configuration:
+We have to follow the same steps on our second cluster in DC2, in the `all.yml` vars file we have to add under the `ceph_conf_overrides` section at the end of the file, 
+the following configuration:
 ```
 [root@bastion ~]# vim ~/dc2/ceph-ansible/group_vars/all.yml
   client.rgw.ceph1:
@@ -162,8 +160,8 @@ ansible_user=cloud-user
 ```
 
 
-Once modified we have to run the site-docker playbook again for DC2. However all changes mentioned above are exclusively related to the RadosGW service. In this case the -l option can be used to limit the playbook execution to rgws hostgroup.
-
+Once modified we have to run the site-docker playbook again for DC2. However all changes mentioned above are exclusively related to the RGW service. 
+In this case the -l option can be used to limit the playbook execution to rgws hostgroup.
 ```
 [root@bastion ~]# cd ~/dc2/ceph-ansible/
 [root@bastion ceph-ansible]# ansible-playbook -i inventory site-docker.yml -l rgws
@@ -173,7 +171,7 @@ ceph2                      : ok=410  changed=23   unreachable=0    failed=0
 ceph3                      : ok=413  changed=24   unreachable=0    failed=0
 ```
 
->**NOTE:** You will not see your RadosGW service listed in the Ceph status command but don't worry this is normal. We have configured our RadosGW services as part of a Realm/Zone that do not exist yet, that is why the RadosGW service does not start. In the next section we are going to create the realm,zonegroup and zones, then we can check that our RadosGW daemons are running like expected.
+>**NOTE:** You will not see your RGW service listed in the Ceph status command but don't worry this is normal. We have configured our RGW services as part of a Realm/Zone that do not exist yet, that is why the RGW service does not start. In the next section we are going to create the realm,zonegroup and zones, then we can check that our RGW daemons are running like expected.
 ```
 [root@bastion ceph-ansible]# ceph --cluster dc1 -s | grep rgw
 [root@bastion ceph-ansible]# 
@@ -183,9 +181,9 @@ ceph3                      : ok=413  changed=24   unreachable=0    failed=0
 
 ### Check both clusters pools
 
-let's check what pools we have in the cluster, now that RadosGW has been deployed we should see 3 pools
+let's check what pools we have in the cluster, now that RGW has been deployed we should see 3 pools.
 
-We have 1 pool created on the installation by the RadosGW, the pool is replicated and the size is 3, which means that for each object that we write is replicated two times, so in total we will have three copies of the object.
+We have 1 pool created on the installation by the RGW, the pool is replicated and the size is 3, which means that for each object that we write is replicated two times, so in total we will have three copies of the object.
 ```
 [root@bastion ceph-ansible]# ceph --cluster dc1 osd pool ls detail
 pool 1 '.rgw.root' replicated size 3 min_size 2 crush_rule 0 object_hash rjenkins pg_num 8 pgp_num 8 last_change 28 flags hashpspool stripe_width 0 application rgw
