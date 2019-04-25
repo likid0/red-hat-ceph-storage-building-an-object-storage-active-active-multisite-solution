@@ -40,7 +40,7 @@ Every attendee gets her/his own lab environment. The labs have already been depl
 
 ### **Get *GUID* and Access Information**
 
-The web browser of your laptop should default to ADD LINK TO GRABBER URL. On this web page *select the lab* your attending and enter the *Activation Key* that will be given by the lab instructor.
+The web browser of your laptop should default to [Lab GUID Grabber](https://www.opentlc.com/gg/gg.cgi?profile=generic_summit). On this web page *select the lab* your attending and enter the *Activation Key* that will be given by the lab instructor.
 
 After submitting your input by clicking *Next* you will see the attendee welcome screen with all the information you need:
 
@@ -69,11 +69,16 @@ If your GUID is *83d4*, do this:
 ssh lab-user@bastion-83d4.rhpds.opentlc.com
 ```
 
->TIP: The user will default to `lab-user` and SSH key authentication will be used automatically. If for any reason key authentication is not working and the SSH client is asking for a password, use *r3dh4t1!*
+>TIP: The user for the bastion will default to `lab-user` and SSH key authentication will be used automatically. If for any reason key authentication is not working and the SSH client is asking for a password, use *r3dh4t1!*
 
 Then become root:
 ```
 [lab-user@bastion ~]$ sudo -i
+```
+
+Once in the bastion host, you can jump to any Ceph node using the `cloud-user` user.
+```
+[lab-user@bastion ~]$ ssh cloud-user@ceph2
 ```
 
 Once you have been able to connect to the bastion host via SSH, you can start the lab you will need to follow the Lab content index that will take you to a step by step guide of each exercise.

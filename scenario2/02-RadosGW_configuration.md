@@ -2,10 +2,7 @@
 
 We are going to deploy the RadosGW service on the 3 nodes we have per-cluster, once we have our RadosGW services running on each cluster we will be ready to starte the multi-site configuration.
 
-
-
 As we mentioned before we are going to make use of ceph-ansible to deploy and configure the RadosGW servives, we have to do some modifications to the ceph-ansible group vars to achive our goal:
-
 
 ## Configure RGWs in DC1
 
