@@ -1,13 +1,14 @@
 # Rados Gateway Active-Active Multisite Configuration
 
-A single zone configuration typically consists of one zone group containing one zone and one or more Ceph RGW instances where you may load-balance gateway client requests between the instances. In a single zone configuration, typically multiple gateway instances point to a single Ceph storage cluster.
+A single zone configuration typically consists of one zone group containing one zone and one or more Ceph RGW instances where you may load-balance gateway client requests between the instances. 
+In a single zone configuration, typically multiple gateway instances point to a single Ceph storage cluster.
 
-In this lab we are going to deploy an advanced configuration that consists of one zone group and two zones, each zone with three Ceph RGW instances. Each zone is backed by its own Ceph Storage Cluster. Multiple zones in a zone group provides disaster recovery for the zone group should one of the zones experience a significant failure. **Each zone is active and may receive write operations**.
+In this lab we are going to deploy an advanced configuration that consists of one zone group and two zones, each zone with three Ceph RGW instances. Each zone is backed by its own Ceph Storage Cluster. 
+Multiple zones in a zone group provides disaster recovery for the zone group should one of the zones experience a significant failure. **Each zone is active and may receive write operations**.
 
 A logical representation of realm, zone group and zone of our deployment is represented in the following diagram:
 
 <center><img src="scenario3/images/RH-Summit-RGW-Realm.png" border=0/></center>
-
 
 First lets be sure the RGW services are stopped in all the nodes or both clusters:
 
@@ -21,9 +22,8 @@ First lets be sure the RGW services are stopped in all the nodes or both cluster
 > NOTE: All RGW services **SHOULD BE STOPPED** before following this procedure to create realms, zone groups and zones.
 More info can be found in the [Red Hat Ceph Storage Object Gateway Guide For RHEL](https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html-single/object_gateway_guide_for_red_hat_enterprise_linux/index)
 
-
-Prepare multi-site environment. Define and export variables, here we export all the variables we are going to need during the configuration of the realm, zone group and zones; Our master zone is going to be DC1 and the secondary DC2.
-
+Prepare multi-site environment. Define and export variables, here we export all the variables we are going to need during the configuration of the realm, zone group and zones; 
+Our master zone is going to be DC1 and the secondary DC2.
 ```
 export REALM="summitlab"
 export ZONEGROUP="production"
@@ -58,7 +58,7 @@ radosgw-admin --cluster dc1 realm create --rgw-realm=${REALM} --default
 ```
 
 A realm must have at least one zone group, which will serve as the master zone group for the realm.
-Create the zonegroup with the RGW replication endpoints of the master zone:
+Create the zone group with the RGW replication endpoints of the master zone:
 ```
 radosgw-admin --cluster dc1 zonegroup create --rgw-zonegroup=${ZONEGROUP} --endpoints=${ENDPOINTS_MASTER_ZONE} --rgw-realm=${REALM} --master --default
 {
@@ -378,7 +378,7 @@ cepha | SUCCESS | rc=0 >>
 88b10f4aabd7        10.0.0.10:5000/rhceph/rhceph-3-rhel7:latest   "/entrypoint.sh"    2 minutes ago       Up 2 minutes                            ceph-rgw-cepha
 ```
 
-We should now have 3 new dc1 pools that have been created by Rados during the startup of the service:
+We should now have 3 new DC1 pools that have been created by RGW during the startup of the service:
 ```
 [root@bastion ceph-ansible]# ceph --cluster dc1 osd lspools 
 1 .rgw.root,2 dc1.rgw.control,3 dc1.rgw.meta,4 dc1.rgw.log,
@@ -651,7 +651,6 @@ Sending period to new master zone 7c8cfb46-2570-4b57-89f8-b5a4debb8767
     "realm_name": "summitlab",
     "realm_epoch": 2
 }
-
 ```
 
 Start RGW services in the secondary zone nodes:
@@ -670,7 +669,6 @@ Like we did with DC1, let's run a quick check with curl so we can verify we can 
 <?xml version="1.0" encoding="UTF-8"?><Error><Code>NoSuchBucket</Code><BucketName>cephb</BucketName><RequestId>tx000000000000000000004-005cab7931-48b05-dc1</RequestId><HostId>48b05-dc1-production</HostId></Error>
 
 <?xml version="1.0" encoding="UTF-8"?><Error><Code>NoSuchBucket</Code><BucketName>cephc</BucketName><RequestId>tx000000000000000000004-005cab7931-48b02-dc1</RequestId><HostId>48b02-dc1-production</HostId></Error>
-
 ```
 
 Once we have finished the configuration of our second zone, we can check the sync status between zone DC1 and zone DC2:
