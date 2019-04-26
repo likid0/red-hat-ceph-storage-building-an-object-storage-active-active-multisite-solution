@@ -41,12 +41,6 @@ Edit the `all.yml` file in ceph-ansible node for DC1 and add the following lines
     rgw_thread_pool_size: 1024
 ```
 
-**NOTE: This is no longer needed with recent ceph versions. It was only needed with Ceph 3.0**
-```
-[root@bastion ~]# vim /root/dc1/ceph-ansible/group_vars/rgws.yml
-
-ceph_rgw_docker_extra_env: "-e RGW_ZONE=dc1 -e RGW_ZONEGROUP=production"
-```
 
 Before executing the ansible playbook, we need to check if our 3 nodes are listed in the [rgws] group. In DC1 one they have already been added for us.
 ```
@@ -85,6 +79,9 @@ cepha                      : ok=516  changed=30   unreachable=0    failed=0
 cephb                      : ok=413  changed=25   unreachable=0    failed=0   
 cephc                      : ok=416  changed=26   unreachable=0    failed=0
 ```
+
+You can do the configuration of RGW on both sites in parallel, so while the playbook for DC1 is running you can continue with the configuration of RGW in DC2.
+
 
 ## Configure RGWs in DC2
 
