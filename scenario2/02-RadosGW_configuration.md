@@ -80,7 +80,7 @@ cephb                      : ok=413  changed=25   unreachable=0    failed=0
 cephc                      : ok=416  changed=26   unreachable=0    failed=0
 ```
 
-You can do the configuration of RGW on both sites in parallel, so while the playbook for DC1 is running you can continue with the configuration of RGW in DC2.
+> NOTE: You can do the configuration of RGW on both sites in parallel, so while the playbook for DC1 is running you can continue with the next step "configure RGW in DC2".
 
 
 ## Configure RGWs in DC2
