@@ -281,33 +281,19 @@ We have also 6 OSDs, 2 OSDs per node(disks vdc and vdd). All six OSDs are `up` a
 
 Finally on the data section, we still don't have any pools created, once we install RGW we will see that several pools get created during deployment.
 
-### Check both clusters pools
 
-So with just one command we have a summary of our cluster state. We can dig a little bit deeper, for example let's check what pools we have in the cluster and how much space they are using.
 
-On DC2 We have 4 pools created during the installation of the RadosGW daemons, the pools are replicated and the size is 3, which means that for each object that we write is replicated two times, so in total we will have three copies of the object.
-```
-[root@bastion ~]# ceph --cluster dc2  osd pool ls detail
-pool 1 '.rgw.root' replicated size 3 min_size 2 crush_rule 0 object_hash rjenkins pg_num 8 pgp_num 8 last_change 13 owner 18446744073709551615 flags hashpspool stripe_width 0 application rgw
-pool 2 'default.rgw.control' replicated size 3 min_size 2 crush_rule 0 object_hash rjenkins pg_num 8 pgp_num 8 last_change 16 owner 18446744073709551615 flags hashpspool stripe_width 0 application rgw
-pool 3 'default.rgw.meta' replicated size 3 min_size 2 crush_rule 0 object_hash rjenkins pg_num 8 pgp_num 8 last_change 18 owner 18446744073709551615 flags hashpspool stripe_width 0 application rgw
-pool 4 'default.rgw.log' replicated size 3 min_size 2 crush_rule 0 object_hash rjenkins pg_num 8 pgp_num 8 last_change 20 owner 18446744073709551615 flags hashpspool stripe_width 0 application rgw
-```
-
-### Check both clusters available space
+### Check clusters available space
 
 To check how much space our pools are using, we can use the `ceph df` command to get a summary of space usage per pool in the cluster:
 ```
 [root@bastion ~]# ceph --cluster dc2 df
 GLOBAL:
-    SIZE        AVAIL       RAW USED     %RAW USED
-    60.0GiB     53.9GiB      6.03GiB         10.06
+    SIZE        AVAIL       RAW USED     %RAW USED 
+    60.0GiB     54.0GiB      6.01GiB         10.02 
 POOLS:
-    NAME                    ID     USED        %USED     MAX AVAIL     OBJECTS
-    .rgw.root               1      1.09KiB         0       17.0GiB           4
-    default.rgw.control     2           0B         0       17.0GiB           8
-    default.rgw.meta        3           0B         0       17.0GiB           0
-    default.rgw.log         4           0B         0       17.0GiB         207
+    NAME     ID     USED     %USED     MAX AVAIL     OBJECTS 
+
 ```
 
 ### Check both clusters OSDs
