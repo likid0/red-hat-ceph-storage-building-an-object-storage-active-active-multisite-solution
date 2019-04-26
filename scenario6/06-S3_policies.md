@@ -94,8 +94,8 @@ Now for the user2:
 
 Lets configure the S3 clients with the users we just created. We are going to use the previous config file we had, make a copy of the file and edit the credentials with the ones from user1
 ```
-[root@bastion ~]# cp s3-dc1.cfg s3-dc1-user1.cfg
-[root@bastion ~]# cat s3-dc1-user1.cfg | grep -i user1
+[root@bastion ~]# cp  s3-dc1.cfg s3-dc1-user1.cfg
+[root@bastion ~]# vi s3-dc1-user1.cfg | grep -i user1
 access_key = user1
 secret_key = user1
 ``` 
