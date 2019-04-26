@@ -271,7 +271,10 @@ And with the `s3cmd du` option we can see the disk used by each object:
 ## Check multisite replication
 
 If we run the sync status command after running a put of a large object we would be able to see the secondary cluster doing a sync to keep up with the master.
-The sync status parameter that is provided by the `radosgw-admin` CLI gives us an output that is divided in 2 SYNC sections metadata(users,acls,etc) and data(the actual data objects).
+The sync status parameter that is provided by the `radosgw-admin` CLI gives us an output that is divided in two Sync sections:
+
+* metadata(users,acls,etc)
+* data(the actual data objects).
 
 From the bastion:
 ```
