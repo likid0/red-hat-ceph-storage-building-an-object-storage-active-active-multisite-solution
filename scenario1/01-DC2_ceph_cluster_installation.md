@@ -283,19 +283,6 @@ Finally on the data section, we still don't have any pools created, once we inst
 
 
 
-### Check clusters available space
-
-To check how much space our pools are using, we can use the `ceph df` command to get a summary of space usage per pool in the cluster:
-```
-[root@bastion ~]# ceph --cluster dc2 df
-GLOBAL:
-    SIZE        AVAIL       RAW USED     %RAW USED 
-    60.0GiB     54.0GiB      6.01GiB         10.02 
-POOLS:
-    NAME     ID     USED     %USED     MAX AVAIL     OBJECTS 
-
-```
-
 ### Check both clusters OSDs
 
 We can check our OSD cluster tree were we can see that we have 2 OSDs under each host.
