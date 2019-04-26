@@ -124,11 +124,6 @@ the following configuration:
     rgw_thread_pool_size: 1024
 ```
 
-**NOTE: This is no longer needed with recent ceph versions. It was only needed with Ceph 3.0**
-```
-# vim /root/dc2/ceph-ansible/group_vars/rgws.yml
-ceph_rgw_docker_extra_env: "-e RGW_ZONE=dc2 -e RGW_ZONEGROUP=production"
-```
 
 We now have to modify the inventory so we can add our 3 ceph nodes under the [rgws] group section:
 ```
