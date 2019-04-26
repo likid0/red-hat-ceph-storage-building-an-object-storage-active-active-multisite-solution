@@ -6,7 +6,7 @@ As we mentioned before, we are going to make use of ceph-ansible to deploy and c
 
 ## Configure RGWs in DC1
 
-Edit the `all.yml` file in ceph-ansible node for DC1 and add the following lines to the override section:
+Edit the `all.yml` file in ceph-ansible node for DC1 and add the following lines at the end of the override section:
  ```
 [root@bastion ~]# vim ~/dc1/ceph-ansible/group_vars/all.yml
   client.rgw.cepha:
