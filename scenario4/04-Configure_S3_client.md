@@ -4,7 +4,7 @@ Now that our Active-Active Multi-Site RGW cluster is configured, let's test ever
 
 First we need to create a RGW user in DC1, we have to save the access and secret key from the output.
 
-> **NOTE: Save the access_key and secret_key You will need them for the next exercise**
+> **NOTE: Save the access_key and secret_key. You will need them for the next exercise**
 
 ```
 radosgw-admin --cluster dc1 user create --uid="summit19" --display-name="Redhat Summit User"
