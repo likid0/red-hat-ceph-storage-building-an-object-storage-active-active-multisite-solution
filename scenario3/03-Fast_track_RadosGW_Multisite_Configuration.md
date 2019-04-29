@@ -29,19 +29,19 @@ Master zone: Execute the following commands in the RGW node of DC1 (ceph1).
 A realm contains the multi-site configuration of zone groups and zones and also serves to enforce a globally unique namespace within the realm.
 Create the realm:
 ```
-radosgw-admin --cluster dc1 realm create --rgw-realm=${REALM} --default
+[root@bastion ~]# radosgw-admin --cluster dc1 realm create --rgw-realm=${REALM} --default
 ```
 
 A realm must have at least one zone group, which will serve as the master zone group for the realm.
 Create the zonegroup with the RGW replication endpoints of the master zone:
 ```
-radosgw-admin --cluster dc1 zonegroup create --rgw-zonegroup=${ZONEGROUP} --endpoints=${ENDPOINTS_MASTER_ZONE} --rgw-realm=${REALM} --master --default
+[root@bastion ~]# radosgw-admin --cluster dc1 zonegroup create --rgw-zonegroup=${ZONEGROUP} --endpoints=${ENDPOINTS_MASTER_ZONE} --rgw-realm=${REALM} --master --default
 ```
 
 Create a master zone for the multi-site configuration by opening a command line interface on a host identified to serve in the master zone group and zone.
 Create the zones with the RGW replication endpoints of the master zone(cepha):
 ```
-radosgw-admin --cluster dc1 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${MASTER_ZONE} --endpoints=${ENDPOINTS_MASTER_ZONE} --master --default
+[root@bastion ~]# radosgw-admin --cluster dc1 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${MASTER_ZONE} --endpoints=${ENDPOINTS_MASTER_ZONE} --master --default
 ```
 
 ### Create the sync user in Master Zone and start the RGW service.
@@ -57,21 +57,21 @@ At a high level, these are the steps we have to perform now:
 
 Create the sync user. Save the ACCESS_KEY and SECRET_KEY values from this command:
 ```
-radosgw-admin --cluster dc1 user create --uid=${SYNC_USER} --display-name="Synchronization User" --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --system
+[root@bastion ~]# radosgw-admin --cluster dc1 user create --uid=${SYNC_USER} --display-name="Synchronization User" --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --system
 ```
 
 #### Assign the sync-user to the master zone
 
 Assign the user to the master zone:
 ```
-radosgw-admin --cluster dc1 zone modify --rgw-zone=${MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
+[root@bastion ~]# radosgw-admin --cluster dc1 zone modify --rgw-zone=${MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
 ```
 
 #### Update the period
 
 Update the period:
 ```
-radosgw-admin --cluster dc1 period update --commit
+[root@bastion ~]# radosgw-admin --cluster dc1 period update --commit
 }
 ```
 
@@ -80,17 +80,17 @@ radosgw-admin --cluster dc1 period update --commit
 Start RGW cluster dc1 service in the master zone nodes.
 Start the service in the cepha node:
 ```
-ansible -b -m shell -a "systemctl enable ceph-radosgw@rgw.* --now" cepha
+[root@bastion ~]# ansible -b -m shell -a "systemctl enable ceph-radosgw@rgw.* --now" cepha
 ```
 
 We can check with ceph status if the RGW service is running:
 ```
-ceph --cluster dc1 -s | grep rgw
+[root@bastion ~]# ceph --cluster dc1 -s | grep rgw
 ```
 
 And also a quick check with curl so we can verify we can access port 8080 provided by the RGW service:
 ```
-curl http://cepha:8080
+[root@bastion ~]# curl http://cepha:8080
 ```
 
 With these basic checks we can move forward and configure our DC2 ceph cluster as the slave zone in our zone-group
@@ -101,37 +101,37 @@ Secondary zone: Execute the following commands in the RGW node of DC2 (ceph1)
 
 Pull the realm information:
 ```
-radosgw-admin --cluster dc2 realm pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --rgw-realm=${REALM}
+[root@bastion ~]# radosgw-admin --cluster dc2 realm pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --rgw-realm=${REALM}
 ```
 
 Set the realm as the default one:
 ```
-radosgw-admin --cluster dc2 realm default --rgw-realm=${REALM}
+[root@bastion ~]# radosgw-admin --cluster dc2 realm default --rgw-realm=${REALM}
 ```
 
 Pull the period information:
 ```
-radosgw-admin --cluster dc2 period pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
+[root@bastion ~]# radosgw-admin --cluster dc2 period pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
 ```
 
 Create the secondary zone:
 ```
-radosgw-admin --cluster dc2 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${SECONDARY_ZONE} --endpoints=${ENDPOINTS_SECONDARY_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
+[root@bastion ~]# radosgw-admin --cluster dc2 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${SECONDARY_ZONE} --endpoints=${ENDPOINTS_SECONDARY_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
 ```
 
 Update the period:
 ```
-radosgw-admin --cluster dc2 period update --commit
+[root@bastion ~]# radosgw-admin --cluster dc2 period update --commit
 ```
 
 Start RGW service in the secondary zone nodes:
 ```
-systemctl enable ceph-radosgw@rgw.$(hostname -s) --now
+[root@bastion ~]# systemctl enable ceph-radosgw@rgw.$(hostname -s) --now
 ```
 
 Once we have finished the configuration of our second zone, we can check the sync status between zone dc1 and zone dc2
 ```
-radosgw-admin  --cluster dc1 sync status
+[root@bastion ~]# radosgw-admin  --cluster dc1 sync status
 ```
 
 ## Clean-up RGW installation in both clusters
@@ -169,18 +169,18 @@ Now that our cluster is ready and we have cleaned up the default  pools, let's t
 First we need to create a RGW user, we have to save the access and secret key from the output.
 
 ```
-radosgw-admin --cluster dc1 user create --uid="summit19" --display-name="Redhat Summit User"
+[root@bastion ~]# radosgw-admin --cluster dc1 user create --uid="summit19" --display-name="Redhat Summit User"
 ```
 
 Lets check that our `summit19` is present in our master zone dc1:
 
 ```
-radosgw-admin --cluster dc1 user list
+[root@bastion ~]# radosgw-admin --cluster dc1 user list
 ```
 
 if we wait for both clusters to sync the metadata we can see that the rgw user is also present on cluster dc2:
 ```
-radosgw-admin --cluster dc2 user list
+[root@bastion ~]# radosgw-admin --cluster dc2 user list
 ```
 
 ## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
