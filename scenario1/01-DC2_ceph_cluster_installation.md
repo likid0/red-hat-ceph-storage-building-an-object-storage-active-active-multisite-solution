@@ -198,7 +198,7 @@ copy_admin_key: true
 
 With all the variables ready we can start the deployment of the Ceph cluster.
 
->WARNING: before running the installation we recommend using screen or tmux to avoid problems in case there are network issues.
+> WARNING: before running the installation we recommend using screen or tmux to avoid problems in case there are network issues.
 
 On the root of the ceph-ansible dir /root/dc2/ceph-ansible we need to run the `site-docker.yml` playbook.
 ```
@@ -216,6 +216,14 @@ ceph2                      : ok=319  changed=34   unreachable=0    failed=0
 ceph3                      : ok=321  changed=35   unreachable=0    failed=0   
 metrics4                   : ok=67   changed=6    unreachable=0    failed=0   
 ```
+
+> INFO: If you need to delete your cluster you can use the purge-docker-cluster.yml available in ceph ansible.
+> WARNING: this will delete all the config and pools in your cluster only use if something has gone very wrong.
+> For Example to delete/purge the DC2 ceph cluster you would run the next steps:
+> #cd /root/dc2/ceph-ansible/
+> # ansible-playbook -i inventory --skip-tags=with_pkg purge-docker-cluster.yml
+
+
 
 ## Check both DC1 and DC2 cluster health
 
