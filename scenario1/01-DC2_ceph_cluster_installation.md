@@ -220,8 +220,8 @@ metrics4                   : ok=67   changed=6    unreachable=0    failed=0
 > INFO: If you need to delete your cluster you can use the purge-docker-cluster.yml available in ceph ansible.
 > WARNING: this will delete all the config and pools in your cluster only use if something has gone very wrong.
 > For Example to delete/purge the DC2 ceph cluster you would run the next steps:
-> #cd /root/dc2/ceph-ansible/
-> # ansible-playbook -i inventory --skip-tags=with_pkg purge-docker-cluster.yml
+> [root@bastion]# cd /root/dc2/ceph-ansible/
+> [root@bastion ceph-ansible]# ansible-playbook -i inventory --skip-tags=with_pkg purge-docker-cluster.yml
 
 
 
