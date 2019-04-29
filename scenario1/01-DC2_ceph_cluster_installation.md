@@ -221,7 +221,7 @@ metrics4                   : ok=67   changed=6    unreachable=0    failed=0
 
 > WARNING!!: this will delete all the config and pools in your cluster only use if something has gone very wrong.
 
-> For Example to delete/purge the DC2 ceph cluster you would run the next steps:
+> For Example to delete/purge the DC2 ceph cluster you would run the next 2 commands:
 
 ```
 [root@bastion]# cd /root/dc2/ceph-ansible/
