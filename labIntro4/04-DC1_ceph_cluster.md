@@ -7,7 +7,7 @@ RADOS Gateway (RGW) services running in each site.
 
 Here is a diagram of the Lab environment
 
-<img src="labIntro4/images/lab_description.jpg" height="220"/>
+<img src="labIntro4/images/lab_description2.jpg" height="220"/>
 
 
 ## Network details for DC1 datacenter RHCS deployment
