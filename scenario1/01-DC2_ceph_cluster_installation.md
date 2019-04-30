@@ -91,7 +91,7 @@ There are 2 yml files that we have to modify, so we can configure our DC2 Ceph c
 * osds.yml
 * all.yml
 
->**NOTE**: Be careful with indentation and only modify the parameters mentioned. Syntax errors may lead to cluster misconfiguration which could damage the cluster.
+> **NOTE**: Be careful with indentation and only modify the parameters mentioned. Syntax errors may lead to cluster misconfiguration which could damage the cluster.
 
 First we are going to configure the OSDs. We need to edit the file and do the following modifications:
 - Specify `lvm` as the `osd_scenario`
@@ -123,6 +123,9 @@ vdd                   253:48   0   10G  0 disk
 ```
 
 Once we know that we have vdc and vdd, we add them our osds.yml file:
+
+> ** NOTE **: Make sure to also uncomment the line with "devices:" as shown in the example below
+
 ```
 [root@bastion ceph-ansible]# vim group_vars/osds.yml
 # Declare devices to be used as OSDs
