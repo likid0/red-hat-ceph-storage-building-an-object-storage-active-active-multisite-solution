@@ -38,7 +38,7 @@ export SYNC_USER="sync-user"
 export ACCESS_KEY="redhat"
 export SECRET_KEY="redhat"
 ```
-> WARNUNG: Shell variables contained exclusively within the shell in which they were set or defined, if you open a new session or terminal during the duration of scenario 03, you will have to re-export the variables specified above again.
+> WARNING: Shell variables are contained exclusively within the shell in which they were set or defined, if you open a new session or terminal during the duration of scenario 03, you will have to re-export the variables specified snippet above again.
 
 ## Configure Master Zone
 
