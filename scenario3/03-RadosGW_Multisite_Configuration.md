@@ -19,11 +19,12 @@ First lets be sure the RGW services are stopped in all the nodes or both cluster
 # for i in 1 2 3 ; do ansible -b -i inventory -m shell -a "systemctl stop ceph-radosgw@rgw.ceph${i}.service" ceph${i}; done
 ```
 
-> NOTE: All RGW services **SHOULD BE STOPPED** before following this procedure to create realms, zone groups and zones.
-More info can be found in the [Red Hat Ceph Storage Object Gateway Guide For RHEL](https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html-single/object_gateway_guide_for_red_hat_enterprise_linux/index)
+> NOTE: All RGW services *SHOULD BE STOPPED* before following this procedure to create realms, zone groups and zones.
+
 
 Prepare multi-site environment. Define and export variables, here we export all the variables we are going to need during the configuration of the realm, zone group and zones; 
 Our master zone is going to be DC1 and the secondary DC2.
+
 ```
 export REALM="summitlab"
 export ZONEGROUP="production"
@@ -37,6 +38,7 @@ export SYNC_USER="sync-user"
 export ACCESS_KEY="redhat"
 export SECRET_KEY="redhat"
 ```
+> WARNUNG: Shell variables contained exclusively within the shell in which they were set or defined, if you open a new session or terminal during the duration of scenario 03, you will have to re-export the variables specified above again.
 
 ## Configure Master Zone
 
