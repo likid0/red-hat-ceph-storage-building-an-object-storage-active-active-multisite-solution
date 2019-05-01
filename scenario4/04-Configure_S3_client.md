@@ -265,6 +265,7 @@ Bucket 's3://my-first-bucket/' created
 Let's upload a file, we are going to use the `s3cmd` RPM file as an example:
 
 ```
+[root@bastion ~]# cd /root
 [root@bastion ~]# ls
 anaconda-ks.cfg  ansible  ceph-ansible-keys  dc1  dc2  original-ks.cfg  red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution  s3cmd-2.0.2-1.el7.noarch.rpm  sync-repos.sh
 ```
