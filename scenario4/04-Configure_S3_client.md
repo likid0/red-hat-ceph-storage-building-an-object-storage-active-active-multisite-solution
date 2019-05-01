@@ -56,7 +56,29 @@ radosgw-admin --cluster dc1 user list
 ]
 ```
 
-if we wait for both clusters to sync the metadata, we can see that the rgw user `summit19` is also present on cluster dc2:
+if we are quick enough running the next command we might be able to see the metada syncing between the 2 sites, here you can see the metadata is one change behind(the user we just created)
+
+```
+[root@bastion-f90a ceph-ansible]# radosgw-admin  --cluster dc2 sync status
+          realm 8950a099-f2d3-4eab-8e21-27615162dfc0 (summitlab)
+      zonegroup e4e02c0a-dfea-42be-919b-7d30e48b4cb9 (production)
+           zone 9fff2b98-1ba5-4a2d-9ead-e45c5eb496d1 (dc2)
+  metadata sync syncing
+                full sync: 0/64 shards
+                incremental sync: 64/64 shards
+                metadata is behind on 1 shards
+                behind shards: [33]
+                oldest incremental change not applied: 2019-05-01 09:48:21.0.073832s
+      data sync source: 0444f868-3b6e-41cb-886f-0661334010de (dc1)
+                        syncing
+                        full sync: 0/128 shards
+                        incremental sync: 128/128 shards
+                        data is caught up with source
+
+```
+
+
+Once the metadata sync has finished, we can see that the rgw user `summit19` is also present on cluster dc2:
 ```
 radosgw-admin --cluster dc2 user list
 [
