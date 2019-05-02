@@ -120,7 +120,7 @@ Also check via the `radosgw-admin` cli that the DC1 zone is doing a sync to keep
                         recovering shards: [52]
 ```
 
-From the Grafana ceph-metrics dashboard select the "Ceph Cluster" dashboard, You will be able to see the troughput and IOPs per pool, and we can see that the busiest pool is the `dc2.rgw.buckets.data`. For example You can also check the TOP 5 pools by capacity used.
+From the Grafana ceph-metrics dashboard select the "Ceph Pools" dashboard, You will be able to see the troughput and IOPs per pool, and we can see that the busiest pool is the `dc2.rgw.buckets.data`. For example You can also check the TOP 5 pools by capacity used.
 
 <center><img src="scenario5/images/04cephmetrics-pools.png" style="width:1200px;" border=0/></center>
 

@@ -173,7 +173,7 @@ ceph3                      : ok=413  changed=24   unreachable=0    failed=0
 
 ### Check both clusters pools
 
-let's check what pools we have in the cluster, now that RGW has been deployed we should see 3 pools.
+let's check what pools we have in the cluster, now that RGW has been deployed we should see 1 pool.
 
 We have 1 pool created on the installation by the RGW, the pool is replicated and the size is 3, which means that for each object that we write is replicated two times, so in total we will have three copies of the object.
 ```

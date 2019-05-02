@@ -42,7 +42,7 @@ export SECRET_KEY="redhat"
 
 ## Configure Master Zone
 
-Master zone: Execute the following commands in the RGW node of DC1 (ceph1).
+Master zone: Execute the following commands in the RGW node of DC1 (cepha).
 
 ### Create realm, zone group and zone in Master Zone
 
