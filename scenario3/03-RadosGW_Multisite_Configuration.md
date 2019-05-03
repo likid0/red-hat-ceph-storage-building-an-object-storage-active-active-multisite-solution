@@ -182,7 +182,7 @@ At a high level, these are the steps we have to perform now:
 Create the sync user. This is a system RGW user that will be used by both clusters to connect to each other so data
 can be synced between them.
 ```
-radosgw-admin --cluster dc1 user create --uid=${SYNC_USER} --display-name="Synchronization User" --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --system
+[root@bastion ~]# radosgw-admin --cluster dc1 user create --uid=${SYNC_USER} --display-name="Synchronization User" --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --system
 {
     "user_id": "sync-user",
     "display_name": "Synchronization User",
@@ -227,7 +227,7 @@ radosgw-admin --cluster dc1 user create --uid=${SYNC_USER} --display-name="Synch
 
 Assign the sync user we created before to the master zone:
 ```
-radosgw-admin --cluster dc1 zone modify --rgw-zone=${MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
+[root@bastion ~]# radosgw-admin --cluster dc1 zone modify --rgw-zone=${MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
 {
     "id": "6d1a4a77-75bb-45ca-8088-05d6e7d3e223",
     "name": "dc1",
@@ -269,7 +269,7 @@ radosgw-admin --cluster dc1 zone modify --rgw-zone=${MASTER_ZONE} --access-key=$
 
 Update the period:
 ```
-radosgw-admin --cluster dc1 period update --commit
+[root@bastion ~]# radosgw-admin --cluster dc1 period update --commit
 {
     "id": "72480644-e86d-4508-990c-ad4440266a3b",
     "epoch": 1,
@@ -406,7 +406,7 @@ Secondary zone: Execute the following commands in the RGW node of DC2 (ceph1)
 
 Pull the realm information from our Master Zone(DC1), here we are using the access-key and the secret from the sync user we created previously:
 ```
-radosgw-admin --cluster dc2 realm pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --rgw-realm=${REALM}
+[root@bastion ~]# radosgw-admin --cluster dc2 realm pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY} --rgw-realm=${REALM}
 2019-04-19 09:28:25.620757 7fb46137de00  1 error read_lastest_epoch .rgw.root:periods.075aa943-2b7c-4209-80b7-eabafb2f74d0.latest_epoch
 2019-04-19 09:28:25.643588 7fb46137de00  1 Set the period's master zonegroup fd0929f8-98e5-4b9e-9493-7b68038f9826 as the default
 {
@@ -419,13 +419,13 @@ radosgw-admin --cluster dc2 realm pull --url=${URL_MASTER_ZONE} --access-key=${A
 
 Set the realm we just pulled from the Master Zone(Summitlab) as the default one for cluster DC2:
 ```
-radosgw-admin --cluster dc2 realm default --rgw-realm=${REALM}
+[root@bastion ~]# radosgw-admin --cluster dc2 realm default --rgw-realm=${REALM}
 
 ```
 
 Pull the period information from the master zone:
 ```
-radosgw-admin --cluster dc2 period pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
+[root@bastion ~]# radosgw-admin --cluster dc2 period pull --url=${URL_MASTER_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
 2019-04-19 09:28:53.555244 7f23f1f48e00  1 found existing latest_epoch 1 >= given epoch 1, returning r=-17
 {
     "id": "075aa943-2b7c-4209-80b7-eabafb2f74d0",
@@ -509,7 +509,7 @@ radosgw-admin --cluster dc2 period pull --url=${URL_MASTER_ZONE} --access-key=${
 
 Now that we have the info from the latest period in DC2, let's create a new zone, this zone is for DC2 cluster and will be the secondary zone for our master zone DC1:
 ```
-radosgw-admin --cluster dc2 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${SECONDARY_ZONE} --endpoints=${ENDPOINTS_SECONDARY_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
+[root@bastion ~]# radosgw-admin --cluster dc2 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${SECONDARY_ZONE} --endpoints=${ENDPOINTS_SECONDARY_ZONE} --access-key=${ACCESS_KEY} --secret=${SECRET_KEY}
 2019-04-19 09:29:10.843299 7f028ace3e00  0 failed reading obj info from .rgw.root:zone_info.7c8cfb46-2570-4b57-89f8-b5a4debb8767: (2) No such file or directory
 2019-04-19 09:29:10.843350 7f028ace3e00  0 WARNING: could not read zone params for zone id=7c8cfb46-2570-4b57-89f8-b5a4debb8767 name=dc1
 {
@@ -552,7 +552,7 @@ radosgw-admin --cluster dc2 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=
 
 Update the period, we are now updating the period for our multi-site configuration with the information of the new secondary zone we just created, once the period is updated, master zone DC1 will know it has a secondary zone DC2 that needs to be in sync:
 ```
-radosgw-admin --cluster dc2 period update --commit
+[root@bastion ~]# radosgw-admin --cluster dc2 period update --commit
 2019-04-19 09:29:22.594724 7f9558376e00  1 Cannot find zone id=bf4a5715-8561-4b19-ba01-a2a7ed7b4668 (name=dc2), switching to local zonegroup configuration
 Sending period to new master zone 7c8cfb46-2570-4b57-89f8-b5a4debb8767
 {
@@ -675,7 +675,7 @@ Like we did with DC1, let's run a quick check with curl so we can verify we can 
 
 Once we have finished the configuration of our second zone, we can check the sync status between zone DC1 and zone DC2:
 ```
-radosgw-admin  --cluster dc1 sync status
+[root@bastion ~]# radosgw-admin  --cluster dc1 sync status
           realm 80827d79-3fce-4b55-9e73-8c67ceab4f73 (summitlab)
       zonegroup 88222e12-006a-4cac-a5ab-03925365d817 (production)
            zone 602f21ea-7664-4662-bad8-0c3840bb1d7a (dc1)
@@ -688,7 +688,7 @@ radosgw-admin  --cluster dc1 sync status
 ```
 
 ```
-radosgw-admin  --cluster dc2 sync status
+[root@bastion ~]# radosgw-admin  --cluster dc2 sync status
           realm 80827d79-3fce-4b55-9e73-8c67ceab4f73 (summitlab)
       zonegroup 88222e12-006a-4cac-a5ab-03925365d817 (production)
            zone ed9f1807-7bc8-48c0-b82f-0fa1511ba47b (dc2)
@@ -709,12 +709,10 @@ Lets clean-up the default RGW installation, by default when ever a RGW daemon st
 
 Once RGW services are working with the new values, delete the default zone group and zones.
 
-First we remove the zone default from the zone group default so we can delete it:
+First from the master zone we remove the zone default from the zone group default so we can delete it:
 ```
 radosgw-admin --cluster dc1 zonegroup remove --rgw-zonegroup=default --rgw-zone=default
 radosgw-admin --cluster dc1 period update --commit
-radosgw-admin --cluster dc2 zonegroup remove --rgw-zonegroup=default --rgw-zone=default
-radosgw-admin --cluster dc2 period update --commit
 ```
 
 Now we can delete the default zone from both clusters:
