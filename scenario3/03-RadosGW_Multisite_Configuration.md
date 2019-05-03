@@ -50,7 +50,7 @@ A realm contains the multi-site configuration of zone groups and zones, also ser
 
 Create the realm:
 ```
-radosgw-admin --cluster dc1 realm create --rgw-realm=${REALM} --default
+[root@bastion ~]# radosgw-admin --cluster dc1 realm create --rgw-realm=${REALM} --default
 {
     "id": "81fb554d-079c-4047-8387-f68d16564cc3",
     "name": "summitlab",
@@ -62,7 +62,7 @@ radosgw-admin --cluster dc1 realm create --rgw-realm=${REALM} --default
 A realm must have at least one zone group, which will serve as the master zone group for the realm.
 Create the zone group with the RGW replication endpoints of the master zone:
 ```
-radosgw-admin --cluster dc1 zonegroup create --rgw-zonegroup=${ZONEGROUP} --endpoints=${ENDPOINTS_MASTER_ZONE} --rgw-realm=${REALM} --master --default
+[root@bastion ~]# radosgw-admin --cluster dc1 zonegroup create --rgw-zonegroup=${ZONEGROUP} --endpoints=${ENDPOINTS_MASTER_ZONE} --rgw-realm=${REALM} --master --default
 {
     "id": "00ba3e86-1207-49ba-9df6-cd2a8a07de2a",
     "name": "production",
@@ -85,7 +85,7 @@ Create a master zone for the multi-site configuration by opening a command line 
 
 Create the zones with the RGW replication endpoints of the master zone(cepha):
 ```
-radosgw-admin --cluster dc1 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${MASTER_ZONE} --endpoints=${ENDPOINTS_MASTER_ZONE} --master --default
+[root@bastion ~]# radosgw-admin --cluster dc1 zone create --rgw-zonegroup=${ZONEGROUP} --rgw-zone=${MASTER_ZONE} --endpoints=${ENDPOINTS_MASTER_ZONE} --master --default
 {
     "id": "6d1a4a77-75bb-45ca-8088-05d6e7d3e223",
     "name": "dc1",
