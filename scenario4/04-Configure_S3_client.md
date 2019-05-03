@@ -80,7 +80,7 @@ if we are quick enough running the next command we might be able to see the meta
 
 Once the metadata sync has finished, we can see that the rgw user `summit19` is also present on cluster dc2:
 ```
-radosgw-admin --cluster dc2 user list
+[root@bastion~]# radosgw-admin --cluster dc2 user list
 [
     "summit19",
     "sync-user"
