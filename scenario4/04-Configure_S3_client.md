@@ -7,7 +7,7 @@ First we need to create a RGW user in DC1, we have to save the access and secret
 > **NOTE: Save the access_key and secret_key. You will need them for the next exercise**
 
 ```
-radosgw-admin --cluster dc1 user create --uid="summit19" --display-name="Redhat Summit User"
+[root@bastion~]# radosgw-admin --cluster dc1 user create --uid="summit19" --display-name="Redhat Summit User"
 {
     "user_id": "summit19",
     "display_name": "Redhat Summit User",
@@ -49,7 +49,7 @@ radosgw-admin --cluster dc1 user create --uid="summit19" --display-name="Redhat 
 
 Lets check that our user `summit19` is present in our master zone dc1:
 ```
-radosgw-admin --cluster dc1 user list
+[root@bastion~]# radosgw-admin --cluster dc1 user list
 [
     "summit19",
     "sync-user"
@@ -59,7 +59,7 @@ radosgw-admin --cluster dc1 user list
 if we are quick enough running the next command we might be able to see the metada syncing between the 2 sites, here you can see the metadata is one change behind(the user we just created)
 
 ```
-[root@bastion-f90a ceph-ansible]# radosgw-admin  --cluster dc2 sync status
+[root@bastion ceph-ansible]# radosgw-admin  --cluster dc2 sync status
           realm 8950a099-f2d3-4eab-8e21-27615162dfc0 (summitlab)
       zonegroup e4e02c0a-dfea-42be-919b-7d30e48b4cb9 (production)
            zone 9fff2b98-1ba5-4a2d-9ead-e45c5eb496d1 (dc2)
