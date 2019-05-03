@@ -91,7 +91,7 @@ radosgw-admin --cluster dc2 user list
 
 In the lab Introduction we mentioned that we had 1 load balancer for each site, this HAproxy load balancer will take care of distributing the incoming S3 client requests among the 3 RGW instances we have in each DC.
 
-<img src="labIntro4/images/lab_description.jpg" height="220"/>
+<img src="labIntro4/images/lab_description2.png" height="220"/>
 
 Let's quickly check the configuration of each HAproxy; We have a frontend ip binded, this is the IP that accepts client connections,
 and then our backend with the IPs of the 3 RGW instances we have in DC1.
