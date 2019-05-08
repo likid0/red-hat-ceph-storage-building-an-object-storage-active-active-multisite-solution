@@ -60,7 +60,7 @@ Here is a diagram of the Lab environment
 
 | Hostname     | IP     |
 | :------------- | :------------- |
-| lbdc1.summit.lab       |  172.16.0.100      |
+| lbdc2.summit.lab       |  172.16.0.100      |
 
 
 * 3 Ceph nodes:
