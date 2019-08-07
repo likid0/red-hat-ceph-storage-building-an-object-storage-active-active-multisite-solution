@@ -196,10 +196,10 @@ POOLS:
 ```
 
 
-## [**Next: RGW Multisite Configuration**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario3/03-RadosGW_Multisite_Configuration)
+## [**Next: RGW Multisite Configuration**](https://likid0.github.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario3/03-RadosGW_Multisite_Configuration)
 
 ## Sources
 
 * [Red Hat Ceph Storage Object Gateway Guide For RHEL](https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html-single/object_gateway_guide_for_red_hat_enterprise_linux/index)
 
-## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
+## [**-- HOME --**](https://likid0.github.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)

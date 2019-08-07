@@ -382,6 +382,6 @@ download: 's3://my-second-bucket/DC2-file.txt' -> './DC2-file.txt'  [1 of 1]
 File Uploaded to DC2
 ```
 
-## [**Next: Configure ceph-metrics on DC2**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario5/05-DC2_cephmetrics_configuration)
+## [**Next: Configure ceph-metrics on DC2**](https://likid0.github.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario5/05-DC2_cephmetrics_configuration)
 
-## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
+## [**-- HOME --**](https://likid0.github.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)

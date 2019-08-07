@@ -16,4 +16,4 @@ RADOS Gateway is a FastCGI module for interacting with librados. Since it provid
 
 * [Ceph RGW docs](http://docs.ceph.com/docs/bobtail/radosgw/)
 
-## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
+## [**-- HOME --**](https://likid0.github.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)

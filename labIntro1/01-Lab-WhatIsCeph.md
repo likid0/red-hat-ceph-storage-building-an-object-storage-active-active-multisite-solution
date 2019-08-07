@@ -60,4 +60,4 @@ Red Hat Ceph Storage is tightly integrated with Red Hat OpenStack® Platform and
 * [Upstream Ceph docs](http://docs.ceph.com/docs/master/)
 
 
-## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
+## [**-- HOME --**](https://likid0.github.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)

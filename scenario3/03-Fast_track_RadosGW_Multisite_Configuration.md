@@ -183,4 +183,4 @@ if we wait for both clusters to sync the metadata we can see that the rgw user i
 [root@bastion ~]# radosgw-admin --cluster dc2 user list
 ```
 
-## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
+## [**-- HOME --**](https://likid0.github.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)

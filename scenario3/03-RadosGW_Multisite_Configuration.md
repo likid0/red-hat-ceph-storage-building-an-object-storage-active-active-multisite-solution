@@ -764,6 +764,6 @@ We can check that now the default zone and zone groups don't appear when we list
 
 ```
 
-## [**Next: Configure a S3 client**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario4/04-Configure_S3_client)
+## [**Next: Configure a S3 client**](https://likid0.github.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario4/04-Configure_S3_client)
 
-## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
+## [**-- HOME --**](https://likid0.github.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)

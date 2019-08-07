@@ -301,4 +301,4 @@ Using *user2* credentials, try to delete the object *test-file-policies* in *tes
 delete: 's3://test-s3-policies/test-file-policies'
 ```
 
-## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
+## [**-- HOME --**](https://likid0.github.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)

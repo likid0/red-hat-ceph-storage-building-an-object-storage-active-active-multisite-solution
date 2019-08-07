@@ -119,6 +119,6 @@ The bastion host is configured as a Ceph client so you can check the status of t
 6. **[EXTRA]** If you still have time, we will show how S3 policies work, and how we can give other users access to our buckets.
 
 
-## [**Next: Install and configure RHCS ceph cluster in DC2 site**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario1/01-DC2_ceph_cluster_installation)
+## [**Next: Install and configure RHCS ceph cluster in DC2 site**](https://likid0.github.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/scenario1/01-DC2_ceph_cluster_installation)
 
-## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
+## [**-- HOME --**](https://likid0.github.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)

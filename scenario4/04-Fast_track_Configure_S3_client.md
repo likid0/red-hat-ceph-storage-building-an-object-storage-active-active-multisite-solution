@@ -154,4 +154,4 @@ The file is also accessible from zone DC1, our active/active multisite cluster i
 s3cmd -c ~/s3-dc1.cfg  ls  s3://my-second-bucket
 ```
 
-## [**-- HOME --**](https://redhatsummitlabs.gitlab.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
+## [**-- HOME --**](https://likid0.github.io/red-hat-ceph-storage-building-an-object-storage-active-active-multisite-solution/#/)
