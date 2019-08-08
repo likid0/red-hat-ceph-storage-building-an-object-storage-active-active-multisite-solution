@@ -1,8 +1,8 @@
-# Red Hat Summit, Boston 2019
+# Red Hat Tech Exchange 2019
 
-**Title** : Red Hat Ceph Storage: Building an Object Storage Active/Active Multi-site Solution (**T168C8**)
+**Title** : Red Hat Ceph Storage: Building an Object Storage Active/Active Multi-site Solution (**R2037**)
 
-**Date**  : 8th May 2019
+**Date**  : 23/27 Sept 2019
 
 ## **Authors/Lab Owners**
 * Daniel Dominguez <<ddomingu@redhat.com>>
