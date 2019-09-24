@@ -661,9 +661,9 @@ cd ~/dc2/ceph-ansible/
 for i in 1 2 3 ; do ansible -b -i inventory -m shell -a "systemctl start ceph-radosgw@rgw.ceph${i}.service" ceph${i}; done
 ```
 
-Like we did with DC1, let's run a quick check with curl so we can verify we can access port 8080 provided by the RGW service on each node:
+Like we did with DC1, let's run a quick check in DC2 with curl, so we verify we can access port 8080 provided by the RGW service on each node:
 ```
-[root@bastion ~]# for NODE in a b c; do echo -e "\n" ; curl http://ceph${NODE}:8080; done
+[root@bastion ~]# for NODE in 1 2 3; do echo -e "\n" ; curl http://ceph${NODE}:8080; done
 
 
 <?xml version="1.0" encoding="UTF-8"?><Error><Code>NoSuchBucket</Code><BucketName>cepha</BucketName><RequestId>tx000000000000000000004-005cab7931-4b24e-dc1</RequestId><HostId>4b24e-dc1-production</HostId></Error>
