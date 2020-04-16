@@ -24,7 +24,7 @@ ansible.cfg  group_vars  inventory  inventory.sample  playbook.yml  purge.yml  R
 
 Lets check the `group_vars/all.yml` variable file, here we can specify the name of the cluster, if we want to do a containerized deployment, were is our registry and also specify the Grafana users to access the metrics dashboard.
 
-To try and save some time, the inventory and the variables have already been pre-configured for you.
+To try and save some time, the inventory has been already been pre-configured for you. you just have to configure the variables in the group_vars/all.yml file as it's described below:
 ```
 [root@metrics4 cephmetrics-ansible]# cat group_vars/all.yml
 dummy:
@@ -51,10 +51,10 @@ grafana:
 prometheus:
   container_name: 172.16.0.10:5000/openshift3/prometheus
   etc_hosts:
-    172.16.0.11: ceph1.summit.lab
-    172.16.0.12: ceph2.summit.lab
-    172.16.0.13: ceph3.summit.lab
-    172.16.0.14: metrics4.summit.lab
+    ceph1: 172.16.0.11
+    ceph2: 172.16.0.12
+    ceph3: 172.16.0.13 
+    metrics4: 172.16.0.14 
 ```
 
 We can now run the installation playbook.
